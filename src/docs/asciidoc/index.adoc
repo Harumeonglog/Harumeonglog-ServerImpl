@@ -6,3 +6,6 @@
 :app-name: 하루멍록
 :toclevels: 2
 :seclinks:
+
+== 산책 API
+include::{docfile}/../walk.adoc[]

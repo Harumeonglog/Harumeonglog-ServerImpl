@@ -1,18 +1,21 @@
 package com.example.harumeonglog.domain.walk.domain;
 
+import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 
 @Getter
+@Builder
 public class Walk {
 
     private Long id;
 
+    private String title;
+
     private Double distance;
 
-    private LocalTime time;
+    private Integer time;
 
     private Double startLatitude;
 

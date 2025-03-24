@@ -20,11 +20,14 @@ public class WalkEntity extends BaseEntity {
     @Column(name = "walk_id")
     private Long id;
 
+    @Column(name = "title", nullable = false)
+    private String title;
+
     @Column(name = "distance", nullable = false)
     private Double distance;
 
     @Column(name = "time", nullable = false)
-    private LocalTime time;
+    private Integer time;
 
     @Column(name = "start_latitude", nullable = false)
     private Double startLatitude;

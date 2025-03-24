@@ -5,6 +5,7 @@ package com.example.harumeonglog.domain.pet.domain;
 
 import com.example.harumeonglog.domain.pet.domain.enums.Gender;
 import com.example.harumeonglog.domain.pet.domain.enums.PetSize;
+import lombok.Builder;
 import lombok.Getter;
 
 
@@ -12,6 +13,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
+@Builder
 public class Pet {
 
     private Long id;
