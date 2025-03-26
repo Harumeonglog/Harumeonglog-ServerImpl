@@ -12,3 +12,12 @@ include::{docfile}/../member.adoc[]
 
 == 산책 API
 include::{docfile}/../walk.adoc[]
+
+== 알림 API
+include::{docfile}/../notice.adoc[]
+
+== 게시물 API
+include::{docfile}/../post.adoc[]
+
+== 댓글 API
+include::{docfile}/../comment.adoc[]
