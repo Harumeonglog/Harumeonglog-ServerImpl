@@ -35,11 +35,11 @@ public class PostController {
     }
 
     @PostMapping
-    public CustomResponse<PostResponse.PostPreviewResponse> createPost(
+    public CustomResponse<Long> createPost(
             @RequestBody PostRequest.PostCreateRequest postCreateRequest
             ) {
         Post post = postService.createPost(postCreateRequest);
-        return CustomResponse.ok(PostResponse.PostPreviewResponse.from(post));
+        return CustomResponse.ok(post.getId());
     }
 
     @PatchMapping("/{postId}")
