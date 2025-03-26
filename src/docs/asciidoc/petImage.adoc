@@ -40,7 +40,7 @@ include::{snippets}/pet-image-controller-test/get-images/http-request.adoc[]
 include::{snippets}/pet-image-controller-test/get-images/response-fields.adoc[]
 
 ===== Result
-include::{snippets}/pet-image-controller-test/get-images/response-fields-result.adoc
+include::{snippets}/pet-image-controller-test/get-images/response-fields-result.adoc[]
 
 // ===== ImageInfo
 // include::{snippets}/pet-image-controller-test/get-images/res
