@@ -28,6 +28,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.reset;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
@@ -65,6 +66,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
 
         final Post post1 = Post.builder()
                 .id(1L)
+                .content("내용")
                 .category(PostCategory.INFO)
                 .commentNum(0L)
                 .postLikeNum(0L)
@@ -79,6 +81,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
 
         final Post post2 = Post.builder()
                 .id(2L)
+                .content("내용")
                 .category(PostCategory.INFO)
                 .commentNum(0L)
                 .postLikeNum(0L)
@@ -110,12 +113,12 @@ public class PostControllerTest extends AbstractRestDocsTest {
                                 beneathPath("result").withSubsectionId("result"),
                                 fieldWithPath("cursor").description("다음 요청에 사용할 커서"),
                                 fieldWithPath("hasNext").description("다음 게시글이 더 있는지 여부"),
-                                subsectionWithPath("items").description("게시글 리스트").type("PostResponse[]")
+                                subsectionWithPath("items").description("게시글 리스트").type("PostPreviewResponse[]")
                         ),
                         responseFields(
-                                beneathPath("result.items[]").withSubsectionId("PostResponse"),
+                                beneathPath("result.items[]").withSubsectionId("PostPreviewResponse"),
                                 fieldWithPath("postId").description("게시글 ID"),
-                                fieldWithPath("content").description("게시글 내용").optional(),
+                                fieldWithPath("content").description("게시글 내용").type("String"),
                                 fieldWithPath("likeNum").description("좋아요 수"),
                                 fieldWithPath("commentNum").description("댓글 수"),
                                 fieldWithPath("postCategory").description("게시글 카테고리 (INFO, HUMOR, QNA, SNS, ETC)"),
@@ -215,7 +218,23 @@ public class PostControllerTest extends AbstractRestDocsTest {
                                 fieldWithPath("content").description("게시글 내용"),
                                 fieldWithPath("postImageList").description("게시글 이미지 URL 목록").optional()
                         ),
-                        commonResponse
+                        commonResponse,
+                        responseFields(
+                                beneathPath("result").withSubsectionId("PostPreviewResponse"),
+                                fieldWithPath("postId").description("게시글 ID"),
+                                fieldWithPath("content").description("게시글 내용"),
+                                fieldWithPath("likeNum").description("게시글 좋아요 수"),
+                                fieldWithPath("commentNum").description("게시글 댓글 수"),
+                                fieldWithPath("postCategory").description("게시글 카테고리"),
+                                subsectionWithPath("memberInfoResponse").description("작성자 정보").type("MemberInfoResponse")
+                        ),
+                        responseFields(
+                                beneathPath("result.memberInfoResponse").withSubsectionId("MemberInfoResponse"),
+                                fieldWithPath("memberId").description("작성자 ID"),
+                                fieldWithPath("email").description("작성자 이메일"),
+                                fieldWithPath("nickname").description("작성자 닉네임"),
+                                fieldWithPath("image").description("작성자 이미지 URL")
+                        )
                 ));
     }
 
@@ -249,7 +268,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
 
     @Test
     @DisplayName("게시글 상세 조회")
-    void getPostDetail() throws Exception {
+    void getPost() throws Exception {
         Member member = Member.builder()
                 .id(1L)
                 .email("a@naver.com")
@@ -286,7 +305,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
                         ),
                         commonResponse,
                         responseFields(
-                                beneathPath("result").withSubsectionId("PostDetailResponse"),
+                                beneathPath("result").withSubsectionId("result"),
                                 fieldWithPath("postId").description("게시글 ID"),
                                 fieldWithPath("content").description("게시글 내용").optional(),
                                 fieldWithPath("likeNum").description("좋아요 수"),
