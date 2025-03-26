@@ -35,7 +35,7 @@ public class WalkController {
     @GetMapping
     public CustomResponse<WalkResponse.WalkSearchListResponse> getWalkList(@RequestParam(value = "sort", defaultValue = "RECOMMEND") String sort,
                                                                        @RequestParam(value = "cursor", required = false) Long cursor,
-                                                                       @RequestParam(value = "offset", defaultValue = "10") int offset) {
+                                                                       @RequestParam(value = "size", defaultValue = "10") int offset) {
         WalkResponse.WalkSearchListResponse response = walkService.getWalkList(sort, cursor, offset);
         return CustomResponse.ok(response);
     }
