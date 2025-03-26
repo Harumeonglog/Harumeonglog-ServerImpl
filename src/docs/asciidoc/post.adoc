@@ -150,3 +150,55 @@ include::{snippets}/post-controller-test/report-post/response-fields.adoc[]
 ===== Response
 include::{snippets}/post-controller-test/report-post/http-response.adoc[]
 ---
+=== 내가 쓴 게시물 목록 조회 API
+내가 쓴 게시물 목록 조회 API
+
+==== 요청
+===== Request Header
+include::{snippets}/post-controller-test/get-my-post/request-headers.adoc[]
+
+===== Query Parameters
+include::{snippets}/post-controller-test/get-my-post/query-parameters.adoc[]
+
+===== Request
+include::{snippets}/post-controller-test/get-my-post/http-request.adoc[]
+
+==== 응답
+===== Response Field
+include::{snippets}/post-controller-test/get-my-post/response-fields.adoc[]
+===== Result
+include::{snippets}/post-controller-test/get-my-post/response-fields-result.adoc[]
+===== PostPreviewResponse
+include::{snippets}/post-controller-test/get-my-post/response-fields-PostPreviewResponse.adoc[]
+===== MemberInfoResponse
+include::{snippets}/post-controller-test/get-my-post/response-fields-MemberInfo.adoc[]
+
+===== Response
+include::{snippets}/post-controller-test/get-my-post/http-response.adoc[]
+---
+=== 내가 좋아요 단 게시물 목록 조회 API
+내가 쓴 게시물 목록 조회 API
+
+==== 요청
+===== Request Header
+include::{snippets}/post-controller-test/get-my-like-post/request-headers.adoc[]
+
+===== Query Parameters
+include::{snippets}/post-controller-test/get-my-like-post/query-parameters.adoc[]
+
+===== Request
+include::{snippets}/post-controller-test/get-my-like-post/http-request.adoc[]
+
+==== 응답
+===== Response Field
+include::{snippets}/post-controller-test/get-my-like-post/response-fields.adoc[]
+===== Result
+include::{snippets}/post-controller-test/get-my-like-post/response-fields-result.adoc[]
+===== PostPreviewResponse
+include::{snippets}/post-controller-test/get-my-like-post/response-fields-PostPreviewResponse.adoc[]
+===== MemberInfoResponse
+include::{snippets}/post-controller-test/get-my-like-post/response-fields-MemberInfo.adoc[]
+
+===== Response
+include::{snippets}/post-controller-test/get-my-like-post/http-response.adoc[]
+---
