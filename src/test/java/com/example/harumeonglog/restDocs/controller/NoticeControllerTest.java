@@ -89,7 +89,7 @@ public class NoticeControllerTest extends AbstractRestDocsTest {
 
     @Test
     @DisplayName("알림 삭제")
-    void 알림_삭제() throws Exception {
+    void deleteNotice() throws Exception {
         // given
         Long alarmId = 1L;
         willDoNothing().given(noticeService).deleteNotice(alarmId);
