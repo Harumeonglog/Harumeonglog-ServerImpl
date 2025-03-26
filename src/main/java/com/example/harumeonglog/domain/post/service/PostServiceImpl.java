@@ -44,4 +44,14 @@ public class PostServiceImpl implements PostService {
     public void reportPost(Long postId) {
 
     }
+
+    @Override
+    public Slice<Post> getMyPost(Long cursor, Integer size) {
+        return null;
+    }
+
+    @Override
+    public Slice<Post> getMyLikePost(Long cursor, Integer size) {
+        return null;
+    }
 }

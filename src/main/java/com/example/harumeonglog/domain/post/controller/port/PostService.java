@@ -18,4 +18,8 @@ public interface PostService {
     void likePost(Long postId);
 
     void reportPost(Long postId);
+
+    Slice<Post> getMyPost(Long cursor, Integer size);
+
+    Slice<Post> getMyLikePost(Long cursor, Integer size);
 }

@@ -75,4 +75,26 @@ public class PostController {
         return CustomResponse.ok(null);
     }
 
+    @GetMapping("/me")
+    public CustomResponse<PostResponse.PostListResponse> getMyPost(
+            @RequestParam(name = "cursor") Long cursor,
+            @RequestParam(name = "size") Integer size
+    ) {
+        Slice<Post> postSlice = postService.getMyPost(cursor, size);
+        Long nextCursor = postSlice.toList().get(postSlice.getSize() - 1).getId();
+        PostResponse.PostListResponse from = PostResponse.PostListResponse.from(nextCursor, postSlice.hasNext(), postSlice.toList());
+        return CustomResponse.ok(from);
+    }
+
+    @GetMapping("/me/likes")
+    public CustomResponse<PostResponse.PostListResponse> getMyLikePost(
+            @RequestParam(name = "cursor") Long cursor,
+            @RequestParam(name = "size") Integer size
+    ) {
+        Slice<Post> postSlice = postService.getMyLikePost(cursor, size);
+        Long nextCursor = postSlice.toList().get(postSlice.getSize() - 1).getId();
+        PostResponse.PostListResponse from = PostResponse.PostListResponse.from(nextCursor, postSlice.hasNext(), postSlice.toList());
+        return CustomResponse.ok(from);
+    }
+
 }
