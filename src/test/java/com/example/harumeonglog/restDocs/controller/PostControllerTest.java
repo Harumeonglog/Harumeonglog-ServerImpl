@@ -100,7 +100,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
                 .param("size", String.valueOf(size)));
 
         result.andExpect(status().isOk())
-                .andDo(document("get-posts",
+                .andDo(restDocs.document(
                         queryParameters(
                                 parameterWithName("cursor").description("커서 (마지막으로 본 게시글 ID)").optional(),
                                 parameterWithName("size").description("불러올 게시글 수").optional()
@@ -163,7 +163,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
                 .content(body));
 
         result.andExpect(status().isOk())
-                .andDo(document("create-post",
+                .andDo(restDocs.document(
                         requestFields(
                                 fieldWithPath("postCategory").description("게시글 카테고리"),
                                 fieldWithPath("content").description("게시글 내용"),
@@ -206,7 +206,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
                 .content(body));
 
         result.andExpect(status().isOk())
-                .andDo(document("update-post",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("postId").description("게시글 ID")
                         ),
@@ -225,7 +225,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
         ResultActions result = mockMvc.perform(delete("/posts/{postId}", 1L));
 
         result.andExpect(status().isOk())
-                .andDo(document("delete-post",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("postId").description("삭제할 게시글 ID")
                         ),
@@ -239,7 +239,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
         ResultActions result = mockMvc.perform(post("/posts/{postId}/likes", 1L));
 
         result.andExpect(status().isOk())
-                .andDo(document("like-post",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("postId").description("좋아요 누를 게시글 ID")
                         ),
@@ -280,7 +280,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
         ResultActions result = mockMvc.perform(get("/posts/{postId}", 1L));
 
         result.andExpect(status().isOk())
-                .andDo(document("get-post-detail",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("postId").description("상세 조회할 게시글 ID")
                         ),

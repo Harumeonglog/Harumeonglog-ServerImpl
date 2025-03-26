@@ -30,7 +30,7 @@ public class CommentControllerTest extends AbstractRestDocsTest {
     private CommentService commentService;
 
     @Test
-    void 댓글_조회() throws Exception {
+    void getComments() throws Exception {
         Comment comment = Comment.builder()
                 .id(1L)
                 .content("Test comment")
@@ -45,7 +45,7 @@ public class CommentControllerTest extends AbstractRestDocsTest {
                         .param("size", "10")
                 )
                 .andExpect(status().isOk())
-                .andDo(document("comment-get-comments",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("postId").description("게시글 ID")
                         ),
@@ -71,7 +71,7 @@ public class CommentControllerTest extends AbstractRestDocsTest {
     }
 
     @Test
-    void 댓글_작성() throws Exception {
+    void createComment() throws Exception {
         Mockito.when(commentService.createComment(any()))
                 .thenReturn(Comment.builder().id(1L).build());
 
@@ -85,7 +85,7 @@ public class CommentControllerTest extends AbstractRestDocsTest {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(requestBody))
                 .andExpect(status().isOk())
-                .andDo(document("comment-create",
+                .andDo(restDocs.document(
                         requestFields(
                                 fieldWithPath("content").description("댓글 내용")
                         ),
@@ -100,10 +100,10 @@ public class CommentControllerTest extends AbstractRestDocsTest {
 
 
     @Test
-    void 댓글_삭제() throws Exception {
+    void deleteComment() throws Exception {
         mockMvc.perform(delete("/comments/{commentId}", 1L))
                 .andExpect(status().isOk())
-                .andDo(document("comment-delete",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("commentId").description("댓글 ID")
                         )
@@ -111,10 +111,10 @@ public class CommentControllerTest extends AbstractRestDocsTest {
     }
 
     @Test
-    void 댓글_신고() throws Exception {
+    void reportComment() throws Exception {
         mockMvc.perform(post("/comments/{commentId}/reports", 1L))
                 .andExpect(status().isOk())
-                .andDo(document("comment-report",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("commentId").description("신고할 댓글 ID")
                         )
@@ -122,10 +122,10 @@ public class CommentControllerTest extends AbstractRestDocsTest {
     }
 
     @Test
-    void 댓글_차단() throws Exception {
+    void blockComment() throws Exception {
         mockMvc.perform(post("/comments/{commentId}/blocks", 1L))
                 .andExpect(status().isOk())
-                .andDo(document("comment-block",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("commentId").description("차단할 댓글 ID")
                         )

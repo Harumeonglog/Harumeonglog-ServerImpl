@@ -66,7 +66,7 @@ public class NoticeControllerTest extends AbstractRestDocsTest {
 
         // then
         result.andExpect(status().isOk())
-                .andDo(document("get-notices",
+                .andDo(restDocs.document(
                         queryParameters(
                                 parameterWithName("size").description("불러올 알림 개수"),
                                 parameterWithName("cursor").description("현재 커서 (마지막 알림 ID)")
@@ -99,7 +99,7 @@ public class NoticeControllerTest extends AbstractRestDocsTest {
 
         // then
         result.andExpect(status().isOk())
-                .andDo(document("notice-delete",
+                .andDo(restDocs.document(
                         pathParameters(
                                 parameterWithName("noticeId").description("삭제할 알림 ID")
                         ),
