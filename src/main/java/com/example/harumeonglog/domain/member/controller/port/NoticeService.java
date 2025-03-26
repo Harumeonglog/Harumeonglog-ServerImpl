@@ -6,5 +6,5 @@ import org.springframework.data.domain.Slice;
 public interface NoticeService {
     Slice<Notice> getNotices(Integer size, Long cursor);
 
-    void deleteNotice(Long alarmId);
+    void deleteNotice(Long noticeId);
 }

@@ -29,7 +29,7 @@ public class NoticeResponse {
     @Getter
     @Builder
     public static class NoticePreviewResponse {
-        private Long id;
+        private Long noticeId;
         private String title;
         private String content;
         private NoticeType noticeType;
@@ -37,7 +37,7 @@ public class NoticeResponse {
 
         public static NoticePreviewResponse from(Notice notice) {
             return NoticePreviewResponse.builder()
-                    .id(notice.getId())
+                    .noticeId(notice.getId())
                     .content(notice.getContent())
                     .title(notice.getTitle())
                     .noticeType(notice.getNoticeType())

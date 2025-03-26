@@ -14,7 +14,7 @@ public class NoticeController {
 
     private final NoticeService noticeService;
 
-    @GetMapping("/alarms")
+    @GetMapping("/notices")
     public CustomResponse<NoticeResponse.NoticeListResponse> getNotices(
             @RequestParam(name = "size") Integer size,
             @RequestParam(name = "cursor") Long cursor
@@ -25,9 +25,9 @@ public class NoticeController {
     }
 
 
-    @DeleteMapping("/alarms/{alarmId}")
-    public CustomResponse<Void> deleteNotice(@PathVariable Long alarmId) {
-        noticeService.deleteNotice(alarmId);
+    @DeleteMapping("/notices/{noticeId}")
+    public CustomResponse<Void> deleteNotice(@PathVariable Long noticeId) {
+        noticeService.deleteNotice(noticeId);
         return CustomResponse.ok(null);
     }
 

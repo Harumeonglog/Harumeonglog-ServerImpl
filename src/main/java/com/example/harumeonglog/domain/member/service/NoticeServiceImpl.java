@@ -13,7 +13,7 @@ public class NoticeServiceImpl implements NoticeService {
     }
 
     @Override
-    public void deleteNotice(Long alarmId) {
+    public void deleteNotice(Long noticeId) {
 
     }
 
