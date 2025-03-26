@@ -9,3 +9,12 @@
 
 == 산책 API
 include::{docfile}/../walk.adoc[]
+
+== 일정 API
+include::{docfile}/../event.adoc[]
+
+== 반려견 API
+include::{docfile}/../pet.adoc[]
+
+== 반려견 이미지 API
+include::{docfile}/../petImage.adoc[]
