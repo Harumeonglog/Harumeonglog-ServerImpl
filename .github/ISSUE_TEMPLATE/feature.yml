@@ -7,8 +7,8 @@ body:
   - type: dropdown
     id: select-attribute
     attributes:
-      label: "기능 종류"
-      description: "어떤 기능을 추가하시나요?"
+      label: "✔️ 기능 종류"
+      description: "추가할 기능의 종류를 선택해주세요!"
       options:
         - "기타"
         - "API 구현"
@@ -19,7 +19,7 @@ body:
   - type: input
     id: feature-content
     attributes:
-      label: 어떤 기능을 추가하나요?
+      label: "📝 어떤 기능을 추가하나요?"
       description: 작업할 Feature에 대한 설명을 적어주세요.
       placeholder: ex. 게시글 조회 구현
     validations:
@@ -27,7 +27,7 @@ body:
   - type: textarea
     id: additional
     attributes:
-      label: 자세한 내용 (Optional)
+      label: "👀 자세한 내용 (Optional)"
       description: 설명이 부족하다면 더 자세한 내용을 적어주세요.
       placeholder: ex. 게시글 조회에 커서 기반 페이지네이션 적용
     validations:
