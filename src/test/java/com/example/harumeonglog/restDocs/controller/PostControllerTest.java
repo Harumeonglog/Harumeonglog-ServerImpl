@@ -138,7 +138,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
     @DisplayName("게시글 생성")
     void createPost() throws Exception {
         PostRequest.PostCreateRequest request = PostRequest.PostCreateRequest.builder()
-                .postCategory(com.example.harumeonglog.domain.post.controller.dto.enums.PostCategory.INFO)
+                .postCategory(PostCategory.INFO)
                 .content("내용")
                 .postImageList(null)
                 .build();
@@ -180,7 +180,7 @@ public class PostControllerTest extends AbstractRestDocsTest {
     @DisplayName("게시글 수정")
     void updatePost() throws Exception {
         PostRequest.PostUpdateRequest request = PostRequest.PostUpdateRequest.builder()
-                .postCategory(com.example.harumeonglog.domain.post.controller.dto.enums.PostCategory.INFO)
+                .postCategory(PostCategory.INFO)
                 .postImageList(null)
                 .content("바꿈")
                 .build();

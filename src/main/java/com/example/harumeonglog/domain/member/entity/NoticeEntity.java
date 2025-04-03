@@ -1,7 +1,7 @@
 package com.example.harumeonglog.domain.member.entity;
 
-import com.example.harumeonglog.domain.member.entity.enums.NoticeType;
 import com.example.harumeonglog.domain.common.entity.BaseEntity;
+import com.example.harumeonglog.domain.member.domain.enums.NoticeType;
 import jakarta.persistence.*;
 import lombok.*;
 

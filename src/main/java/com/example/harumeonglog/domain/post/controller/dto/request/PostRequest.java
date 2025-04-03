@@ -1,6 +1,6 @@
 package com.example.harumeonglog.domain.post.controller.dto.request;
 
-import com.example.harumeonglog.domain.post.controller.dto.enums.PostCategory;
+import com.example.harumeonglog.domain.post.domain.enums.PostCategory;
 import lombok.Builder;
 import lombok.Getter;
 
