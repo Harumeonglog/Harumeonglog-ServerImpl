@@ -1,7 +1,7 @@
 package com.example.harumeonglog.domain.event.entity;
 
 import com.example.harumeonglog.domain.common.entity.BaseEntity;
-import com.example.harumeonglog.domain.event.entity.enums.EventCategory;
+import com.example.harumeonglog.domain.event.domain.enums.EventCategory;
 import com.example.harumeonglog.domain.member.entity.MemberEntity;
 import com.example.harumeonglog.domain.pet.entity.PetEntity;
 import jakarta.persistence.*;

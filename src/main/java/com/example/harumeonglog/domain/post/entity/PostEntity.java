@@ -2,8 +2,8 @@ package com.example.harumeonglog.domain.post.entity;
 
 import com.example.harumeonglog.domain.comment.entity.CommentEntity;
 import com.example.harumeonglog.domain.member.entity.MemberEntity;
-import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.common.entity.BaseEntity;
+import com.example.harumeonglog.domain.post.domain.enums.PostCategory;
 import jakarta.persistence.*;
 import lombok.*;
 
