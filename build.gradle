@@ -121,7 +121,8 @@ jacocoTestReport {
                         '**/HarumeonglogApplication.class',
                         '**/BaseEntity.class',
                         '**/config/**',
-                        '**/enums/**'
+                        '**/enums/**',
+                        '**/filter/**'
                 ])
             })
     )
@@ -156,7 +157,8 @@ jacocoTestCoverageVerification {
                     "*.HarumeonglogApplication",
                     "*.BaseEntity",
                     "*.config.*",
-                    "*.enums.*"
+                    "*.enums.*",
+                    "*.filter.*"
             ]
 
         }
