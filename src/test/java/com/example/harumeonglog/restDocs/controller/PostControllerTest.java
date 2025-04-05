@@ -393,9 +393,9 @@ public class PostControllerTest extends AbstractRestDocsTest {
 
         Slice<Post> postSlice = new SliceImpl<>(List.of(post1, post2), PageRequest.of(0, size), hasNext);
 
-        given(postQueryService.getPosts(anyLong(), anyInt())).willReturn(postSlice);
+        given(postQueryService.getMyPost(anyLong(), anyInt())).willReturn(postSlice);
 
-        ResultActions result = mockMvc.perform(get("/posts")
+        ResultActions result = mockMvc.perform(get("/posts/me")
                 .param("cursor", cursor.toString())
                 .param("size", String.valueOf(size)));
 
@@ -483,9 +483,9 @@ public class PostControllerTest extends AbstractRestDocsTest {
 
         Slice<Post> postSlice = new SliceImpl<>(List.of(post1, post2), PageRequest.of(0, size), hasNext);
 
-        given(postQueryService.getPosts(anyLong(), anyInt())).willReturn(postSlice);
+        given(postQueryService.getMyLikePost(anyLong(), anyInt())).willReturn(postSlice);
 
-        ResultActions result = mockMvc.perform(get("/posts")
+        ResultActions result = mockMvc.perform(get("/posts/me/likes")
                 .param("cursor", cursor.toString())
                 .param("size", String.valueOf(size)));
 
