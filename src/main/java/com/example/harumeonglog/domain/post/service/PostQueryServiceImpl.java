@@ -2,10 +2,12 @@ package com.example.harumeonglog.domain.post.service;
 
 import com.example.harumeonglog.domain.post.controller.port.PostQueryService;
 import com.example.harumeonglog.domain.post.domain.Post;
+import lombok.Builder;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 @Service
+@Builder
 public class PostQueryServiceImpl implements PostQueryService {
 
 
