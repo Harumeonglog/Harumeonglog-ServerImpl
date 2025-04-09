@@ -30,3 +30,6 @@ include::{docfile}/../pet.adoc[]
 
 == 반려견 이미지 API
 include::{docfile}/../petImage.adoc[]
+
+== 헬스 체킹 API
+include::{docfile}/../healthCheck.adoc[]
