@@ -18,7 +18,7 @@ public class DiscordServiceImpl implements DiscordService {
 
     private static final String DISCORD_CONTENT = "# 🚨 에러 발생 비이이이이사아아아앙";
     private static final String DISCORD_TITLE = "ℹ️ 에러 정보";
-    private static final String DISCORD_DESCRIPTION_FORMAT = "### 🕖 발생 시간\n%s\n### 🔗 요청 URL\n%s\n### 📝 Method & Class\n```\n%s\n```";
+    private static final String DISCORD_DESCRIPTION_FORMAT = "### 🕖 발생 시간\n%s\n### 🔗 요청 URL\n%s\n### 📝 Message\n```\n%s\n```";
     private static final String DISCORD_STACK_TRACE_TITLE = "📚 Stack Trace";
     private static final String DISCORD_STACK_TRACE_DESCRIPTION_FORMAT = "```\n%s\n```";
 
