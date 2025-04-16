@@ -1,7 +1,7 @@
 package com.example.harumeonglog.global.security.filter;
 
-import com.example.harumeonglog.global.security.util.JwtUtil;
-import com.example.harumeonglog.global.security.util.RedisUtil;
+import com.example.harumeonglog.global.util.JwtUtil;
+import com.example.harumeonglog.global.util.RedisUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;

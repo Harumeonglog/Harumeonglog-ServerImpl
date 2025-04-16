@@ -1,6 +1,6 @@
-package com.example.harumeonglog.global.security.util;
+package com.example.harumeonglog.global.util;
 
-import com.example.harumeonglog.domain.common.config.data.JwtConfigData;
+import com.example.harumeonglog.global.data.JwtConfigData;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;

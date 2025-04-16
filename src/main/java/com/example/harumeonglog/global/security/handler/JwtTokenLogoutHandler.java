@@ -1,7 +1,7 @@
 package com.example.harumeonglog.global.security.handler;
 
 import com.example.harumeonglog.global.common.code.GeneralSuccessCode;
-import com.example.harumeonglog.global.common.response.util.HttpResponseUtil;
+import com.example.harumeonglog.global.util.HttpResponseUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;

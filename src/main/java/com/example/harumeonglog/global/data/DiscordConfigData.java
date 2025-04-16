@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.common.config.data;
+package com.example.harumeonglog.global.data;
 
 import lombok.*;
 import org.springframework.boot.context.properties.ConfigurationProperties;

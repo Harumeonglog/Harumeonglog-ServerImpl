@@ -3,8 +3,8 @@ package com.example.harumeonglog.global.security.filter;
 
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
-import com.example.harumeonglog.global.security.util.JwtUtil;
-import com.example.harumeonglog.global.security.util.RedisUtil;
+import com.example.harumeonglog.global.util.JwtUtil;
+import com.example.harumeonglog.global.util.RedisUtil;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;

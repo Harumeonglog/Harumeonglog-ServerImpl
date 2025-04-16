@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.common.util.discord.dto;
+package com.example.harumeonglog.global.discord.dto;
 
 import lombok.*;
 

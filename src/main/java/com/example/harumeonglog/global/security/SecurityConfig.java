@@ -8,11 +8,11 @@ import com.example.harumeonglog.global.security.handler.CustomAccessDeniedHandle
 import com.example.harumeonglog.global.security.handler.CustomAuthorizationEntryPoint;
 import com.example.harumeonglog.global.security.handler.JwtTokenLogoutHandler;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
-import com.example.harumeonglog.global.security.util.JwtUtil;
-import com.example.harumeonglog.global.security.util.RedisUtil;
+import com.example.harumeonglog.global.util.JwtUtil;
+import com.example.harumeonglog.global.util.RedisUtil;
 
-import com.example.harumeonglog.domain.common.config.data.ProfileConfigData;
-import com.example.harumeonglog.domain.common.config.data.SwaggerConfigData;
+import com.example.harumeonglog.global.data.ProfileConfigData;
+import com.example.harumeonglog.global.data.SwaggerConfigData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

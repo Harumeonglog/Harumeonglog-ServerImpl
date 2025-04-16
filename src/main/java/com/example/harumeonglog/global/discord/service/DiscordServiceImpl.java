@@ -1,7 +1,7 @@
-package com.example.harumeonglog.domain.common.util.discord.service;
+package com.example.harumeonglog.global.discord.service;
 
-import com.example.harumeonglog.domain.common.util.discord.DiscordApiUtil;
-import com.example.harumeonglog.domain.common.util.discord.dto.DiscordMessage;
+import com.example.harumeonglog.global.discord.DiscordApiUtil;
+import com.example.harumeonglog.global.discord.dto.DiscordMessage;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;

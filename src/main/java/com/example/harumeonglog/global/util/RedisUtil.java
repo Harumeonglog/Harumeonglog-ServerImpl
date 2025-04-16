@@ -1,4 +1,4 @@
-package com.example.harumeonglog.global.security.util;
+package com.example.harumeonglog.global.util;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;

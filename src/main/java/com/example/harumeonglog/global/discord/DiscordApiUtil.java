@@ -1,7 +1,7 @@
-package com.example.harumeonglog.domain.common.util.discord;
+package com.example.harumeonglog.global.discord;
 
-import com.example.harumeonglog.domain.common.config.data.DiscordConfigData;
-import com.example.harumeonglog.domain.common.util.discord.dto.DiscordMessage;
+import com.example.harumeonglog.global.data.DiscordConfigData;
+import com.example.harumeonglog.global.discord.dto.DiscordMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;

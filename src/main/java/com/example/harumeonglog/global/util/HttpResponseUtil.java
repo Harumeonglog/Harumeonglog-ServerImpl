@@ -1,4 +1,4 @@
-package com.example.harumeonglog.global.common.response.util;
+package com.example.harumeonglog.global.util;
 
 import com.example.harumeonglog.global.common.code.BaseCode;
 import com.example.harumeonglog.global.error.code.BaseErrorCode;

@@ -4,8 +4,8 @@ import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.error.code.BaseErrorCode;
 import com.example.harumeonglog.global.error.code.GeneralErrorCode;
 import com.example.harumeonglog.global.error.exception.GeneralException;
-import com.example.harumeonglog.domain.common.config.data.ProfileConfigData;
-import com.example.harumeonglog.domain.common.util.discord.service.DiscordService;
+import com.example.harumeonglog.global.data.ProfileConfigData;
+import com.example.harumeonglog.global.discord.service.DiscordService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
@@ -17,7 +17,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.context.request.WebRequest;
 
 import java.util.Arrays;
 import java.util.HashMap;

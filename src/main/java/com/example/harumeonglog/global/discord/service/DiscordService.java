@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.common.util.discord.service;
+package com.example.harumeonglog.global.discord.service;
 
 import jakarta.servlet.http.HttpServletRequest;
 

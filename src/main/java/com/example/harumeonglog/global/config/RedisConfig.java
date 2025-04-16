@@ -1,6 +1,6 @@
 package com.example.harumeonglog.global.config;
 
-import com.example.harumeonglog.domain.common.config.data.RedisConfigData;
+import com.example.harumeonglog.global.data.RedisConfigData;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
