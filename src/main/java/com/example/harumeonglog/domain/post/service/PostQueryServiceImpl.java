@@ -12,7 +12,6 @@ import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
 import com.example.harumeonglog.global.error.code.PostErrorCode;
 import com.example.harumeonglog.global.error.exception.PostException;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
@@ -89,7 +88,23 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public Slice<Post> getMyLikePost(Long cursor, Integer size) {
-        return null;
+    public PostResponse.PostPreviewListResponse getMyLikePost(Long cursor, Integer size, Member member) {
+        if (cursor == 0) {
+            cursor = Long.MAX_VALUE;
+        }
+
+        Slice<Post> postSlice = postRepository.findMyLikePosts(member, cursor, PageRequest.of(0, size));
+
+        Long nextCursor = null;
+        if (!postSlice.isLast()) {
+            nextCursor = postSlice.toList().get(postSlice.toList().size() - 1).getId();
+        }
+
+        List<PostResponse.PostPreviewResponse> postPreviewResponses = postSlice.toList().stream().map((post) -> {
+            String postImageKey = post.getPostImageList().get(0).getPostImageKeyName() != null ? post.getPostImageList().get(0).getPostImageKeyName() : null;
+            return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
+        }).toList();
+
+        return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
     }
 }
