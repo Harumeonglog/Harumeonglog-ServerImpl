@@ -29,14 +29,8 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     @Override
     public PostResponse.PostPreviewListResponse getPosts(Long cursor, Integer size, String search, PostRequestCategory postRequestCategory) {
-
-        if (search == null || search.isEmpty()) {
-            search = "";
-        }
-
-        if (cursor == 0) {
-            cursor = Long.MAX_VALUE;
-        }
+        cursor = normalizeCursor(cursor);
+        search = normalizeSearch(search);
 
         Slice<Post> postSlice;
         if (postRequestCategory.equals(PostRequestCategory.ALL)) {
@@ -46,64 +40,57 @@ public class PostQueryServiceImpl implements PostQueryService {
             postSlice = postRepository.findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(search, cursor, postCategory, PageRequest.of(0, size));
         }
 
-        Long nextCursor = null;
-        if (!postSlice.isLast()) {
-            nextCursor = postSlice.toList().get(postSlice.toList().size() - 1).getId();
-        }
-
-        List<PostResponse.PostPreviewResponse> postPreviewResponses = postSlice.toList().stream().map((post) -> {
-            String postImageKey = post.getPostImageList().get(0).getPostImageKeyName() != null ? post.getPostImageList().get(0).getPostImageKeyName() : null;
-            return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
-        }).toList();
-
-        return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
+        return buildPostPreviewListResponse(postSlice);
     }
 
     @Override
     public PostResponse.PostDetailResponse getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
-        List<String> postImageList = post.getPostImageList().stream().map(PostImage::getPostImageKeyName).toList();
+        List<String> postImageList = post.getPostImageList().stream()
+                .map(PostImage::getPostImageKeyName)
+                .toList();
         return PostConverter.toPostDetailResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageList);
     }
 
     @Override
     public PostResponse.PostPreviewListResponse getMyPost(Long cursor, Integer size, Member member) {
-        if (cursor == 0) {
-            cursor = Long.MAX_VALUE;
-        }
+        cursor = normalizeCursor(cursor);
 
         Slice<Post> postSlice = postRepository.findByMemberAndIdLessThanOrderByIdDesc(member, cursor, PageRequest.of(0, size));
-
-        Long nextCursor = null;
-        if (!postSlice.isLast()) {
-            nextCursor = postSlice.toList().get(postSlice.toList().size() - 1).getId();
-        }
-
-        List<PostResponse.PostPreviewResponse> postPreviewResponses = postSlice.toList().stream().map((post) -> {
-            String postImageKey = post.getPostImageList().get(0).getPostImageKeyName() != null ? post.getPostImageList().get(0).getPostImageKeyName() : null;
-            return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
-        }).toList();
-
-        return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
+        return buildPostPreviewListResponse(postSlice);
     }
 
     @Override
     public PostResponse.PostPreviewListResponse getMyLikePost(Long cursor, Integer size, Member member) {
-        if (cursor == 0) {
-            cursor = Long.MAX_VALUE;
-        }
+        cursor = normalizeCursor(cursor);
 
         Slice<Post> postSlice = postRepository.findMyLikePosts(member, cursor, PageRequest.of(0, size));
+        return buildPostPreviewListResponse(postSlice);
+    }
 
+    private Long normalizeCursor(Long cursor) {
+        return (cursor == 0) ? Long.MAX_VALUE : cursor;
+    }
+
+    private String normalizeSearch(String search) {
+        return (search == null || search.isEmpty()) ? "" : search;
+    }
+
+    private PostResponse.PostPreviewListResponse buildPostPreviewListResponse(Slice<Post> postSlice) {
         Long nextCursor = null;
-        if (!postSlice.isLast()) {
-            nextCursor = postSlice.toList().get(postSlice.toList().size() - 1).getId();
+        List<Post> posts = postSlice.toList();
+
+        if (!postSlice.isLast() && !posts.isEmpty()) {
+            nextCursor = posts.get(posts.size() - 1).getId();
         }
 
-        List<PostResponse.PostPreviewResponse> postPreviewResponses = postSlice.toList().stream().map((post) -> {
-            String postImageKey = post.getPostImageList().get(0).getPostImageKeyName() != null ? post.getPostImageList().get(0).getPostImageKeyName() : null;
-            return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
-        }).toList();
+        List<PostResponse.PostPreviewResponse> postPreviewResponses = posts.stream()
+                .map(post -> {
+                    String postImageKey = post.getPostImageList().isEmpty() ? null :
+                            post.getPostImageList().get(0).getPostImageKeyName();
+                    return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
+                })
+                .toList();
 
         return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
     }
