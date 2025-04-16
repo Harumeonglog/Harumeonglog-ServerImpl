@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.pet.controller;
 
 
+import com.example.harumeonglog.domain.pet.controller.specification.PetControllerSpecification;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.AddPetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.ChangePetInfoResponse;
@@ -10,6 +11,7 @@ import com.example.harumeonglog.domain.pet.dto.request.PetRequest.ChangeCurrentP
 import com.example.harumeonglog.domain.pet.dto.request.PetRequest.ChangePetInfoRequest;
 import com.example.harumeonglog.domain.pet.dto.request.PetRequest.InviteRequest;
 import com.example.harumeonglog.domain.pet.service.PetService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,8 +19,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pets")
-public class PetController {
+@RequestMapping("/api/v1/pets")
+@Tag(name = "Pet", description = "Pet 관련 API")
+public class PetController implements PetControllerSpecification {
 
     private final PetService petService;
 

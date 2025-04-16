@@ -1,10 +1,12 @@
 package com.example.harumeonglog.domain.pet.controller;
 
+import com.example.harumeonglog.domain.pet.controller.specification.PetImageControllerSpecification;
 import com.example.harumeonglog.domain.pet.dto.response.PetImageResponse;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.domain.pet.dto.request.PetImageRequest.AddImagesRequest;
 import com.example.harumeonglog.domain.pet.dto.request.PetImageRequest.DeleteImagesRequest;
 import com.example.harumeonglog.domain.pet.service.PetImageService;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,8 +14,9 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/pet-images")
-public class PetImageController {
+@RequestMapping("/api/v1/pet-images")
+@Tag(name = "PetImage", description = "Pet 이미지 관련 API")
+public class PetImageController implements PetImageControllerSpecification {
 
     private final PetImageService petImageService;
 
