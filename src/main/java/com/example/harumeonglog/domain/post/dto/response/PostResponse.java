@@ -57,8 +57,7 @@ public class PostResponse {
         private Long commentNum;
         private PostCategory postCategory;
         private MemberInfoResponse memberInfoResponse;
-        private List<String> postImages;
-
+        private List<String> postImageList;
     }
 
 }

@@ -1,5 +1,6 @@
 package com.example.harumeonglog.domain.post.controller;
 
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
@@ -7,6 +8,7 @@ import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.service.PostCommandService;
 import com.example.harumeonglog.domain.post.service.PostQueryService;
 
+import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.web.bind.annotation.*;
@@ -31,10 +33,11 @@ public class PostController {
     }
 
     @GetMapping("/{postId}")
-    public CustomResponse<PostResponse.PostDetailResponse> getPost() {
-        Post post = postQueryService.getPost();
-
-        return CustomResponse.ok(null);
+    public CustomResponse<PostResponse.PostDetailResponse> getPost(
+            @PathVariable Long postId, @AuthenticatedMember Member member
+    ) {
+        PostResponse.PostDetailResponse postDetailResponse = postQueryService.getPost(postId);
+        return CustomResponse.ok(postDetailResponse);
     }
 
     @PostMapping
