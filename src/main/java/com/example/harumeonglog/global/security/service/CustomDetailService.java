@@ -7,19 +7,16 @@ import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.domain.member.infrastructure.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class CustomDetailService implements UserDetailsService {
+public class CustomDetailService {
 
     private final MemberRepository memberRepository;
 
-    @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Member member = memberRepository.findByEmail(username).orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
+    public UserDetails loadUserById(Long id) {
+        Member member = memberRepository.findById(id).orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
         return new CustomUserDetails(member);
     }
 }

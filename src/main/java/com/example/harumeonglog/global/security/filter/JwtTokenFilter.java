@@ -43,12 +43,12 @@ public class JwtTokenFilter extends AbstractTokenFilter {
 
     @Override
     protected Authentication createAuthentication(String token) throws AuthenticationException {
-        String username = jwtUtil.getUsername(token);
-        if (username == null) {
+        Long userId = jwtUtil.getUserId(token);
+        if (userId == null) {
             throw new BadCredentialsException("토큰에서 사용자 정보를 찾을 수 없습니다.");
         }
 
-        UserDetails userDetails = customDetailService.loadUserByUsername(username);
+        UserDetails userDetails = customDetailService.loadUserById(userId);
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userDetails, token, userDetails.getAuthorities());
         authentication.setDetails(userDetails);
         return authentication;
