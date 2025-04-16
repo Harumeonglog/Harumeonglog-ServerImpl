@@ -2,10 +2,13 @@ package com.example.harumeonglog.domain.post.service;
 
 import com.example.harumeonglog.domain.post.converter.PostConverter;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
+import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
+import com.example.harumeonglog.global.error.code.PostErrorCode;
+import com.example.harumeonglog.global.error.exception.PostException;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,7 +33,11 @@ public class PostCommandServiceImpl implements PostCommandService {
 
     @Override
     public Post updatePost(Long postId, PostRequest.PostUpdateRequest postUpdateRequest) {
-        return null;
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
+        List<PostImage> postImageList = postUpdateRequest.getPostImageList().stream().map((s)-> PostImage.builder().post(post).postImageKeyName(s).build()).toList();
+        post.update(postUpdateRequest.getContent(), postUpdateRequest.getPostCategory(), postImageList);
+
+        return post;
     }
 
     @Override

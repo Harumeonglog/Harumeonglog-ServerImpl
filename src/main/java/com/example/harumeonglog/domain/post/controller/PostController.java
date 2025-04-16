@@ -51,12 +51,12 @@ public class PostController {
     }
 
     @PatchMapping("/{postId}")
-    public CustomResponse<PostResponse.PostPreviewResponse> updatePost(
+    public CustomResponse<Long> updatePost(
             @PathVariable Long postId,
             @RequestBody PostRequest.PostUpdateRequest postUpdateRequest
     ) {
         Post post = postCommandService.updatePost(postId, postUpdateRequest);
-        return CustomResponse.ok(null);
+        return CustomResponse.ok(post.getId());
     }
 
     @DeleteMapping("/{postId}")

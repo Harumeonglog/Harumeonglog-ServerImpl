@@ -22,7 +22,7 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponse.PostPreviewResponse toPostPreviewResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, String imageList) {
+    public static PostResponse.PostPreviewResponse toPostPreviewResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, String image) {
         return PostResponse.PostPreviewResponse.builder()
                 .postId(post.getId())
                 .postCategory(post.getCategory())
@@ -30,6 +30,7 @@ public class PostConverter {
                 .likeNum(post.getPostLikeNum())
                 .commentNum(post.getCommentNum())
                 .memberInfoResponse(memberInfoResponse)
+                .imageKeyName(image)
                 .build();
     }
 

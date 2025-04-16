@@ -29,6 +29,7 @@ public class PostResponse {
         private Long commentNum;
         private PostCategory postCategory;
         private MemberInfoResponse memberInfoResponse;
+        private String imageKeyName;
     }
 
     @Getter
@@ -40,6 +41,15 @@ public class PostResponse {
         private Long commentNum;
         private PostCategory postCategory;
         private MemberInfoResponse memberInfoResponse;
+        private List<String> postImageList;
+    }
+
+    @Getter
+    @Builder
+    public static class PostUpdateResponse {
+        private Long postId;
+        private String content;
+        private PostCategory postCategory;
         private List<String> postImageList;
     }
 
