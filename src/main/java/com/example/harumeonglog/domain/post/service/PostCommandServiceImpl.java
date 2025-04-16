@@ -3,13 +3,16 @@ package com.example.harumeonglog.domain.post.service;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.converter.PostConverter;
 import com.example.harumeonglog.domain.post.converter.PostLikeConverter;
+import com.example.harumeonglog.domain.post.converter.PostReportConverter;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
 import com.example.harumeonglog.domain.post.entity.PostLike;
+import com.example.harumeonglog.domain.post.entity.PostReport;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
+import com.example.harumeonglog.domain.post.repository.PostReportRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
 import com.example.harumeonglog.global.error.code.PostErrorCode;
 import com.example.harumeonglog.global.error.exception.PostException;
@@ -27,6 +30,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
     private final PostLikeRepository postLikeRepository;
+    private final PostReportRepository postReportRepository;
 
     @Override
     public Post createPost(PostRequest.PostCreateRequest postCreateRequest) {
@@ -64,7 +68,14 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public void reportPost(Long postId) {
+    public void reportPost(Long postId, Member member) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
+        PostReport postReport = postReportRepository.findByPostAndMember(post, member);
+        if (postReport != null) {
+            postReportRepository.delete(postReport);
+        } else {
+            postReportRepository.save(PostReportConverter.toPostReport(post, member));
+        }
     }
 }

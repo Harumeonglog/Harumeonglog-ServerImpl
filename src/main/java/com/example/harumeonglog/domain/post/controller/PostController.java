@@ -78,9 +78,10 @@ public class PostController {
 
     @PostMapping("/{postId}/reports")
     public CustomResponse<Void> reportPost(
-            @PathVariable Long postId
+            @PathVariable Long postId,
+            @AuthenticatedMember Member member
     ) {
-        postCommandService.reportPost(postId);
+        postCommandService.reportPost(postId, member);
         return CustomResponse.ok(null);
     }
 

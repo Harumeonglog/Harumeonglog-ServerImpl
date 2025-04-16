@@ -15,5 +15,5 @@ public interface PostCommandService {
 
     void likePost(Long postId, Member member);
 
-    void reportPost(Long postId);
+    void reportPost(Long postId, Member member);
 }
