@@ -68,8 +68,24 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public Slice<Post> getMyPost(Long cursor, Integer size) {
-        return null;
+    public PostResponse.PostPreviewListResponse getMyPost(Long cursor, Integer size, Member member) {
+        if (cursor == 0) {
+            cursor = Long.MAX_VALUE;
+        }
+
+        Slice<Post> postSlice = postRepository.findByMemberAndIdLessThanOrderByIdDesc(member, cursor, PageRequest.of(0, size));
+
+        Long nextCursor = null;
+        if (!postSlice.isLast()) {
+            nextCursor = postSlice.toList().get(postSlice.toList().size() - 1).getId();
+        }
+
+        List<PostResponse.PostPreviewResponse> postPreviewResponses = postSlice.toList().stream().map((post) -> {
+            String postImageKey = post.getPostImageList().get(0).getPostImageKeyName() != null ? post.getPostImageList().get(0).getPostImageKeyName() : null;
+            return PostConverter.toPostPreviewResponse(post, MemberConverter.toMemberInfoResponse(post.getMember()), postImageKey);
+        }).toList();
+
+        return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
     }
 
     @Override

@@ -88,11 +88,11 @@ public class PostController {
     @GetMapping("/me")
     public CustomResponse<PostResponse.PostPreviewListResponse> getMyPost(
             @RequestParam(name = "cursor") Long cursor,
-            @RequestParam(name = "size") Integer size
+            @RequestParam(name = "size") Integer size,
+            @AuthenticatedMember Member member
     ) {
-        Slice<Post> postSlice = postQueryService.getMyPost(cursor, size);
-        Long nextCursor = postSlice.toList().get(postSlice.getSize() - 1).getId();
-        return CustomResponse.ok(null);
+        PostResponse.PostPreviewListResponse postPreviewListResponse = postQueryService.getMyPost(cursor, size, member);
+        return CustomResponse.ok(postPreviewListResponse);
     }
 
     @GetMapping("/me/likes")

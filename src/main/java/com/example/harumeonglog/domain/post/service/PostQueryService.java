@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.post.service;
 
 
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
@@ -11,7 +12,7 @@ public interface PostQueryService {
 
     PostResponse.PostDetailResponse getPost(Long postId);
 
-    Slice<Post> getMyPost(Long cursor, Integer size);
+    PostResponse.PostPreviewListResponse getMyPost(Long cursor, Integer size, Member member);
 
     Slice<Post> getMyLikePost(Long cursor, Integer size);
 }

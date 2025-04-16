@@ -1,5 +1,6 @@
 package com.example.harumeonglog.domain.post.repository;
 
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
@@ -15,4 +16,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p from Post p where p.category = :postcategory and p.content like :search and p.id < :cursor")
     Slice<Post> findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(String search, Long cursor, PostCategory postCategory, PageRequest of);
+
+    Slice<Post> findByMemberAndIdLessThanOrderByIdDesc(Member member, Long id, Pageable pageable);
 }
