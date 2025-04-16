@@ -61,8 +61,10 @@ public class PostCommandServiceImpl implements PostCommandService {
 
         PostLike postLike = postLikeRepository.findByPostAndMember(post, member);
         if (postLike != null) {
+            post.fixLikeNum(-1L);
             postLikeRepository.delete(postLike);
         } else {
+            post.fixLikeNum(1L);
             postLikeRepository.save(PostLikeConverter.toPostLike(post, member));
         }
     }
@@ -73,8 +75,10 @@ public class PostCommandServiceImpl implements PostCommandService {
 
         PostReport postReport = postReportRepository.findByPostAndMember(post, member);
         if (postReport != null) {
+            post.fixReportNum(-1L);
             postReportRepository.delete(postReport);
         } else {
+            post.fixReportNum(1L);
             postReportRepository.save(PostReportConverter.toPostReport(post, member));
         }
     }

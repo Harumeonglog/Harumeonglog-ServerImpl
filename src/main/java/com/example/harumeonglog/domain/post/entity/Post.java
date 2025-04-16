@@ -58,4 +58,12 @@ public class Post extends BaseEntity {
         this.category = category;
         this.postImageList = postImageList;
     }
+
+    public void fixLikeNum(Long number) {
+        this.postLikeNum += number;
+    }
+
+    public void fixReportNum(Long number) {
+        this.postReportNum += number;
+    }
 }
