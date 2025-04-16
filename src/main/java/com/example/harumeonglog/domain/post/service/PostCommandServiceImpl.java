@@ -1,11 +1,15 @@
 package com.example.harumeonglog.domain.post.service;
 
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.converter.PostConverter;
+import com.example.harumeonglog.domain.post.converter.PostLikeConverter;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
+import com.example.harumeonglog.domain.post.entity.PostLike;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
+import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
 import com.example.harumeonglog.global.error.code.PostErrorCode;
 import com.example.harumeonglog.global.error.exception.PostException;
@@ -22,6 +26,7 @@ import java.util.List;
 public class PostCommandServiceImpl implements PostCommandService {
     private final PostRepository postRepository;
     private final PostImageRepository postImageRepository;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     public Post createPost(PostRequest.PostCreateRequest postCreateRequest) {
@@ -47,8 +52,15 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     @Override
-    public void likePost(Long postId) {
+    public void likePost(Long postId, Member member) {
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
+        PostLike postLike = postLikeRepository.findByPostAndMember(post, member);
+        if (postLike != null) {
+            postLikeRepository.delete(postLike);
+        } else {
+            postLikeRepository.save(PostLikeConverter.toPostLike(post, member));
+        }
     }
 
     @Override

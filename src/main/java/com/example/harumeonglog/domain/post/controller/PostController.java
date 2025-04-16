@@ -69,9 +69,10 @@ public class PostController {
 
     @PostMapping("/{postId}/likes")
     public CustomResponse<Void> likePost(
-            @PathVariable Long postId
+            @PathVariable Long postId,
+            @AuthenticatedMember Member member
     ) {
-        postCommandService.likePost(postId);
+        postCommandService.likePost(postId, member);
         return CustomResponse.ok(null);
     }
 
