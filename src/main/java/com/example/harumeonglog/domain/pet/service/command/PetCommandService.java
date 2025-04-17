@@ -8,8 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 public interface PetCommandService {
     PetResponse.AddPetResponse addPet(PetRequest.AddPetRequest request, MultipartFile mainImage, Member member);
     PetResponse.ChangePetInfoResponse changePetInfo(Long petId, PetRequest.ChangePetInfoRequest request, MultipartFile mainImage, Member member);
-    void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request);
-
+    void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request, Member member);
     void deletePet(Long petId);
     void invite(Long petId, PetRequest.InviteRequest request);
 }

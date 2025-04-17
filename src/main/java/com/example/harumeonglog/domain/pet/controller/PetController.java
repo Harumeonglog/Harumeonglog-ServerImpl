@@ -67,7 +67,9 @@ public class PetController implements PetControllerSpecification {
 
     @PatchMapping("/current")
     public CustomResponse<String> updateCurrentPet(
-            @RequestBody ChangeCurrentPetRequest request) {
+            @RequestBody ChangeCurrentPetRequest request,
+            @AuthenticatedMember Member member) {
+        petCommandService.changeCurrentPet(request, member);
         return CustomResponse.ok("변경 완료");
     }
 

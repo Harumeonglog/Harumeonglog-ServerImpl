@@ -127,8 +127,15 @@ public class PetCommandServiceImpl implements PetCommandService {
 
 
     @Override
-    public void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request) {
+    public void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request, Member member) {
+        Pet pet = petRepository.findById(request.getPetId()).orElseThrow(
+                () -> new PetException(PetErrorCode.NOT_FOUND));
 
+        // 해당 MEMBER, PET이 없을 경우 에러처리
+        memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+
+        member.setCurrentPetId(pet.getId());
     }
 
     @Override

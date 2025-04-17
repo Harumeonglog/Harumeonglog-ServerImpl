@@ -62,7 +62,8 @@ public interface PetControllerSpecification {
     })
     @PatchMapping("/current")
     CustomResponse<String> updateCurrentPet(
-            @RequestBody PetRequest.ChangeCurrentPetRequest request
+            @RequestBody PetRequest.ChangeCurrentPetRequest request,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "펫 삭제 API by 백종우", description = "펫을 삭제합니다.")
