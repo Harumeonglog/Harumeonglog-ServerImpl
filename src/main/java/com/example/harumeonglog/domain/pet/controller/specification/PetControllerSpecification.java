@@ -45,7 +45,8 @@ public interface PetControllerSpecification {
     @GetMapping
     CustomResponse<PetResponse.GetPetsResponse> getPets(
             @RequestParam(required = false) Long cursor,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "대표 펫 변경 API by 백종우", description = "대표 펫을 변경합니다.")

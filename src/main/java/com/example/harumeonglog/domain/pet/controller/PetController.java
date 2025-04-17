@@ -52,8 +52,9 @@ public class PetController implements PetControllerSpecification {
     @GetMapping
     public CustomResponse<PetResponse.GetPetsResponse> getPets(
             @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
-            @RequestParam(defaultValue = "10") int size) { // 페이지 크기
-        return CustomResponse.ok(petQueryService.getPets(cursor, size));
+            @RequestParam(defaultValue = "10") int size,  // 페이지 크기
+            @AuthenticatedMember Member member) {
+        return CustomResponse.ok(petQueryService.getPets(cursor, size, member));
     }
 
     @PatchMapping("/current")
