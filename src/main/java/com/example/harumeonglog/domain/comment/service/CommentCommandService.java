@@ -4,9 +4,7 @@ import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.entity.Comment;
 import org.springframework.data.domain.Slice;
 
-public interface CommentService {
-    Slice<Comment> getComments(Long postId, Integer cursor, Integer size);
-
+public interface CommentCommandService {
     void reportComment(Long commentId);
 
     void blockComment(Long commentId);

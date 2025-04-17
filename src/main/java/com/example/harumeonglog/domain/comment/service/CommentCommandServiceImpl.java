@@ -2,17 +2,19 @@ package com.example.harumeonglog.domain.comment.service;
 
 import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.entity.Comment;
-import lombok.Builder;
-import org.springframework.data.domain.Slice;
+import com.example.harumeonglog.domain.comment.repository.CommentRepository;
+import com.example.harumeonglog.global.error.code.CommentErrorCode;
+import com.example.harumeonglog.global.error.exception.CommentException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Builder
-public class CommentServiceImpl implements CommentService {
-    @Override
-    public Slice<Comment> getComments(Long postId, Integer cursor, Integer size) {
-        return null;
-    }
+@Transactional
+@RequiredArgsConstructor
+public class CommentCommandServiceImpl implements CommentCommandService {
+
+    private final CommentRepository commentRepository;
 
     @Override
     public void reportComment(Long commentId) {
@@ -31,7 +33,8 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public void deleteComment(Long commentId) {
-
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+        comment.delete();
     }
 
     @Override
