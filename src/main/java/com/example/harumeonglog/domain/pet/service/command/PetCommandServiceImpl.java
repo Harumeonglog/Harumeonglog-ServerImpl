@@ -11,8 +11,10 @@ import com.example.harumeonglog.domain.pet.entity.MemberPet;
 import com.example.harumeonglog.domain.pet.entity.Pet;
 import com.example.harumeonglog.domain.pet.repository.MemberPetRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
+import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.code.S3ErrorCode;
+import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.S3Exception;
 import com.example.harumeonglog.global.util.S3Util;
@@ -71,10 +73,19 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
-    public PetResponse.ChangePetInfoResponse changePetInfo(Long petId, PetRequest.ChangePetInfoRequest request, MultipartFile mainImage) {
+    public PetResponse.ChangePetInfoResponse changePetInfo(Long petId, PetRequest.ChangePetInfoRequest request, MultipartFile mainImage, Member member) {
         // Pet 조회
         Pet pet = petRepository.findById(petId)
                 .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
+
+        // 해당 MEMBER, PET이 없을 경우 에러처리
+        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+
+        // OWNER 권한이 아닐경우 에러처리
+        if(!memberPet.getRole().equals(MemberPetRole.OWNER)) {
+            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
+        }
 
         try {
             String newMainImageKey = pet.getMainImage(); // 기존 키 유지

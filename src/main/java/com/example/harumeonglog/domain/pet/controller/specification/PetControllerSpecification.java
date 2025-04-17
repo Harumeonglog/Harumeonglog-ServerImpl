@@ -34,7 +34,8 @@ public interface PetControllerSpecification {
     CustomResponse<PetResponse.ChangePetInfoResponse> changePetInfo(
             @PathVariable Long petId,
             @RequestPart(value = "request", required = false) PetRequest.ChangePetInfoRequest request,
-            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage
+            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "펫 목록 조회 API by 백종우", description = "펫 목록을 조회합니다.")
