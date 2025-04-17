@@ -30,11 +30,11 @@ public interface PetControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "수정 성공")
     })
-    @PutMapping("/{petId}")
+    @PatchMapping("/{petId}")
     CustomResponse<PetResponse.ChangePetInfoResponse> changePetInfo(
             @PathVariable Long petId,
-            @RequestPart PetRequest.ChangePetInfoRequest request,
-            @RequestPart("mainImage") MultipartFile mainImage
+            @RequestPart(value = "request", required = false) PetRequest.ChangePetInfoRequest request,
+            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage
     );
 
     @Operation(summary = "펫 목록 조회 API by 백종우", description = "펫 목록을 조회합니다.")

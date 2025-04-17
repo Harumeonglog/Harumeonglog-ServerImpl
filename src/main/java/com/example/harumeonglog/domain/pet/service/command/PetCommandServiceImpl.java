@@ -53,7 +53,7 @@ public class PetCommandServiceImpl implements PetCommandService {
             s3Util.uploadFile(mainImage, mainImageKey);
 
             // pet에 이미지 저장
-            pet.setMainImage(mainImageKey);
+            savedPet.setMainImage(mainImageKey);
 
             // memberPet 생성
             MemberPet memberPet = MemberPetConverter.toMemberPet(member, pet, MemberPetRole.OWNER);

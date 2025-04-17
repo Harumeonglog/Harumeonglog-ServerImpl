@@ -40,11 +40,11 @@ public class PetController implements PetControllerSpecification {
                 .body(CustomResponse.created(petCommandService.addPet(request, mainImage, member)));
     }
 
-    @PutMapping("/{petId}")
+    @PatchMapping(value = "/{petId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public CustomResponse<ChangePetInfoResponse> changePetInfo(
             @PathVariable Long petId,
-            @RequestPart ChangePetInfoRequest request,
-            @RequestPart("mainImage") MultipartFile mainImage) {
+            @RequestPart(value = "request", required = false) ChangePetInfoRequest request,
+            @RequestPart(value = "mainImage", required = false) MultipartFile mainImage) {
         return CustomResponse.ok(petCommandService.changePetInfo(petId, request, mainImage));
     }
 

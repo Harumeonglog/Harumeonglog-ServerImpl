@@ -39,7 +39,7 @@ public class Pet extends BaseEntity {
     @Column(name = "birth", nullable = false)
     private LocalDate birth;
 
-    @Column(name = "main_image", nullable = false)
+    @Column(name = "main_image")
     private String mainImage;
 
     @Column(name = "deleted_at")
