@@ -1,12 +1,12 @@
 package com.example.harumeonglog.global.util;
 
 import com.example.harumeonglog.global.data.JwtConfigData;
+import com.example.harumeonglog.global.security.domain.CustomUserDetails;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -28,17 +28,25 @@ public class JwtUtil {
         this.refreshExpiration = Duration.ofMillis(jwtConfigData.getTime().getRefresh());
     }
 
-    public String createAccessToken(UserDetails details) {
+    public String createAccessToken(CustomUserDetails details) {
         return createToken(details, accessExpiration);
     }
 
-    public String createRefreshToken(UserDetails details) {
+    public String createRefreshToken(CustomUserDetails details) {
         return createToken(details, refreshExpiration);
     }
 
     public String getUsername(String token) {
         try {
             return getClaims(token).getPayload().getSubject();
+        } catch (JwtException e) {
+            return null;
+        }
+    }
+
+    public Long getUserId(String token) {
+        try {
+            return getClaims(token).getPayload().get("id", Long.class);
         } catch (JwtException e) {
             return null;
         }
@@ -53,11 +61,12 @@ public class JwtUtil {
         }
     }
 
-    private String createToken(UserDetails detail, Duration expiration) {
+    private String createToken(CustomUserDetails detail, Duration expiration) {
         Instant now = Instant.now();
         return Jwts.builder()
                 .subject(detail.getUsername())
                 .claim("authorization", detail.getAuthorities())
+                .claim("id", detail.getLoginMember().getId())
                 .issuedAt(Date.from(now))
                 .expiration(Date.from(now.plus(expiration)))
                 .signWith(secretKey)
