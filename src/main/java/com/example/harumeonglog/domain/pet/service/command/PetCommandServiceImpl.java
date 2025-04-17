@@ -2,6 +2,7 @@ package com.example.harumeonglog.domain.pet.service.command;
 
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.MemberPetRole;
+import com.example.harumeonglog.domain.member.infrastructure.MemberRepository;
 import com.example.harumeonglog.domain.pet.converter.MemberPetConverter;
 import com.example.harumeonglog.domain.pet.converter.PetConverter;
 import com.example.harumeonglog.domain.pet.dto.request.PetRequest;
@@ -29,7 +30,9 @@ import java.util.UUID;
 public class PetCommandServiceImpl implements PetCommandService {
     private final PetRepository petRepository;
     private final MemberPetRepository memberPetRepository;
+    private final MemberRepository memberRepository;
     private final S3Util s3Util;
+
 
     @Override
     public PetResponse.AddPetResponse addPet(PetRequest.AddPetRequest request, MultipartFile mainImage, Member member) {
@@ -56,6 +59,9 @@ public class PetCommandServiceImpl implements PetCommandService {
             MemberPet memberPet = MemberPetConverter.toMemberPet(member, pet, MemberPetRole.OWNER);
             memberPetRepository.save(memberPet);
 
+            // member의 currentPetId 지정
+            member.setCurrentPetId(pet.getId());
+
             return PetConverter.toAddPetResponse(savedPet);
         } catch (IOException e) {
             throw new S3Exception(S3ErrorCode.UPLOAD_FAILED);
@@ -65,8 +71,46 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
-    public PetResponse.ChangePetInfoResponse changePetInfo(Long petId, PetRequest.ChangePetInfoRequest request) {
-        return null;
+    public PetResponse.ChangePetInfoResponse changePetInfo(Long petId, PetRequest.ChangePetInfoRequest request, MultipartFile mainImage) {
+        // Pet 조회
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
+
+        try {
+            String newMainImageKey = pet.getMainImage(); // 기존 키 유지
+
+            // mainImage가 제공된 경우 기존 이미지 삭제 및 새 이미지 업로드
+            if (mainImage != null && !mainImage.isEmpty()) {
+                // 기존 이미지 삭제 (기존 키가 null이 아닌 경우)
+                if (pet.getMainImage() != null) {
+                    s3Util.deleteFile(pet.getMainImage());
+                }
+
+                // 새 S3 키 생성
+                newMainImageKey = String.format("pet/%d/main/%s/%s",
+                        pet.getId(), UUID.randomUUID(), mainImage.getOriginalFilename());
+
+                // S3에 새 이미지 업로드
+                s3Util.uploadFile(mainImage, newMainImageKey);
+            }
+
+            // Pet 정보 업데이트
+            pet.update(
+                    request.getName(),
+                    request.getSize(),
+                    request.getType(),
+                    request.getGender(),
+                    request.getBirth(),
+                    newMainImageKey
+            );
+
+            // 응답 DTO 반환
+            return PetConverter.toChangePetInfoResponse(pet);
+        } catch (IOException e) {
+            throw new S3Exception(S3ErrorCode.UPLOAD_FAILED);
+        } catch (S3Exception e) {
+            throw new S3Exception(S3ErrorCode.SERVICE_UNAVAILABLE);
+        }
     }
 
 

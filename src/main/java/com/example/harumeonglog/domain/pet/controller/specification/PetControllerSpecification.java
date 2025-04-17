@@ -33,7 +33,8 @@ public interface PetControllerSpecification {
     @PutMapping("/{petId}")
     CustomResponse<PetResponse.ChangePetInfoResponse> changePetInfo(
             @PathVariable Long petId,
-            @RequestBody PetRequest.ChangePetInfoRequest request
+            @RequestPart PetRequest.ChangePetInfoRequest request,
+            @RequestPart("mainImage") MultipartFile mainImage
     );
 
     @Operation(summary = "펫 목록 조회 API by 백종우", description = "펫 목록을 조회합니다.")

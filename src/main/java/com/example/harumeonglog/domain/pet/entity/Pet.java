@@ -48,4 +48,12 @@ public class Pet extends BaseEntity {
     public void setMainImage(String mainImage){
         this.mainImage = mainImage;
     }
+
+    public void update(String name, PetSize size, String type, Gender gender, LocalDate birth, String mainImage){
+        this.name = name;
+        this.size = size;
+        this.type = type;
+        this.gender = gender;
+        this.birth = birth;
+    }
 }

@@ -21,4 +21,16 @@ public class PetConverter {
                 .petId(pet.getId())
                 .build();
     }
+
+    public static PetResponse.ChangePetInfoResponse toChangePetInfoResponse(Pet pet){
+        return PetResponse.ChangePetInfoResponse.builder()
+                .petId(pet.getId())
+                .name(pet.getName())
+                .size(pet.getSize())
+                .type(pet.getType())
+                .gender(pet.getGender())
+                .birth(pet.getBirth())
+                .mainImage(pet.getMainImage())
+                .build();
+    }
 }

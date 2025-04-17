@@ -43,4 +43,8 @@ public class Member extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    @Column(name = "current_pet_id")
+    @Setter
+    private Long currentPetId;
+
 }

@@ -42,8 +42,10 @@ public class PetController implements PetControllerSpecification {
 
     @PutMapping("/{petId}")
     public CustomResponse<ChangePetInfoResponse> changePetInfo(
-            @PathVariable Long petId, @RequestBody ChangePetInfoRequest request) {
-        return CustomResponse.ok(petCommandService.changePetInfo(petId, request));
+            @PathVariable Long petId,
+            @RequestPart ChangePetInfoRequest request,
+            @RequestPart("mainImage") MultipartFile mainImage) {
+        return CustomResponse.ok(petCommandService.changePetInfo(petId, request, mainImage));
     }
 
     @GetMapping
