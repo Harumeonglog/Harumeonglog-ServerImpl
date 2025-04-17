@@ -47,4 +47,8 @@ public class Member extends BaseEntity {
     @Setter
     private Long currentPetId;
 
+    public void update(String nickname, String image) {
+         this.nickname = nickname;
+         this.image = image;
+    }
 }
