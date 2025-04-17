@@ -5,15 +5,17 @@ import com.example.harumeonglog.domain.member.entity.enums.MemberPetRole;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 import com.example.harumeonglog.domain.pet.entity.MemberPet;
 import com.example.harumeonglog.domain.pet.entity.Pet;
+import com.example.harumeonglog.global.util.S3Util;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Slice;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
+@Slf4j
 public class MemberPetConverter {
+
     public static MemberPet toMemberPet( Member member, Pet pet, MemberPetRole role){
         return MemberPet.builder()
                 .pet(pet)
@@ -21,17 +23,17 @@ public class MemberPetConverter {
                 .role(role)
                 .build();
     }
-
     public static PetResponse.GetPetsResponse toGetPetsResponse(
             Slice<MemberPet> memberPetSlice,
             List<MemberPet> currentMemberPets,
-            List<MemberPet> relatedMemberPets) {
+            List<MemberPet> relatedMemberPets,
+            S3Util s3Util) {
         List<PetResponse.PetInfo> petInfos = currentMemberPets.stream()
-                .map(mp -> toPetInfoResponse(mp, relatedMemberPets))
+                .map(mp -> toPetInfoResponse(mp, relatedMemberPets, s3Util))
                 .collect(Collectors.toList());
 
         Long nextCursor = memberPetSlice.hasNext() ?
-                currentMemberPets.get(currentMemberPets.size() - 1).getId() : null;
+                currentMemberPets.get(currentMemberPets.size() - 1).getPet().getId() : null;
 
         return PetResponse.GetPetsResponse.builder()
                 .pets(petInfos)
@@ -42,16 +44,15 @@ public class MemberPetConverter {
 
     public static PetResponse.PetInfo toPetInfoResponse(
             MemberPet memberPet,
-            List<MemberPet> relatedMemberPets) {
+            List<MemberPet> relatedMemberPets,
+            S3Util s3Util) {
         Pet pet = memberPet.getPet();
-        // 현재 MemberPet을 PeopleInfo로 변환
         PetResponse.PeopleInfo currentPeopleInfo = PetResponse.PeopleInfo.builder()
                 .id(memberPet.getMember().getId())
                 .name(memberPet.getMember().getNickname())
                 .role(memberPet.getRole().name())
                 .build();
 
-        // 관련 MemberPet을 PeopleInfo로 변환
         List<PetResponse.PeopleInfo> relatedPeopleInfos = relatedMemberPets.stream()
                 .filter(mp -> mp.getPet().getId().equals(pet.getId()))
                 .map(mp -> PetResponse.PeopleInfo.builder()
@@ -61,7 +62,6 @@ public class MemberPetConverter {
                         .build())
                 .toList();
 
-        // PeopleInfo 병합
         List<PetResponse.PeopleInfo> peopleInfos = new ArrayList<>();
         peopleInfos.add(currentPeopleInfo);
         peopleInfos.addAll(relatedPeopleInfos);
@@ -74,8 +74,31 @@ public class MemberPetConverter {
                 .type(pet.getType())
                 .gender(pet.getGender())
                 .birth(pet.getBirth())
-                .mainImage(pet.getMainImage())
+                .mainImage(pet.getMainImage() != null ?
+                        s3Util.getFilePresignedUrl(pet.getMainImage(), 60) : null)
                 .people(peopleInfos)
+                .build();
+    }
+
+    public static PetResponse.PetListPreviewResponse toGetChangePetResponse(
+            Slice<MemberPet> memberPetSlice, S3Util s3Util) {
+        List<MemberPet> memberPets = memberPetSlice.getContent();
+        List<PetResponse.PetPreviewResponse> petPreviewResponse = memberPets.stream()
+                .map(mp -> PetResponse.PetPreviewResponse.builder()
+                        .petId(mp.getPet().getId())
+                        .name(mp.getPet().getName())
+                        .mainImage(mp.getPet().getMainImage() != null ?
+                                s3Util.getFilePresignedUrl(mp.getPet().getMainImage(), 60) : null)
+                        .build())
+                .collect(Collectors.toList());
+
+        Long nextCursor = memberPetSlice.hasNext() ?
+                memberPets.get(memberPets.size() - 1).getPet().getId() : null;
+
+        return PetResponse.PetListPreviewResponse.builder()
+                .pets(petPreviewResponse)
+                .cursor(nextCursor)
+                .hasNext(memberPetSlice.hasNext())
                 .build();
     }
 }

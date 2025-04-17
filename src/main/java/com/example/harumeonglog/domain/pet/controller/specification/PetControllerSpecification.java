@@ -49,12 +49,19 @@ public interface PetControllerSpecification {
             @AuthenticatedMember Member member
     );
 
-    @Operation(summary = "대표 펫 변경 API by 백종우", description = "대표 펫을 변경합니다.")
+    @Operation(summary = "현재 펫 변경 시 보유 펫 조회 API by 백종우",description = "대표 펫 변경 시 보유 펫 조회")
+    @GetMapping("/current")
+    CustomResponse<PetResponse.PetListPreviewResponse> getChangePet(
+            @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
+            @RequestParam(defaultValue = "10") int size,  // 페이지 크기
+            @AuthenticatedMember Member member) ;
+
+    @Operation(summary = "현재 펫 변경 API by 백종우", description = "대표 펫을 변경합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "변경 성공")
     })
     @PatchMapping("/current")
-    CustomResponse<PetResponse.ChangeCurrentPetResponse> changeCurrentPet(
+    CustomResponse<String> updateCurrentPet(
             @RequestBody PetRequest.ChangeCurrentPetRequest request
     );
 

@@ -57,10 +57,18 @@ public class PetController implements PetControllerSpecification {
         return CustomResponse.ok(petQueryService.getPets(cursor, size, member));
     }
 
+    @GetMapping("/current")
+    public CustomResponse<PetResponse.PetListPreviewResponse> getChangePet(
+            @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
+            @RequestParam(defaultValue = "10") int size,  // 페이지 크기
+            @AuthenticatedMember Member member) {
+        return CustomResponse.ok(petQueryService.getChangePet(cursor, size, member));
+    }
+
     @PatchMapping("/current")
-    public CustomResponse<PetResponse.ChangeCurrentPetResponse> changeCurrentPet(
+    public CustomResponse<String> updateCurrentPet(
             @RequestBody ChangeCurrentPetRequest request) {
-        return CustomResponse.ok(petCommandService.changeCurrentPet(request));
+        return CustomResponse.ok("변경 완료");
     }
 
     @PatchMapping("/{petId}")

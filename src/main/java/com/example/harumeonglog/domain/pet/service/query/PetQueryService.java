@@ -5,5 +5,6 @@ import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 
 public interface PetQueryService {
     PetResponse.GetPetsResponse getPets(Long cursor, int size, Member member);
+    PetResponse.PetListPreviewResponse getChangePet(Long cursor, int size, Member member);
     PetResponse.SearchMemberResponse searchMember(String email, Long cursor, int size);
 }

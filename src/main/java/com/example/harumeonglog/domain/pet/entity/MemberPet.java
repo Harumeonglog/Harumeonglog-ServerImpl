@@ -11,7 +11,10 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "member_pet")
+@Table(
+        name = "member_pet",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"member_id", "pet_id"})
+)
 public class MemberPet extends BaseEntity {
 
     @Id

@@ -11,10 +11,8 @@ import com.example.harumeonglog.domain.pet.entity.MemberPet;
 import com.example.harumeonglog.domain.pet.entity.Pet;
 import com.example.harumeonglog.domain.pet.repository.MemberPetRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
-import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.code.S3ErrorCode;
-import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.S3Exception;
 import com.example.harumeonglog.global.util.S3Util;
@@ -115,8 +113,11 @@ public class PetCommandServiceImpl implements PetCommandService {
                     newMainImageKey
             );
 
+
+            String image = s3Util.getFilePresignedUrl(newMainImageKey, 60);
+
             // 응답 DTO 반환
-            return PetConverter.toChangePetInfoResponse(pet);
+            return PetConverter.toChangePetInfoResponse(pet, image);
         } catch (IOException e) {
             throw new S3Exception(S3ErrorCode.UPLOAD_FAILED);
         } catch (S3Exception e) {
@@ -126,8 +127,8 @@ public class PetCommandServiceImpl implements PetCommandService {
 
 
     @Override
-    public PetResponse.ChangeCurrentPetResponse changeCurrentPet(PetRequest.ChangeCurrentPetRequest request) {
-        return null;
+    public void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request) {
+
     }
 
     @Override

@@ -22,7 +22,7 @@ public class PetConverter {
                 .build();
     }
 
-    public static PetResponse.ChangePetInfoResponse toChangePetInfoResponse(Pet pet){
+    public static PetResponse.ChangePetInfoResponse toChangePetInfoResponse(Pet pet, String mainImage){
         return PetResponse.ChangePetInfoResponse.builder()
                 .petId(pet.getId())
                 .name(pet.getName())
@@ -30,7 +30,7 @@ public class PetConverter {
                 .type(pet.getType())
                 .gender(pet.getGender())
                 .birth(pet.getBirth())
-                .mainImage(pet.getMainImage())
+                .mainImage(mainImage)
                 .build();
     }
 }

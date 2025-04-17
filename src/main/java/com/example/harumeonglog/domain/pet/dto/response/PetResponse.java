@@ -60,10 +60,20 @@ public class PetResponse {
 
     @Getter
     @Builder
-    public static class ChangeCurrentPetResponse {
+    public static class PetPreviewResponse {
         private Long petId;
         private String name;
+        private String mainImage;
     }
+
+    @Getter
+    @Builder
+    public static class PetListPreviewResponse {
+        List<PetPreviewResponse> pets;
+        private Long cursor;
+        private Boolean hasNext;
+    }
+
     @Getter
     @Builder
     public static class SearchMemberResponse {

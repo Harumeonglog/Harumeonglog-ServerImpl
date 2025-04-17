@@ -22,7 +22,7 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
         LEFT JOIN FETCH mp.member m
         WHERE mp.member.id = :memberId
         AND p.deletedAt IS NULL
-        ORDER BY CASE mp.role WHEN 'OWNER' THEN 1 WHEN 'GUEST' THEN 2 END, mp.id DESC
+        ORDER BY p.id ASC
     """)
     Slice<MemberPet> findFirstPageByMemberId(@Param("memberId") Long memberId, Pageable pageable);
 
@@ -33,16 +33,25 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
         LEFT JOIN FETCH mp.member m
         WHERE mp.member.id = :memberId
         AND p.deletedAt IS NULL
-        AND mp.id < :cursor
-        ORDER BY CASE mp.role WHEN 'OWNER' THEN 1 WHEN 'GUEST' THEN 2 END, mp.id DESC
+        AND p.id > :cursor
+        ORDER BY p.id ASC
     """)
     Slice<MemberPet> findByMemberAndCursor(
             @Param("memberId") Long memberId,
             @Param("cursor") Long cursor,
             Pageable pageable);
 
+    @Query("""
+        SELECT mp
+        FROM MemberPet mp
+        LEFT JOIN FETCH mp.pet p
+        WHERE mp.member.id = :memberId
+        AND p.deletedAt IS NULL
+        ORDER BY p.id ASC
+    """)
+    List<MemberPet> findAllByMemberId(@Param("memberId") Long memberId);
+
     @Query("SELECT mp FROM MemberPet mp LEFT JOIN FETCH mp.member WHERE mp.pet.id IN :petIds AND mp.member.id != :memberId")
     List<MemberPet> findByPetIdsAndNotMemberId(@Param("petIds") List<Long> petIds, @Param("memberId") Long memberId);
-
 
 }
