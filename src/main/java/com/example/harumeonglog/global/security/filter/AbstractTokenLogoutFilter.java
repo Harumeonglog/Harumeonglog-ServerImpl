@@ -21,10 +21,10 @@ import java.io.IOException;
 @Slf4j
 public abstract class AbstractTokenLogoutFilter extends OncePerRequestFilter {
 
-    private final RequestMatcher requestMatcher = new AntPathRequestMatcher("/logout", "POST");
     private final LogoutSuccessHandler logoutSuccessHandler;
     private final String authorizationHeader;
     private final String tokenPrefix;
+    private RequestMatcher requestMatcher = new AntPathRequestMatcher("/logout", "POST");
 
     protected AbstractTokenLogoutFilter(AbstractTokenFilter abstractTokenFilter, LogoutSuccessHandler logoutSuccessHandler) {
         this.authorizationHeader = abstractTokenFilter.getAuthorizationHeader();
@@ -69,5 +69,9 @@ public abstract class AbstractTokenLogoutFilter extends OncePerRequestFilter {
         log.info("로그아웃 실패 ({}): {}", e.getClass(), e.getMessage());
         ObjectMapper om = new ObjectMapper();
         om.writeValue(response.getOutputStream(), CustomResponse.fail(AuthErrorCode.FAIL_LOGOUT, e.getMessage()));
+    }
+
+    public void setRequestMatcher(String logoutUrl) {
+        this.requestMatcher = new AntPathRequestMatcher(logoutUrl, "POST");
     }
 }

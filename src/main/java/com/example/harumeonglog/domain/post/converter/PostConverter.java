@@ -1,11 +1,9 @@
 package com.example.harumeonglog.domain.post.converter;
 
-import com.example.harumeonglog.domain.member.converter.MemberConverter;
 import com.example.harumeonglog.domain.member.dto.response.MemberResponse;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
-import com.example.harumeonglog.domain.post.entity.PostImage;
 
 import java.util.List;
 

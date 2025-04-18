@@ -1,12 +1,14 @@
-package com.example.harumeonglog.domain.member.service;
+package com.example.harumeonglog.domain.auth.service;
 
-import com.example.harumeonglog.domain.member.converter.OAuth2Converter;
-import com.example.harumeonglog.domain.member.dto.request.OAuth2Request;
-import com.example.harumeonglog.domain.member.dto.response.OAuth2Response;
+import com.example.harumeonglog.domain.auth.converter.OAuth2Converter;
+import com.example.harumeonglog.domain.auth.dto.request.OAuth2Request;
+import com.example.harumeonglog.domain.auth.dto.response.OAuth2Response;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
+import com.example.harumeonglog.global.error.code.TokenErrorCode;
 import com.example.harumeonglog.global.error.exception.AuthException;
+import com.example.harumeonglog.global.error.exception.TokenException;
 import com.example.harumeonglog.global.security.domain.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -34,7 +36,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         OAuth2Response.OAuth2IdTokenHeader tokenHeader = parseIdTokenHeader(idToken);
         OAuth2Response.OAuth2PublicKeyResponse keyInfo = getProperKeyInfo(tokenHeader);
         if (keyInfo == null) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
         PublicKey publicKey = generatePublicKey(keyInfo);
 
@@ -58,6 +60,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         Member member = memberRepository.findByProviderIdAndSocialType(request.getProviderId(), request.getSocialType()).orElse(
                 OAuth2Converter.toMember(request)
         );
+        // TODO: 로그인 시 동기화 여부
         member.update(request.getNickname(), request.getImage());
         return new CustomUserDetails(memberRepository.save(member));
     }
@@ -69,7 +72,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(decodeBase64(header), OAuth2Response.OAuth2IdTokenHeader.class);
         } catch (IOException e) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
     }
 
@@ -82,7 +85,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         try {
             return KeyFactory.getInstance(keyInfo.getKty()).generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AuthException(AuthErrorCode.FAIL_PARSING_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.FAIL_PARSING_ID_TOKEN);
         }
     }
 
@@ -95,7 +98,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
                     .parseSignedClaims(idToken)
                     .getPayload();
         } catch (RuntimeException e) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
     }
 

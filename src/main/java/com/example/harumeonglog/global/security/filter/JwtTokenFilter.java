@@ -1,11 +1,12 @@
 package com.example.harumeonglog.global.security.filter;
 
 
+import com.example.harumeonglog.domain.auth.service.TokenQueryService;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
+import com.example.harumeonglog.global.error.exception.GeneralException;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
-import com.example.harumeonglog.global.util.JwtUtil;
-import com.example.harumeonglog.global.util.RedisUtil;
 import com.example.harumeonglog.global.common.response.CustomResponse;
+import com.example.harumeonglog.global.util.HttpResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,25 +26,23 @@ public class JwtTokenFilter extends AbstractTokenFilter {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
-    private final JwtUtil jwtUtil;
-    private final RedisUtil redisUtil;
+    private final TokenQueryService tokenQueryService;
     private final CustomDetailService customDetailService;
 
-    public JwtTokenFilter(JwtUtil jwtUtil, RedisUtil redisUtil, CustomDetailService customDetailService) {
+    public JwtTokenFilter(TokenQueryService tokenQueryService, CustomDetailService customDetailService) {
         super(AUTHORIZATION_HEADER, TOKEN_PREFIX);
-        this.jwtUtil = jwtUtil;
-        this.redisUtil = redisUtil;
+        this.tokenQueryService = tokenQueryService;
         this.customDetailService = customDetailService;
     }
 
     @Override
     protected boolean validToken(String token) {
-        return jwtUtil.isValid(token) && !redisUtil.isBlackList(token);
+        return tokenQueryService.isValid(token);
     }
 
     @Override
     protected Authentication createAuthentication(String token) throws AuthenticationException {
-        Long userId = jwtUtil.getUserId(token);
+        Long userId = tokenQueryService.getUserId(token);
         if (userId == null) {
             throw new BadCredentialsException("토큰에서 사용자 정보를 찾을 수 없습니다.");
         }
@@ -56,10 +55,12 @@ public class JwtTokenFilter extends AbstractTokenFilter {
 
     @Override
     protected void handleException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException, ServletException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         log.info("로그인 실패 ({}): {}", e.getClass(), e.getMessage());
-        ObjectMapper om = new ObjectMapper();
-        om.writeValue(response.getOutputStream(), CustomResponse.fail(AuthErrorCode.FAIL_AUTHORIZATION, e.getMessage()));
+        if (e instanceof GeneralException generalException) {
+            HttpResponseUtil.writeResponse(response, generalException.getBaseErrorCode(), generalException.getMessage());
+        }
+        else {
+            HttpResponseUtil.writeResponse(response, AuthErrorCode.FAIL_AUTHENTICATION, e.getMessage());
+        }
     }
 }

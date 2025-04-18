@@ -1,7 +1,6 @@
 package com.example.harumeonglog.domain.post.dto.response;
 
 import com.example.harumeonglog.domain.member.dto.response.MemberResponse.MemberInfoResponse;
-import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import lombok.*;
 

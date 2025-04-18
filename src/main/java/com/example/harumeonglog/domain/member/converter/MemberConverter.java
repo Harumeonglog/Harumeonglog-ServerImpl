@@ -23,11 +23,4 @@ public class MemberConverter {
                 .build();
     }
 
-    public static MemberResponse.MemberLoginResponse toMemberLoginResponse(Long memberId, String accessToken, String refreshToken) {
-        return MemberResponse.MemberLoginResponse.builder()
-                .memberId(memberId)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }

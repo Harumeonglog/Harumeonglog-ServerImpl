@@ -24,20 +24,6 @@ public class MemberController implements MemberControllerSpecification {
     private final MemberService memberService;
     private final SettingService settingService;
 
-    @PostMapping("/{provider}/login")
-    public CustomResponse<MemberResponse.MemberLoginResponse> login(@PathVariable String provider, @RequestBody MemberRequest.MemberLoginRequest request) {
-        MemberResponse.MemberLoginResponse response = memberService.login(provider, request);
-        return CustomResponse.ok(response);
-    }
-
-    @PostMapping("/logout")
-    public CustomResponse<MemberResponse.MemberLogoutResponse> logout() {
-        // TODO: Annotation으로 변경 필요
-        Member member = Member.builder().build();
-        MemberResponse.MemberLogoutResponse response = memberService.logout(member);
-        return CustomResponse.ok(response);
-    }
-
     @GetMapping("/info")
     public CustomResponse<MemberResponse.MemberInfoResponse> getInfo() {
         // TODO: Annotation으로 변경 필요
