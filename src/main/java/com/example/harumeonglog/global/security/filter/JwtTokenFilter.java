@@ -1,10 +1,9 @@
 package com.example.harumeonglog.global.security.filter;
 
 
+import com.example.harumeonglog.domain.auth.service.TokenQueryService;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
-import com.example.harumeonglog.global.util.JwtUtil;
-import com.example.harumeonglog.global.util.RedisUtil;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
@@ -25,25 +24,23 @@ public class JwtTokenFilter extends AbstractTokenFilter {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private static final String TOKEN_PREFIX = "Bearer ";
-    private final JwtUtil jwtUtil;
-    private final RedisUtil redisUtil;
+    private final TokenQueryService tokenQueryService;
     private final CustomDetailService customDetailService;
 
-    public JwtTokenFilter(JwtUtil jwtUtil, RedisUtil redisUtil, CustomDetailService customDetailService) {
+    public JwtTokenFilter(TokenQueryService tokenQueryService, CustomDetailService customDetailService) {
         super(AUTHORIZATION_HEADER, TOKEN_PREFIX);
-        this.jwtUtil = jwtUtil;
-        this.redisUtil = redisUtil;
+        this.tokenQueryService = tokenQueryService;
         this.customDetailService = customDetailService;
     }
 
     @Override
     protected boolean validToken(String token) {
-        return jwtUtil.isValid(token) && !redisUtil.isBlackList(token);
+        return tokenQueryService.isValid(token);
     }
 
     @Override
     protected Authentication createAuthentication(String token) throws AuthenticationException {
-        Long userId = jwtUtil.getUserId(token);
+        Long userId = tokenQueryService.getUserId(token);
         if (userId == null) {
             throw new BadCredentialsException("토큰에서 사용자 정보를 찾을 수 없습니다.");
         }

@@ -12,4 +12,7 @@ import org.springframework.context.annotation.Configuration;
 public class RedisConfigData {
     private String host;
     private int port;
+
+    public static final String BLACKLIST_PREFIX = "BLACK:";
+    public static final String REFRESH_TOKEN_PREFIX = "REFRESH:";
 }

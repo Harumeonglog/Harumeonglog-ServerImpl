@@ -1,6 +1,5 @@
 package com.example.harumeonglog.domain.auth.service;
 
-import com.example.harumeonglog.domain.auth.converter.AuthConverter;
 import com.example.harumeonglog.domain.auth.dto.request.AuthRequest;
 import com.example.harumeonglog.domain.auth.dto.response.AuthResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
@@ -8,7 +7,6 @@ import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
 import com.example.harumeonglog.global.error.exception.AuthException;
 import com.example.harumeonglog.global.security.domain.CustomUserDetails;
-import com.example.harumeonglog.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class AuthCommandServiceImpl implements AuthCommandService {
 
-    private final JwtUtil jwtUtil;
+    private final TokenCommandService tokenCommandService;
     private final OAuth2Service appleOAuth2Service;
     private final OAuth2Service kakaoOAuth2Service;
 
@@ -32,7 +30,7 @@ public class AuthCommandServiceImpl implements AuthCommandService {
         else {
             throw new AuthException(AuthErrorCode.UNSUPPORTED_PROVIDER);
         }
-        return AuthConverter.toAuthLoginResponse(userDetails.getLoginMember().getId(), jwtUtil.createAccessToken(userDetails), jwtUtil.createRefreshToken(userDetails));
+        return tokenCommandService.createToken(userDetails);
     }
 
     @Override

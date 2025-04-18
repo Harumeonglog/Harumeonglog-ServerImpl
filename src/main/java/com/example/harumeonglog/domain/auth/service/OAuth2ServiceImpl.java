@@ -58,6 +58,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         Member member = memberRepository.findByProviderIdAndSocialType(request.getProviderId(), request.getSocialType()).orElse(
                 OAuth2Converter.toMember(request)
         );
+        // TODO: 로그인 시 동기화 여부
         member.update(request.getNickname(), request.getImage());
         return new CustomUserDetails(memberRepository.save(member));
     }
