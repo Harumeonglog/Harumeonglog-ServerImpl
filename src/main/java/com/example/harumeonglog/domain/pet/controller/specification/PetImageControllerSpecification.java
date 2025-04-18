@@ -38,7 +38,8 @@ public interface PetImageControllerSpecification {
     CustomResponse<PetImageResponse.GetImagesResponse> getImages(
             @PathVariable Long petId,
             @RequestParam(required = false) Long cursor,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal Member member
     );
 
     @Operation(summary = "최근 등록된 이미지 조회 API by 백종우", description = "최근에 등록된 펫 이미지 목록을 조회합니다.")
@@ -53,7 +54,7 @@ public interface PetImageControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "조회 성공")
     })
     @GetMapping("/image/{imageId}")
-    CustomResponse<PetImageResponse.GetImageResponse> getImage(@PathVariable Long imageId);
+    CustomResponse<PetImageResponse.GetImageResponse> getImage(@PathVariable Long imageId, @AuthenticationPrincipal Member member);
 
     @Operation(summary = "단일 이미지 삭제 API by 백종우", description = "특정 이미지 ID의 펫 이미지를 삭제합니다.")
     @ApiResponses({

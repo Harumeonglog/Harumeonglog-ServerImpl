@@ -41,8 +41,9 @@ public class PetImageController implements PetImageControllerSpecification {
     public CustomResponse<PetImageResponse.GetImagesResponse> getImages(
             @PathVariable Long petId,
             @RequestParam(required = false) Long cursor,
-            @RequestParam(defaultValue = "10") int size) {
-        return CustomResponse.ok(petImageQueryService.getImages(petId, cursor, size));
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticationPrincipal Member member) {
+        return CustomResponse.ok(petImageQueryService.getImages(petId, member, cursor, size));
     }
 
     @GetMapping("/recent")
@@ -51,18 +52,22 @@ public class PetImageController implements PetImageControllerSpecification {
     }
 
     @GetMapping("/image/{imageId}")
-    public CustomResponse<PetImageResponse.GetImageResponse> getImage(@PathVariable Long imageId) {
-        return CustomResponse.ok(petImageQueryService.getImage(imageId));
+    public CustomResponse<PetImageResponse.GetImageResponse> getImage(
+            @PathVariable Long imageId,
+            @AuthenticationPrincipal Member member) {
+        return CustomResponse.ok(petImageQueryService.getImage(imageId, member));
     }
 
     @DeleteMapping("/image/{imageId}")
     public CustomResponse<String> deleteImage(@PathVariable Long imageId) {
+        petImageCommandService.deleteImage(imageId);
         return CustomResponse.ok("이미지 삭제 완료");
     }
 
     @DeleteMapping("/{petId}")
     public CustomResponse<String> deleteImages(
             @PathVariable Long petId, @RequestBody DeleteImagesRequest request) {
+        petImageCommandService.deleteImages(petId, request);
         return CustomResponse.ok("이미지 삭제 완료");
     }
 }
