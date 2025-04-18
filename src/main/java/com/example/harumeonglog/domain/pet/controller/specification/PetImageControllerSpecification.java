@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.pet.controller.specification;
 
 
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.pet.dto.request.PetImageRequest;
 import com.example.harumeonglog.domain.pet.dto.response.PetImageResponse;
 import com.example.harumeonglog.global.common.response.CustomResponse;
@@ -8,8 +9,13 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
 
 @Tag(name = "PetImage", description = "Pet 이미지 관련 API")
 @RequestMapping("/pet-images")
@@ -19,9 +25,9 @@ public interface PetImageControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON201", description = "등록 성공")
     })
-    @PostMapping("/{petId}")
+    @PostMapping(value = "/{petId}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     ResponseEntity<CustomResponse<PetImageResponse.AddImagesResponse>> addImages(
-            @PathVariable Long petId, @RequestBody PetImageRequest.AddImagesRequest request
+            @PathVariable Long petId, @RequestPart List<MultipartFile> images, @AuthenticationPrincipal Member member
     );
 
     @Operation(summary = "펫 이미지 목록 조회 API by 백종우", description = "펫 이미지 목록을 커서 기반으로 조회합니다.")
