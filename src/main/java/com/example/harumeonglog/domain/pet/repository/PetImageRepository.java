@@ -7,6 +7,8 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
+
 
 public interface PetImageRepository extends JpaRepository<PetImage, Long> {
     @Query("""
@@ -29,4 +31,8 @@ public interface PetImageRepository extends JpaRepository<PetImage, Long> {
             @Param("cursor") Long cursor,
             Pageable pageable
     );
+
+    List<PetImage> findByIdInAndPetId(List<Long> imageIds, Long petId);
+
+    void deleteAllByIdIn(List<Long> imageIds);
 }

@@ -9,6 +9,6 @@ import java.util.List;
 
 public interface PetImageCommandService {
     PetImageResponse.AddImagesResponse addImages(Long petId, Member member, List<MultipartFile> images);
-    void deleteImage(Long imageId);
-    void deleteImages(Long petId, PetImageRequest.DeleteImagesRequest request);
+    void deleteImage(Long imageId, Member member);
+    void deleteImages(Long petId, PetImageRequest.DeleteImagesRequest request, Member member);
 }

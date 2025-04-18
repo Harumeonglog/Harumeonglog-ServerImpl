@@ -81,12 +81,27 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
     }
 
     @Override
-    public void deleteImage(Long imageId) {
+    public void deleteImage(Long imageId, Member member) {
+        PetImage petImage = petImageRepository.findById(imageId).orElseThrow(
+                () -> new PetException(PetErrorCode.IMAGE_NOT_FOUND));
 
+        Pet pet = findPetById(petImage.getPet().getId());
+        validateOwnerAccess(member, pet);
+
+        s3Util.deleteFile(petImage.getImageKey());
+        petImageRepository.delete(petImage);
     }
 
     @Override
-    public void deleteImages(Long petId, PetImageRequest.DeleteImagesRequest request) {
+    public void deleteImages(Long petId, PetImageRequest.DeleteImagesRequest request, Member member) {
+        List<PetImage> petImages = petImageRepository.findByIdInAndPetId(request.getImageIds(), petId);
 
+        Pet pet = findPetById(petId);
+        validateOwnerAccess(member, pet);
+
+        // S3 파일 삭제 및 DB 삭제
+        petImages.forEach(image -> s3Util.deleteFile(image.getImageKey()));
+        petImageRepository.deleteAllByIdIn(request.getImageIds());
     }
+
 }

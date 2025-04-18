@@ -42,12 +42,12 @@ public interface PetImageControllerSpecification {
             @AuthenticationPrincipal Member member
     );
 
-    @Operation(summary = "최근 등록된 이미지 조회 API by 백종우", description = "최근에 등록된 펫 이미지 목록을 조회합니다.")
-    @ApiResponses({
-            @ApiResponse(responseCode = "COMMON200", description = "조회 성공")
-    })
-    @GetMapping("/recent")
-    CustomResponse<PetImageResponse.RecentImagesResponse> recentImages();
+//    @Operation(summary = "최근 등록된 이미지 조회 API by 백종우", description = "최근에 등록된 펫 이미지 목록을 조회합니다.")
+//    @ApiResponses({
+//            @ApiResponse(responseCode = "COMMON200", description = "조회 성공")
+//    })
+//    @GetMapping("/recent")
+//    CustomResponse<PetImageResponse.RecentImagesResponse> recentImages();
 
     @Operation(summary = "단일 이미지 조회 API by 백종우", description = "특정 이미지 ID에 해당하는 펫 이미지를 조회합니다.")
     @ApiResponses({
@@ -61,7 +61,7 @@ public interface PetImageControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "삭제 성공")
     })
     @DeleteMapping("/image/{imageId}")
-    CustomResponse<String> deleteImage(@PathVariable Long imageId);
+    CustomResponse<String> deleteImage(@PathVariable Long imageId, @AuthenticationPrincipal Member member);
 
     @Operation(summary = "여러 이미지 삭제 API by 백종우", description = "펫 ID와 이미지 ID 목록을 통해 여러 이미지를 삭제합니다.")
     @ApiResponses({
@@ -69,6 +69,6 @@ public interface PetImageControllerSpecification {
     })
     @DeleteMapping("/{petId}")
     CustomResponse<String> deleteImages(
-            @PathVariable Long petId, @RequestBody PetImageRequest.DeleteImagesRequest request
+            @PathVariable Long petId, @RequestBody PetImageRequest.DeleteImagesRequest request, @AuthenticationPrincipal Member member
     );
 }
