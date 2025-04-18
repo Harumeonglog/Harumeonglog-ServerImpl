@@ -58,7 +58,7 @@ public interface PostControllerSpecification {
             @RequestBody PostRequest.PostUpdateRequest postUpdateRequest
     );
 
-    @Operation(summary = "게시물 삭제 API by 김준환",description = "게시물 삭제")
+    @Operation(summary = "게시물 삭제 API by 김준환",description = "게시물 삭제 (soft delete)")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
             @ApiResponse(responseCode = "POST404", description = "게시물을 찾지 못했습니다.")
