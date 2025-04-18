@@ -56,4 +56,8 @@ public class Pet extends BaseEntity {
         this.gender = gender;
         this.birth = birth;
     }
+
+    public void softDelete(){
+        this.deletedAt = LocalDateTime.now();
+    }
 }

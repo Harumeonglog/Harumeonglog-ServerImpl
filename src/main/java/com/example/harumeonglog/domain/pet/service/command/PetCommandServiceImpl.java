@@ -11,8 +11,10 @@ import com.example.harumeonglog.domain.pet.entity.MemberPet;
 import com.example.harumeonglog.domain.pet.entity.Pet;
 import com.example.harumeonglog.domain.pet.repository.MemberPetRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
+import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.code.S3ErrorCode;
+import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.S3Exception;
 import com.example.harumeonglog.global.util.S3Util;
@@ -139,13 +141,60 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
-    public void deletePet(Long petId) {
+    public void deletePet(Long petId, Member member) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
 
+        // 권한 확인 (OWNER만 삭제 가능)
+        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
+            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
+        }
+
+        // pet soft delete
+        pet.softDelete();
+
+        // memberPet hard delete
+        memberPetRepository.deleteByPet(pet);
     }
 
     @Override
-    public void invite(Long petId, PetRequest.InviteRequest request) {
+    public void invite(Long petId, PetRequest.InviteListRequest request, Member member) {
+        Pet pet = petRepository.findById(petId)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
 
+        // 권한 확인 (OWNER만 삭제 가능)
+        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
+            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
+        }
+
+        // 초대 처리
+        request.getRequests().stream()
+                .filter(invite -> {
+                    boolean exists = memberPetRepository.findByMemberAndPet(
+                            memberRepository.findById(invite.getMemberId())
+                                    .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND)),
+                            pet
+                    ).isPresent();
+                    if (exists) {
+                        // 이미 초대된 상태인 경우 에러처리
+                        throw new PetException(PetErrorCode.ALREADY_INVITED);
+                    }
+                    return true;
+                })
+                .map(invite -> {
+                    MemberPetRole role;
+                    try{
+                        role = MemberPetRole.valueOf(invite.getRole());
+                    }catch (IllegalArgumentException e){
+                        throw new PetException(PetErrorCode.INVALID_ROLE);
+                    }
+                    return MemberPetConverter.toMemberPet(member, pet, role);
+                })
+                .forEach(memberPetRepository::save);
     }
 
 }

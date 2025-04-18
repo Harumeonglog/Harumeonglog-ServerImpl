@@ -101,4 +101,30 @@ public class MemberPetConverter {
                 .hasNext(memberPetSlice.hasNext())
                 .build();
     }
+
+    public static PetResponse.SearchMemberResponse toSearchMemberResponse(
+            Slice<Member> memberSlice, S3Util s3Util) {
+        List<PetResponse.SearchMemberResponse.MemberInfo> memberInfos = memberSlice.getContent().stream()
+                .map(member -> toMemberInfo(member, s3Util))
+                .collect(Collectors.toList());
+
+        Long nextCursor = memberSlice.hasNext() ?
+                memberInfos.get(memberInfos.size() - 1).getMemberId() : null;
+
+        return PetResponse.SearchMemberResponse.builder()
+                .members(memberInfos)
+                .cursor(nextCursor)
+                .hasNext(memberSlice.hasNext())
+                .build();
+    }
+
+    public static PetResponse.SearchMemberResponse.MemberInfo toMemberInfo(Member member, S3Util s3Util) {
+        return PetResponse.SearchMemberResponse.MemberInfo.builder()
+                .memberId(member.getId())
+                .email(member.getEmail())
+                .name(member.getNickname())
+                .image(member.getImage() != null ?
+                        s3Util.getFilePresignedUrl(member.getImage(), 60) : null)
+                .build();
+    }
 }

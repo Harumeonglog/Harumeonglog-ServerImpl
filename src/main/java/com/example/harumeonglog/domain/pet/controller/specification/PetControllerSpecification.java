@@ -71,7 +71,8 @@ public interface PetControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "삭제 성공")
     })
     @PatchMapping("/{petId}")
-    CustomResponse<String> deletePet(@PathVariable Long petId);
+    CustomResponse<String> deletePet(@PathVariable Long petId,
+                                     @AuthenticatedMember Member member);
 
     @Operation(summary = "펫 초대 API by 백종우", description = "다른 사용자를 펫에 초대합니다.")
     @ApiResponses({
@@ -80,7 +81,8 @@ public interface PetControllerSpecification {
     @PostMapping("/{petId}/invite")
     CustomResponse<String> invite(
             @PathVariable Long petId,
-            @RequestBody PetRequest.InviteRequest request
+            @RequestBody PetRequest.InviteListRequest request,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "멤버 검색 API by 백종우", description = "이메일로 사용자를 검색합니다.")
@@ -91,6 +93,7 @@ public interface PetControllerSpecification {
     CustomResponse<PetResponse.SearchMemberResponse> searchMember(
             @RequestParam String email,
             @RequestParam(required = false) Long cursor,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticatedMember Member member
     );
 }

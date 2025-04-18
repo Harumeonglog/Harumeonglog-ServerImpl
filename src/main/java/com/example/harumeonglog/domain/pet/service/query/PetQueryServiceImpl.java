@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.pet.service.query;
 
 import com.example.harumeonglog.domain.member.entity.Member;
+import com.example.harumeonglog.domain.member.infrastructure.MemberRepository;
 import com.example.harumeonglog.domain.pet.converter.MemberPetConverter;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 import com.example.harumeonglog.domain.pet.entity.MemberPet;
@@ -25,6 +26,7 @@ import java.util.stream.Collectors;
 @Slf4j
 public class PetQueryServiceImpl implements PetQueryService {
     private final MemberPetRepository memberPetRepository;
+    private final MemberRepository memberRepository;
     private final S3Util s3Util;
 
     @Override
@@ -67,7 +69,16 @@ public class PetQueryServiceImpl implements PetQueryService {
     }
 
     @Override
-    public PetResponse.SearchMemberResponse searchMember(String email, Long cursor, int size) {
-        return null;
+    public PetResponse.SearchMemberResponse searchMember(String email, Member member, Long cursor, int size) {
+        Pageable pageable = PageRequest.of(0, size);
+        Slice<Member> memberSlice;
+
+        if (cursor == null || cursor == 0L) {
+            memberSlice = memberRepository.findByEmailContaining(email, member.getId(), pageable);
+        } else {
+            memberSlice = memberRepository.findByEmailContainingAndCursor(email, member.getId(), cursor, pageable);
+        }
+
+        return MemberPetConverter.toSearchMemberResponse(memberSlice, s3Util);
     }
 }

@@ -54,4 +54,5 @@ public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
     @Query("SELECT mp FROM MemberPet mp LEFT JOIN FETCH mp.member WHERE mp.pet.id IN :petIds AND mp.member.id != :memberId")
     List<MemberPet> findByPetIdsAndNotMemberId(@Param("petIds") List<Long> petIds, @Param("memberId") Long memberId);
 
+    void deleteByPet(Pet pet);
 }

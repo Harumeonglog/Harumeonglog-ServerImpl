@@ -3,6 +3,7 @@ package com.example.harumeonglog.domain.pet.controller;
 
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.pet.controller.specification.PetControllerSpecification;
+import com.example.harumeonglog.domain.pet.dto.request.PetRequest;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.AddPetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.ChangePetInfoResponse;
@@ -74,25 +75,29 @@ public class PetController implements PetControllerSpecification {
     }
 
     @PatchMapping("/{petId}")
-    public CustomResponse<String> deletePet(@PathVariable Long petId) {
-        petCommandService.deletePet(petId);
+    public CustomResponse<String> deletePet(@PathVariable Long petId,
+                                            @AuthenticatedMember Member member) {
+        petCommandService.deletePet(petId, member);
         return CustomResponse.ok("펫 삭제 완료");
     }
 
     @PostMapping("/{petId}/invite")
     public CustomResponse<String> invite(
-            @PathVariable Long petId, @RequestBody InviteRequest request) {
-        petCommandService.invite(petId, request);
+            @PathVariable Long petId,
+            @RequestBody PetRequest.InviteListRequest request,
+            @AuthenticatedMember Member member) {
+        petCommandService.invite(petId, request, member);
         return CustomResponse.ok("초대 완료");
     }
 
     @GetMapping("/search-member")
     public CustomResponse<PetResponse.SearchMemberResponse> searchMember(
             @RequestParam String email,
-            @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(required = false) Long cursor,
+            @RequestParam(defaultValue = "10") int size,
+            @AuthenticatedMember Member member
     ) {
-        PetResponse.SearchMemberResponse result = petQueryService.searchMember(email, cursor, size);
+        PetResponse.SearchMemberResponse result = petQueryService.searchMember(email, member, cursor, size);
         return CustomResponse.ok(result);
     }
 

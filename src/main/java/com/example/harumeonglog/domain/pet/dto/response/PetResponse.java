@@ -85,7 +85,9 @@ public class PetResponse {
         @Builder
         public static class MemberInfo {
             private Long memberId;
+            private String email;
             private String name;
+            private String image;
         }
     }
 }

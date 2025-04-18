@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,8 +43,14 @@ public class PetRequest {
     @Setter
     @Getter
     public static class InviteRequest {
-        private String email;
-        private SocialType socialType;
+        private Long memberId;
+        private String role;
+    }
+
+    @Setter
+    @Getter
+    public static class InviteListRequest {
+        List<InviteRequest> requests;
     }
 
     @Setter
