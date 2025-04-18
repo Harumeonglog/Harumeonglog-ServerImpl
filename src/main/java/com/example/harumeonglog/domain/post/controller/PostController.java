@@ -11,9 +11,6 @@ import com.example.harumeonglog.domain.post.service.PostCommandService;
 import com.example.harumeonglog.domain.post.service.PostQueryService;
 
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

@@ -66,4 +66,8 @@ public class Post extends BaseEntity {
     public void fixReportNum(Long number) {
         this.postReportNum += number;
     }
+
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
 }
