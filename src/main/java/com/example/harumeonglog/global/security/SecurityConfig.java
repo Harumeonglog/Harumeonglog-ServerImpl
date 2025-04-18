@@ -1,7 +1,6 @@
 package com.example.harumeonglog.global.security;
 
-import com.example.harumeonglog.domain.auth.service.TokenCommandService;
-import com.example.harumeonglog.domain.auth.service.TokenQueryService;
+import com.example.harumeonglog.domain.auth.service.*;
 import com.example.harumeonglog.global.security.filter.AbstractTokenFilter;
 import com.example.harumeonglog.global.security.filter.AbstractTokenLogoutFilter;
 import com.example.harumeonglog.global.security.filter.JwtTokenFilter;
@@ -39,8 +38,11 @@ public class SecurityConfig {
 
     private final SwaggerConfigData swaggerConfigData;
     private final ProfileConfigData profileConfigData;
+
     private final TokenQueryService tokenQueryService;
-    private final TokenCommandService tokenCommandService;
+    private final RedisCommandService redisCommandService;
+    private final RedisQueryService redisQueryService;
+
     private final CustomDetailService customDetailService;
     private final JwtTokenLogoutHandler jwtTokenLogoutHandler;
     private final CustomAuthorizationEntryPoint customAuthorizationEntryPoint;
@@ -141,7 +143,9 @@ public class SecurityConfig {
 
     @Bean
     AbstractTokenLogoutFilter jwtTokenLogoutFilter() {
-        return new JwtTokenLogoutFilter(jwtTokenFilter(), jwtTokenLogoutHandler, tokenQueryService, tokenCommandService);
+        AbstractTokenLogoutFilter filter = new JwtTokenLogoutFilter(jwtTokenFilter(), jwtTokenLogoutHandler, tokenQueryService, redisCommandService, redisQueryService);
+        filter.setRequestMatcher("/api/v1/auth/logout");
+        return filter;
     }
 
     @Bean

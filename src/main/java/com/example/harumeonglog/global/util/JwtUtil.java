@@ -1,11 +1,10 @@
 package com.example.harumeonglog.global.util;
 
 import com.example.harumeonglog.global.data.JwtConfigData;
+import com.example.harumeonglog.global.error.code.TokenErrorCode;
+import com.example.harumeonglog.global.error.exception.TokenException;
 import com.example.harumeonglog.global.security.domain.CustomUserDetails;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jws;
-import io.jsonwebtoken.JwtException;
-import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
@@ -56,6 +55,8 @@ public class JwtUtil {
         try {
             getClaims(token);
             return true;
+        } catch (ExpiredJwtException e) {
+            throw new TokenException(TokenErrorCode.TOKEN_EXPIRED);
         } catch (JwtException e) {
             return false;
         }

@@ -6,7 +6,9 @@ import com.example.harumeonglog.domain.auth.dto.response.OAuth2Response;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.infrastructure.MemberRepository;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
+import com.example.harumeonglog.global.error.code.TokenErrorCode;
 import com.example.harumeonglog.global.error.exception.AuthException;
+import com.example.harumeonglog.global.error.exception.TokenException;
 import com.example.harumeonglog.global.security.domain.CustomUserDetails;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
@@ -34,7 +36,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         OAuth2Response.OAuth2IdTokenHeader tokenHeader = parseIdTokenHeader(idToken);
         OAuth2Response.OAuth2PublicKeyResponse keyInfo = getProperKeyInfo(tokenHeader);
         if (keyInfo == null) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
         PublicKey publicKey = generatePublicKey(keyInfo);
 
@@ -70,7 +72,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
             ObjectMapper objectMapper = new ObjectMapper();
             return objectMapper.readValue(decodeBase64(header), OAuth2Response.OAuth2IdTokenHeader.class);
         } catch (IOException e) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
     }
 
@@ -83,7 +85,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
         try {
             return KeyFactory.getInstance(keyInfo.getKty()).generatePublic(publicKeySpec);
         } catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
-            throw new AuthException(AuthErrorCode.FAIL_PARSING_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.FAIL_PARSING_ID_TOKEN);
         }
     }
 
@@ -96,7 +98,7 @@ public abstract class OAuth2ServiceImpl implements OAuth2Service {
                     .parseSignedClaims(idToken)
                     .getPayload();
         } catch (RuntimeException e) {
-            throw new AuthException(AuthErrorCode.INVALID_ID_TOKEN);
+            throw new TokenException(TokenErrorCode.INVALID_ID_TOKEN);
         }
     }
 

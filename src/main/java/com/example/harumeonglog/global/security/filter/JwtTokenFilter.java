@@ -3,8 +3,10 @@ package com.example.harumeonglog.global.security.filter;
 
 import com.example.harumeonglog.domain.auth.service.TokenQueryService;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
+import com.example.harumeonglog.global.error.exception.GeneralException;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
 import com.example.harumeonglog.global.common.response.CustomResponse;
+import com.example.harumeonglog.global.util.HttpResponseUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -53,10 +55,12 @@ public class JwtTokenFilter extends AbstractTokenFilter {
 
     @Override
     protected void handleException(HttpServletRequest request, HttpServletResponse response, Exception e) throws IOException, ServletException {
-        response.setStatus(HttpStatus.UNAUTHORIZED.value());
-
         log.info("로그인 실패 ({}): {}", e.getClass(), e.getMessage());
-        ObjectMapper om = new ObjectMapper();
-        om.writeValue(response.getOutputStream(), CustomResponse.fail(AuthErrorCode.FAIL_AUTHORIZATION, e.getMessage()));
+        if (e instanceof GeneralException generalException) {
+            HttpResponseUtil.writeResponse(response, generalException.getBaseErrorCode(), generalException.getMessage());
+        }
+        else {
+            HttpResponseUtil.writeResponse(response, AuthErrorCode.FAIL_AUTHENTICATION, e.getMessage());
+        }
     }
 }
