@@ -10,19 +10,6 @@ public class MemberRequest {
 
     @Getter
     @Builder
-    public static class MemberLoginRequest {
-        private final String idToken;
-
-        public MemberLoginRequest(
-                @JsonProperty("idToken") String idToken
-        ) {
-            this.idToken = idToken;
-        }
-
-    }
-
-    @Getter
-    @Builder
     public static class MemberInfoUpdateRequest {
         private final String image;
         private final String nickname;

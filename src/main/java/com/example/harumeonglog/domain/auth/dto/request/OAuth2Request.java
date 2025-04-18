@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.member.dto.request;
+package com.example.harumeonglog.domain.auth.dto.request;
 
 import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import lombok.Builder;

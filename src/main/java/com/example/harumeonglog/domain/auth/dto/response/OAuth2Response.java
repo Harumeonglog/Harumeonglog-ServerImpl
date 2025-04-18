@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.member.dto.response;
+package com.example.harumeonglog.domain.auth.dto.response;
 
 import lombok.Getter;
 

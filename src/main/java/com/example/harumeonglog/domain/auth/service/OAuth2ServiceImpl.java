@@ -1,8 +1,8 @@
-package com.example.harumeonglog.domain.member.service;
+package com.example.harumeonglog.domain.auth.service;
 
-import com.example.harumeonglog.domain.member.converter.OAuth2Converter;
-import com.example.harumeonglog.domain.member.dto.request.OAuth2Request;
-import com.example.harumeonglog.domain.member.dto.response.OAuth2Response;
+import com.example.harumeonglog.domain.auth.converter.OAuth2Converter;
+import com.example.harumeonglog.domain.auth.dto.request.OAuth2Request;
+import com.example.harumeonglog.domain.auth.dto.response.OAuth2Response;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.infrastructure.MemberRepository;
 import com.example.harumeonglog.global.error.code.AuthErrorCode;
