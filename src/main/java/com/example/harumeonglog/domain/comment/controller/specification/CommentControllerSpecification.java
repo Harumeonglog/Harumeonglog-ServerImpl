@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Tag(name = "Comment", description = "comment 관련 API")
 public interface CommentControllerSpecification {
 
-    @Operation(summary = "Comment 목록 조회 API", description = "comment를 전체 조회합니다")
+    @Operation(summary = "Comment 목록 조회 API by 김준환", description = "comment를 전체 조회합니다")
     @Parameter(name = "cursor", description = "0 이면 끝 값으로 올라감", example = "0")
     @Parameter(name = "size", description = "이만큼 가져옴", example = "10")
     @ApiResponses(value = {
@@ -31,7 +31,7 @@ public interface CommentControllerSpecification {
             @RequestParam Integer size
     );
 
-    @Operation(summary = "Comment 삭제 API", description = "comment 삭제합니다.")
+    @Operation(summary = "Comment 삭제 API by 김준환", description = "comment 삭제합니다.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
             @ApiResponse(responseCode = "COMMENT404", description = "댓글을 찾지 못했습니다.")
