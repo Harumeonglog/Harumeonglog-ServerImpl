@@ -29,7 +29,7 @@ public interface PetControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "수정 성공")
     })
     @PatchMapping("/{petId}")
-    CustomResponse<PetResponse.ChangePetInfoResponse> changePetInfo(
+    CustomResponse<PetResponse.ChangePetInfoResponse> updatePetInfo(
             @PathVariable Long petId,
             @RequestBody PetRequest.ChangePetInfoRequest request,
             @AuthenticatedMember Member member

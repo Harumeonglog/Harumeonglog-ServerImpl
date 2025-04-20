@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Getter;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -16,6 +17,8 @@ public class PetResponse {
     @Getter
     public static class AddPetResponse {
         private Long petId;
+        private LocalDateTime createdAt;
+        private LocalDateTime updatedAt;
     }
     @Getter
     @Builder
@@ -27,6 +30,8 @@ public class PetResponse {
         private Gender gender;
         private LocalDate birth;
         private String mainImage;
+        private LocalDateTime updatedAt;
+
     }
     @Getter
     @Builder

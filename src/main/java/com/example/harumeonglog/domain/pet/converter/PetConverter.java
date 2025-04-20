@@ -20,6 +20,8 @@ public class PetConverter {
     public static PetResponse.AddPetResponse toAddPetResponse(Pet pet){
         return PetResponse.AddPetResponse.builder()
                 .petId(pet.getId())
+                .createdAt(pet.getCreatedAt())
+                .updatedAt(pet.getUpdatedAt())
                 .build();
     }
 
@@ -32,6 +34,7 @@ public class PetConverter {
                 .gender(pet.getGender())
                 .birth(pet.getBirth())
                 .mainImage(mainImage)
+                .updatedAt(pet.getUpdatedAt())
                 .build();
     }
 

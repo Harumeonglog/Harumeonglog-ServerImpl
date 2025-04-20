@@ -42,7 +42,7 @@ public class PetController implements PetControllerSpecification {
     }
 
     @PatchMapping("/{petId}")
-    public CustomResponse<ChangePetInfoResponse> changePetInfo(
+    public CustomResponse<ChangePetInfoResponse> updatePetInfo(
             @PathVariable Long petId,
             @RequestBody ChangePetInfoRequest request,
             @AuthenticatedMember Member member) {
