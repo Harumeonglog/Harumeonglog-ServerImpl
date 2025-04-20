@@ -25,13 +25,6 @@ public class PetImageController implements PetImageControllerSpecification {
     private final PetImageCommandService petImageCommandService;
     private final PetImageQueryService petImageQueryService;
 
-    @PostMapping("/presigned-urls")
-    public CustomResponse<List<Map<String, String>>> addImagesPresignedUrl(
-            @RequestBody PetImageRequest.AddImagesPresignedUrlRequest request,
-            @AuthenticationPrincipal Member member) {
-        return CustomResponse.ok(petImageCommandService.addImagesPresignedUrl(member, request));
-    }
-
     @PostMapping
     public CustomResponse<PetImageResponse.AddImagesResponse> addImages(
             @RequestBody PetImageRequest.AddImageRequest request){
@@ -76,19 +69,4 @@ public class PetImageController implements PetImageControllerSpecification {
         return CustomResponse.ok("이미지 삭제 완료");
     }
 
-
-    @PostMapping("/presigned-url/temp")
-    public CustomResponse<Map<String, String>> getTempPresignedUrl(
-            @RequestParam String filename,
-            @RequestParam String contentType) {
-        return CustomResponse.ok(petImageCommandService.uploadImage(filename, contentType, null));
-    }
-
-    @PostMapping("/presigned-url/{petId}")
-    public CustomResponse<Map<String, String>> getPresignedUrl(
-            @PathVariable Long petId,
-            @RequestParam String filename,
-            @RequestParam String contentType){
-        return CustomResponse.ok(petImageCommandService.uploadImage(filename, contentType, petId));
-    }
 }

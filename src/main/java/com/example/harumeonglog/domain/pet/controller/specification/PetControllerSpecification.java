@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "Pet", description = "Pet 관련 API")
 public interface PetControllerSpecification {
 
-    @Operation(summary = "펫 추가 API by 백종우", description = "펫을 등록합니다. 등록하기 전에 사진을 등록해주세요.")
+    @Operation(summary = "펫 추가 API by 백종우", description = "펫을 등록합니다. 등록하기 전에 사진을 등록해주세요. 메인 이미지는 해당 API에서 처리합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON201", description = "펫 등록 성공")
     })
@@ -35,7 +35,7 @@ public interface PetControllerSpecification {
             @AuthenticatedMember Member member
     );
 
-    @Operation(summary = "펫 목록 조회 API by 백종우", description = "펫 목록을 조회합니다.")
+    @Operation(summary = "펫 목록 조회 API by 백종우", description = "자신이 속한 펫 목록을 조회합니다.")
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "조회 성공")
     })

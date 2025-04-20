@@ -8,6 +8,7 @@ import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.example.harumeonglog.global.data.S3ConfigData;
 import com.example.harumeonglog.global.error.code.S3ErrorCode;
 import com.example.harumeonglog.global.error.exception.S3Exception;
+import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +21,7 @@ import java.util.Date;
 public class S3Util {
     private final AmazonS3 amazonS3Client;
     private final S3ConfigData s3ConfigData;
+
 
 
     //presigned url로 파일 업로드
@@ -46,7 +48,7 @@ public class S3Util {
         if (key == null || key.isEmpty()) {
             return null;
         }
-        return amazonS3Client.getUrl(s3ConfigData.getBucket(), key).toString();
+        return s3ConfigData.getBaseUrl() + key;
     }
 
 

@@ -53,17 +53,6 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
     }
 
     @Override
-    public List<Map<String, String>> addImagesPresignedUrl(Member member, PetImageRequest.AddImagesPresignedUrlRequest images) {
-
-//        Pet pet = findPetById(images.getPetId());
-//        validateOwnerAccess(member, pet);
-
-        return IntStream.range(0, images.getFilenames().size())
-                .mapToObj(i -> uploadImage(images.getFilenames().get(i), images.getContentTypes().get(i), images.getPetId()))
-                .toList();
-    }
-
-    @Override
     public PetImageResponse.AddImagesResponse addImage(PetImageRequest.AddImageRequest request) {
         Pet pet = findPetById(request.getPetId());
 
@@ -102,33 +91,6 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
         // S3 파일 삭제 및 DB 삭제
         petImages.forEach(image -> s3Util.deleteFile(image.getImageKey()));
         petImageRepository.deleteAllByIdIn(request.getImageIds());
-    }
-
-    // 이미지 S3 업로드
-    @Override
-    public Map<String, String> uploadImage(String filename, String contentType, Long petId){
-        String uuid = UUID.randomUUID().toString();
-        String imageKey;
-
-        if (petId == null) {
-            // Pet 객체 미생성: 임시 업로드
-            imageKey = String.format("pet/temp/%s/%s", uuid, filename);
-        } else {
-            // Pet 객체 존재: 특정 Pet에 연결
-            imageKey = String.format("pet/%d/%s/%s",  petId, uuid, filename);
-        }
-
-        // Presigned URL 생성
-        String presignedUrl = s3Util.generatePresignedUrlForUpload(
-                imageKey,
-                contentType,
-                -1, // 클라이언트에서 ContentLength를 지정하도록 함
-                10); // 10분 유효
-        Map<String, String> response = new HashMap<>();
-        response.put("presignedUrl", presignedUrl);
-        response.put("imageKey", imageKey);
-
-        return response;
     }
 
 }
