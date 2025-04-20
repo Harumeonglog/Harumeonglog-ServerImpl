@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.post.converter;
 
 import com.example.harumeonglog.domain.member.dto.response.MemberResponse;
+import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
@@ -42,10 +43,14 @@ public class PostConverter {
                 .build();
     }
 
-    public static Post toPost(PostRequest.PostCreateRequest postCreateRequest) {
+    public static Post toPost(PostRequest.PostCreateRequest postCreateRequest, Member member) {
         return Post.builder()
                 .content(postCreateRequest.getContent())
                 .category(postCreateRequest.getPostCategory())
+                .commentNum(0L)
+                .postLikeNum(0L)
+                .postReportNum(0L)
+                .member(member)
                 .build();
     }
 

@@ -44,7 +44,8 @@ public interface PostControllerSpecification {
     })
     @PostMapping
     CustomResponse<Long> createPost(
-            @RequestBody PostRequest.PostCreateRequest postCreateRequest
+            @RequestBody PostRequest.PostCreateRequest postCreateRequest,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "게시물 수정 API by 김준환",description = "게시물 수정")

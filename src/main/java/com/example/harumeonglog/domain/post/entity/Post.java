@@ -31,10 +31,10 @@ public class Post extends BaseEntity {
     private String content;
 
     @Column(name = "post_report_num", nullable = false)
-    private Long postReportNum;
+    private Long postReportNum = 0L;
 
     @Column(name = "comment_num", nullable = false)
-    private Long commentNum;
+    private Long commentNum = 0L;
 
     @Column(name = "category", nullable = false)
     @Enumerated(EnumType.STRING)
@@ -48,7 +48,7 @@ public class Post extends BaseEntity {
     private Member member;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> commentList;
+    private List<Comment> commentList = new ArrayList<>();
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostImage> postImageList = new ArrayList<>();

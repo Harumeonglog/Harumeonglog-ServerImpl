@@ -33,8 +33,8 @@ public class PostCommandServiceImpl implements PostCommandService {
     private final PostReportRepository postReportRepository;
 
     @Override
-    public Post createPost(PostRequest.PostCreateRequest postCreateRequest) {
-        Post post = postRepository.save(PostConverter.toPost(postCreateRequest));
+    public Post createPost(PostRequest.PostCreateRequest postCreateRequest, Member member) {
+        Post post = postRepository.save(PostConverter.toPost(postCreateRequest, member));
         List<PostImage> postImageList = postCreateRequest.getPostImageList().stream().map((s)-> PostImage.builder().post(post).postImageKeyName(s).build()).toList();
         postImageRepository.saveAll(postImageList);
         return post;
