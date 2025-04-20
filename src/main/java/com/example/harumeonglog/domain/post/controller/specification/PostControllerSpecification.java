@@ -43,7 +43,7 @@ public interface PostControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
     })
     @PostMapping
-    CustomResponse<Long> createPost(
+    CustomResponse<PostResponse.PostCreateResponse> createPost(
             @RequestBody PostRequest.PostCreateRequest postCreateRequest,
             @AuthenticatedMember Member member
     );

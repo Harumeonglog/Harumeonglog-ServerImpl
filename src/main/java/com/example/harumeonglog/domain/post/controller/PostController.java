@@ -46,12 +46,12 @@ public class PostController implements PostControllerSpecification {
 
 
     @PostMapping
-    public CustomResponse<Long> createPost(
+    public CustomResponse<PostResponse.PostCreateResponse> createPost(
             @RequestBody PostRequest.PostCreateRequest postCreateRequest,
             @AuthenticatedMember Member member
             ) {
-        Post post = postCommandService.createPost(postCreateRequest, member);
-        return CustomResponse.ok(post.getId());
+        PostResponse.PostCreateResponse postCreateResponse = postCommandService.createPost(postCreateRequest, member);
+        return CustomResponse.ok(postCreateResponse);
     }
 
     @PatchMapping("/{postId}")

@@ -66,4 +66,13 @@ public class PostConverter {
                 .content(post.getContent())
                 .build();
     }
+
+    public static PostResponse.PostCreateResponse toPostCreateResponse(Post post) {
+
+        return PostResponse.PostCreateResponse.builder()
+                .postId(post.getId())
+                .updateAt(post.getUpdatedAt())
+                .createAt(post.getCreatedAt())
+                .build();
+    }
 }

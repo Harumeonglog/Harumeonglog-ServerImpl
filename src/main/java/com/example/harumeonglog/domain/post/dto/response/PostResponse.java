@@ -60,4 +60,14 @@ public class PostResponse {
         private LocalDateTime updateAt;
     }
 
+    @Getter
+    @Builder
+    @AllArgsConstructor(access = AccessLevel.PROTECTED)
+    @NoArgsConstructor(access = AccessLevel.PROTECTED)
+    public static class PostCreateResponse {
+        private Long postId;
+        private LocalDateTime createAt;
+        private LocalDateTime updateAt;
+    }
+
 }
