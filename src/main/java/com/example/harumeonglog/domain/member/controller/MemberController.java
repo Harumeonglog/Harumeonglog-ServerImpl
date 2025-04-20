@@ -3,7 +3,6 @@ package com.example.harumeonglog.domain.member.controller;
 import com.example.harumeonglog.domain.member.controller.specification.MemberControllerSpecification;
 import com.example.harumeonglog.domain.member.converter.MemberConverter;
 import com.example.harumeonglog.domain.member.entity.Member;
-import com.example.harumeonglog.domain.member.entity.Setting;
 import com.example.harumeonglog.domain.member.service.MemberCommandService;
 import com.example.harumeonglog.domain.member.service.SettingCommandService;
 import com.example.harumeonglog.domain.member.service.SettingQueryService;
@@ -44,14 +43,14 @@ public class MemberController implements MemberControllerSpecification {
     }
 
     @PatchMapping("/info")
-    public CustomResponse<Long> updateInfo(@AuthenticatedMember Member member, @RequestBody MemberRequest.MemberInfoUpdateRequest request) {
-        Member updateMember = memberCommandService.updateInfo(member, request);
-        return CustomResponse.ok(updateMember.getId());
+    public CustomResponse<MemberResponse.MemberInfoUpdateResponse> updateInfo(@AuthenticatedMember Member member, @RequestBody MemberRequest.MemberInfoUpdateRequest request) {
+        MemberResponse.MemberInfoUpdateResponse response = memberCommandService.updateInfo(member, request);
+        return CustomResponse.ok(response);
     }
 
     @PatchMapping("/setting")
-    public CustomResponse<Long> updateSetting(@AuthenticatedMember Member member, @RequestBody SettingRequest.SettingUpdateRequest request) {
-        Setting setting = settingCommandService.updateSetting(member, request);
-        return CustomResponse.ok(setting.getId());
+    public CustomResponse<SettingResponse.SettingUpdateResponse> updateSetting(@AuthenticatedMember Member member, @RequestBody SettingRequest.SettingUpdateRequest request) {
+        SettingResponse.SettingUpdateResponse response = settingCommandService.updateSetting(member, request);
+        return CustomResponse.ok(response);
     }
 }

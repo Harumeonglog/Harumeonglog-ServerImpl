@@ -34,11 +34,11 @@ public interface MemberControllerSpecification {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
     })
-    CustomResponse<Long> updateInfo(Member member, MemberRequest.MemberInfoUpdateRequest request);
+    CustomResponse<MemberResponse.MemberInfoUpdateResponse> updateInfo(Member member, MemberRequest.MemberInfoUpdateRequest request);
 
     @Operation(summary = "환경 설정 수정하는 API by 서정모", description = "환경 설정 수정하는 API")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
     })
-    CustomResponse<Long> updateSetting(Member member, SettingRequest.SettingUpdateRequest request);
+    CustomResponse<SettingResponse.SettingUpdateResponse> updateSetting(Member member, SettingRequest.SettingUpdateRequest request);
 }
