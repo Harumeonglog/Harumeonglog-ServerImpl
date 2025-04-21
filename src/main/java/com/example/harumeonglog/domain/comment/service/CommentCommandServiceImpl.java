@@ -4,7 +4,6 @@ import com.example.harumeonglog.domain.comment.converter.CommentBlockConverter;
 import com.example.harumeonglog.domain.comment.converter.CommentReportConverter;
 import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.entity.Comment;
-import com.example.harumeonglog.domain.comment.entity.CommentBlock;
 import com.example.harumeonglog.domain.comment.entity.CommentReport;
 import com.example.harumeonglog.domain.comment.repository.CommentBlockRepository;
 import com.example.harumeonglog.domain.comment.repository.CommentReportRepository;
@@ -44,6 +43,10 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     @Override
     public void blockComment(Long commentId, Member member) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+
+        if (commentBlockRepository.findByMemberAndComment(member, comment).isPresent()) {
+            throw new CommentException(CommentErrorCode.IS_ALREADY);
+        }
 
         commentBlockRepository.save(CommentBlockConverter.toCommentBlock(comment, member));
     }
