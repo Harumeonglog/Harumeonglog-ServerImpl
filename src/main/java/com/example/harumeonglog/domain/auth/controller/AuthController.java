@@ -6,6 +6,9 @@ import com.example.harumeonglog.domain.auth.dto.response.AuthResponse;
 import com.example.harumeonglog.domain.auth.service.AuthCommandService;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.common.response.CustomResponse;
+import com.example.harumeonglog.global.security.domain.CustomUserDetails;
+import com.example.harumeonglog.global.security.service.CustomDetailService;
+import com.example.harumeonglog.global.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,6 +18,8 @@ import org.springframework.web.bind.annotation.*;
 public class AuthController implements AuthControllerSpecification {
 
     private final AuthCommandService authCommandService;
+    private final JwtUtil jwtUtil;
+    private final CustomDetailService customDetailService;
 
     @PostMapping("/{provider}/login")
     public CustomResponse<AuthResponse.AuthLoginResponse> login(@PathVariable String provider, @RequestBody AuthRequest.AuthLoginRequest request) {
@@ -35,5 +40,13 @@ public class AuthController implements AuthControllerSpecification {
     public CustomResponse<AuthResponse.AuthAccessReissueResponse> reissueAccessToken(@RequestBody AuthRequest.AuthAccessReissueRequest request) {
         AuthResponse.AuthAccessReissueResponse response = authCommandService.reissueAccess(request);
         return CustomResponse.ok(response);
+    }
+
+    @PostMapping("/login/test")
+    public String loginTest() {
+        CustomUserDetails customUserDetails = customDetailService.loadUserById(1L);
+        String accessToken = jwtUtil.createAccessToken(customUserDetails);
+        System.out.println(accessToken);
+        return accessToken;
     }
 }
