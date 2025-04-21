@@ -1,11 +1,14 @@
 package com.example.harumeonglog.domain.comment.service;
 
 import com.example.harumeonglog.domain.comment.converter.CommentBlockConverter;
+import com.example.harumeonglog.domain.comment.converter.CommentLikeConverter;
 import com.example.harumeonglog.domain.comment.converter.CommentReportConverter;
 import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.entity.Comment;
+import com.example.harumeonglog.domain.comment.entity.CommentLike;
 import com.example.harumeonglog.domain.comment.entity.CommentReport;
 import com.example.harumeonglog.domain.comment.repository.CommentBlockRepository;
+import com.example.harumeonglog.domain.comment.repository.CommentLikeRepository;
 import com.example.harumeonglog.domain.comment.repository.CommentReportRepository;
 import com.example.harumeonglog.domain.comment.repository.CommentRepository;
 import com.example.harumeonglog.domain.member.entity.Member;
@@ -23,6 +26,7 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     private final CommentRepository commentRepository;
     private final CommentReportRepository commentReportRepository;
     private final CommentBlockRepository commentBlockRepository;
+    private final CommentLikeRepository commentLikeRepository;
 
     @Override
     public void reportComment(Long commentId, Member member) {
@@ -68,7 +72,18 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     }
 
     @Override
-    public void likeComment(Long commentId) {
+    public void likeComment(Long commentId, Member member) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+
+        CommentLike commentLike = commentLikeRepository.findByCommentAndMember(comment, member);
+
+        if (commentLike != null) {
+            comment.fixLikeNum(-1L);
+            commentLikeRepository.delete(commentLike);
+        } else {
+            comment.fixLikeNum(1L);
+            commentLikeRepository.save(CommentLikeConverter.toCommentLike(comment, member));
+        }
 
     }
 }

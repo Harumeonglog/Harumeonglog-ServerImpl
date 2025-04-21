@@ -14,5 +14,5 @@ public interface CommentCommandService {
 
     void deleteComment(Long commentId, Member member);
 
-    void likeComment(Long commentId);
+    void likeComment(Long commentId, Member member);
 }

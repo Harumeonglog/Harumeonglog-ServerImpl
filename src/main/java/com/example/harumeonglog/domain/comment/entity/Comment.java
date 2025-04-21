@@ -48,4 +48,8 @@ public class Comment extends BaseEntity {
     public void fixReportNum(Long number) {
         this.commentReportNum += number;
     }
+
+    public void fixLikeNum(Long number) {
+        this.commentLikeNum += number;
+    }
 }

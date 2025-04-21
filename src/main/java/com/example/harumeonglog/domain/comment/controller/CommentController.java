@@ -48,6 +48,15 @@ public class CommentController implements CommentControllerSpecification {
         return CustomResponse.ok(null);
     }
 
+    @PostMapping("/comments/{commentId}/likes")
+    public CustomResponse<Void> likeComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    ) {
+        commentCommandService.likeComment(commentId, member);
+        return CustomResponse.ok(null);
+    }
+
     @PostMapping("/comments")
     public CustomResponse<Long> createComment(
         @RequestBody CommentRequest.CommentCreateRequest commentCreateRequest
