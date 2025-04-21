@@ -44,4 +44,8 @@ public class Comment extends BaseEntity {
     public void delete() {
         this.deletedAt = LocalDateTime.now();
     }
+
+    public void fixReportNum(Long number) {
+        this.commentReportNum += number;
+    }
 }

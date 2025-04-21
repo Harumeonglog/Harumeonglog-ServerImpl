@@ -6,7 +6,7 @@ import com.example.harumeonglog.domain.member.entity.Member;
 import org.springframework.data.domain.Slice;
 
 public interface CommentCommandService {
-    void reportComment(Long commentId);
+    void reportComment(Long commentId, Member member);
 
     void blockComment(Long commentId);
 

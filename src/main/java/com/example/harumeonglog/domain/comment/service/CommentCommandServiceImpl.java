@@ -1,7 +1,10 @@
 package com.example.harumeonglog.domain.comment.service;
 
+import com.example.harumeonglog.domain.comment.converter.CommentReportConverter;
 import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.entity.Comment;
+import com.example.harumeonglog.domain.comment.entity.CommentReport;
+import com.example.harumeonglog.domain.comment.repository.CommentReportRepository;
 import com.example.harumeonglog.domain.comment.repository.CommentRepository;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.error.code.CommentErrorCode;
@@ -16,9 +19,21 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentCommandServiceImpl implements CommentCommandService {
 
     private final CommentRepository commentRepository;
+    private final CommentReportRepository commentReportRepository;
 
     @Override
-    public void reportComment(Long commentId) {
+    public void reportComment(Long commentId, Member member) {
+        Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+
+        CommentReport commentReport = commentReportRepository.findByCommentAndMember(comment, member);
+
+        if (commentReport != null) {
+            comment.fixReportNum(-1L);
+            commentReportRepository.delete(commentReport);
+        } else {
+            comment.fixReportNum(1L);
+            commentReportRepository.save(CommentReportConverter.toCommentReport(comment, member));
+        }
 
     }
 

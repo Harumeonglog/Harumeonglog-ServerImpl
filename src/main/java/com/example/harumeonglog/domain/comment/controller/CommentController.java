@@ -31,8 +31,11 @@ public class CommentController implements CommentControllerSpecification {
     }
 
     @PostMapping("/comments/{commentId}/reports")
-    public CustomResponse<Void> reportComment(@PathVariable Long commentId) {
-        commentCommandService.reportComment(commentId);
+    public CustomResponse<Void> reportComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    ) {
+        commentCommandService.reportComment(commentId, member);
         return CustomResponse.ok(null);
     }
 
