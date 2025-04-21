@@ -61,4 +61,15 @@ public interface CommentControllerSpecification {
             @PathVariable Long commentId,
             @AuthenticatedMember Member member
     );
+
+    @Operation(summary = "Comment 좋아요 API by 김준환", description = "comment 좋아요 기능")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+            @ApiResponse(responseCode = "COMMENT404", description = "댓글을 찾지 못했습니다.")
+    })
+    @PostMapping("/comments/{commentId}/likes")
+    CustomResponse<Void> likeComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    );
 }
