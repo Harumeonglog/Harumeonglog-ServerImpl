@@ -2,6 +2,7 @@ package com.example.harumeonglog.global.error;
 
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.error.code.BaseErrorCode;
+import com.example.harumeonglog.global.error.code.CommentErrorCode;
 import com.example.harumeonglog.global.error.code.GeneralErrorCode;
 import com.example.harumeonglog.global.error.exception.GeneralException;
 import com.example.harumeonglog.global.data.ProfileConfigData;
@@ -10,6 +11,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import lombok.extern.slf4j.Slf4j;
@@ -55,6 +58,16 @@ public class ExceptionAdvice {
         log.error("Exception Advice(MethodArgumentNotValidException): {}", error);
         return ResponseEntity.status(code.getHttpStatus()).body(CustomResponse.fail(code, error));
     }
+
+    @ExceptionHandler(DataIntegrityViolationException.class)
+    public ResponseEntity<CustomResponse<String>> handleDuplicateEntry(DataIntegrityViolationException e) {
+        loggingError(e, e.getMessage());
+
+        BaseErrorCode code = GeneralErrorCode._IS_ALREADY;
+
+        return ResponseEntity.status(code.getHttpStatus()).body(CustomResponse.fail(code, null));
+    }
+
 
     @ExceptionHandler(GeneralException.class)
     public ResponseEntity<CustomResponse<String>> generalException(GeneralException e) {

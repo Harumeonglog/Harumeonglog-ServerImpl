@@ -31,23 +31,40 @@ public class CommentController implements CommentControllerSpecification {
     }
 
     @PostMapping("/comments/{commentId}/reports")
-    public CustomResponse<Void> reportComment(@PathVariable Long commentId) {
-        commentCommandService.reportComment(commentId);
+    public CustomResponse<Void> reportComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    ) {
+        commentCommandService.reportComment(commentId, member);
         return CustomResponse.ok(null);
     }
 
     @PostMapping("/comments/{commentId}/blocks")
-    public CustomResponse<Void> blockComment(@PathVariable Long commentId) {
-        commentCommandService.blockComment(commentId);
+    public CustomResponse<Void> blockComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    ) {
+        commentCommandService.blockComment(commentId, member);
         return CustomResponse.ok(null);
     }
 
-    @PostMapping("/comments")
-    public CustomResponse<Long> createComment(
-        @RequestBody CommentRequest.CommentCreateRequest commentCreateRequest
+    @PostMapping("/comments/{commentId}/likes")
+    public CustomResponse<Void> likeComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
     ) {
-        Comment comment = commentCommandService.createComment(commentCreateRequest);
-        return CustomResponse.ok(comment.getId());
+        commentCommandService.likeComment(commentId, member);
+        return CustomResponse.ok(null);
+    }
+
+    @PostMapping("/posts/{postId}/comments")
+    public CustomResponse<CommentResponse.CommentCreateResponse> createComment(
+        @RequestBody CommentRequest.CommentCreateRequest commentCreateRequest,
+        @PathVariable Long postId,
+        @AuthenticatedMember Member member
+    ) {
+        CommentResponse.CommentCreateResponse commentCreateResponse = commentCommandService.createComment(commentCreateRequest, postId, member);
+        return CustomResponse.ok(commentCreateResponse);
     }
 
     @DeleteMapping("/comments/{commentId}")

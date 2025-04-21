@@ -1,5 +1,6 @@
 package com.example.harumeonglog.domain.comment.controller.specification;
 
+import com.example.harumeonglog.domain.comment.dto.request.CommentRequest;
 import com.example.harumeonglog.domain.comment.dto.response.CommentResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.common.response.CustomResponse;
@@ -9,10 +10,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Comment", description = "comment 관련 API")
 public interface CommentControllerSpecification {
@@ -40,5 +38,51 @@ public interface CommentControllerSpecification {
     CustomResponse<Void> deleteComment(
             @AuthenticatedMember Member member,
             @PathVariable Long commentId
+    );
+
+    @Operation(summary = "Comment 신고 API by 김준환", description = "comment 신고합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+            @ApiResponse(responseCode = "COMMENT404", description = "댓글을 찾지 못했습니다.")
+    })
+    @PostMapping("/comments/{commentId}/reports")
+    CustomResponse<Void> reportComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    );
+
+    @Operation(summary = "Comment 차단 API by 김준환", description = "comment 차단합니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+            @ApiResponse(responseCode = "COMMENT400", description = "이미 차단된 댓글입니다."),
+            @ApiResponse(responseCode = "COMMENT404", description = "댓글을 찾지 못했습니다.")
+    })
+    @PostMapping("/comments/{commentId}/blocks")
+    CustomResponse<Void> blockComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    );
+
+    @Operation(summary = "Comment 좋아요 API by 김준환", description = "comment 좋아요 기능")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+            @ApiResponse(responseCode = "COMMENT404", description = "댓글을 찾지 못했습니다.")
+    })
+    @PostMapping("/comments/{commentId}/likes")
+    CustomResponse<Void> likeComment(
+            @PathVariable Long commentId,
+            @AuthenticatedMember Member member
+    );
+
+    @Operation(summary = "Comment 생성 API by 김준환", description = "comment 생성합니다")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다."),
+            @ApiResponse(responseCode = "POST404", description = "게시물을 찾지 못했습니다.")
+    })
+    @PostMapping("/posts/{postId}/comments")
+    CustomResponse<CommentResponse.CommentCreateResponse> createComment(
+            @RequestBody CommentRequest.CommentCreateRequest commentCreateRequest,
+            @PathVariable Long postId,
+            @AuthenticatedMember Member member
     );
 }

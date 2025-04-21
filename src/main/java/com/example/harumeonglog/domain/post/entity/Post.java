@@ -85,4 +85,10 @@ public class Post extends BaseEntity {
         postImage.addPost(this);
         this.postImageList.add(postImage);
     }
+
+    // 연관관계 편의 메서드
+    public void addComment(Comment comment) {
+        comment.addPost(this);
+        commentList.add(comment);
+    }
 }

@@ -10,7 +10,11 @@ import lombok.*;
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
-@Table(name = "comment_like")
+@Table(name = "comment_like",
+        uniqueConstraints = {
+            @UniqueConstraint(columnNames = {"comment_id", "member_id"})
+        }
+)
 public class CommentLike extends BaseEntity {
 
     @Id
@@ -19,10 +23,10 @@ public class CommentLike extends BaseEntity {
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "comment_id")
+    @JoinColumn(name = "comment_id", nullable = false)
     private Comment comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "member_id")
+    @JoinColumn(name = "member_id", nullable = false)
     private Member member;
 }
