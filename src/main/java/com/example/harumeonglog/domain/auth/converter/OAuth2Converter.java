@@ -1,6 +1,6 @@
-package com.example.harumeonglog.domain.member.converter;
+package com.example.harumeonglog.domain.auth.converter;
 
-import com.example.harumeonglog.domain.member.dto.request.OAuth2Request;
+import com.example.harumeonglog.domain.auth.dto.request.OAuth2Request;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 

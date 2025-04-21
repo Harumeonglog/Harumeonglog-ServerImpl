@@ -1,5 +1,6 @@
 package com.example.harumeonglog.global.security;
 
+import com.example.harumeonglog.domain.auth.service.*;
 import com.example.harumeonglog.global.security.filter.AbstractTokenFilter;
 import com.example.harumeonglog.global.security.filter.AbstractTokenLogoutFilter;
 import com.example.harumeonglog.global.security.filter.JwtTokenFilter;
@@ -8,8 +9,6 @@ import com.example.harumeonglog.global.security.handler.CustomAccessDeniedHandle
 import com.example.harumeonglog.global.security.handler.CustomAuthorizationEntryPoint;
 import com.example.harumeonglog.global.security.handler.JwtTokenLogoutHandler;
 import com.example.harumeonglog.global.security.service.CustomDetailService;
-import com.example.harumeonglog.global.util.JwtUtil;
-import com.example.harumeonglog.global.util.RedisUtil;
 
 import com.example.harumeonglog.global.data.ProfileConfigData;
 import com.example.harumeonglog.global.data.SwaggerConfigData;
@@ -19,7 +18,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
 import org.springframework.security.config.annotation.web.configurers.FormLoginConfigurer;
 import org.springframework.security.config.annotation.web.configurers.HttpBasicConfigurer;
@@ -40,8 +38,11 @@ public class SecurityConfig {
 
     private final SwaggerConfigData swaggerConfigData;
     private final ProfileConfigData profileConfigData;
-    private final RedisUtil redisUtil;
-    private final JwtUtil jwtUtil;
+
+    private final TokenQueryService tokenQueryService;
+    private final RedisCommandService redisCommandService;
+    private final RedisQueryService redisQueryService;
+
     private final CustomDetailService customDetailService;
     private final JwtTokenLogoutHandler jwtTokenLogoutHandler;
     private final CustomAuthorizationEntryPoint customAuthorizationEntryPoint;
@@ -49,7 +50,7 @@ public class SecurityConfig {
 
     private final String[] allowUrl = {
             "/health",
-            "/api/v1/members/*/login"
+            "/api/v1/auth/**"
     };
 
     private final String[] apiUrl = {
@@ -137,12 +138,14 @@ public class SecurityConfig {
 
     @Bean
     AbstractTokenFilter jwtTokenFilter() {
-        return new JwtTokenFilter(jwtUtil, redisUtil, customDetailService);
+        return new JwtTokenFilter(tokenQueryService, customDetailService);
     }
 
     @Bean
     AbstractTokenLogoutFilter jwtTokenLogoutFilter() {
-        return new JwtTokenLogoutFilter(jwtTokenFilter(), jwtTokenLogoutHandler, redisUtil, jwtUtil);
+        AbstractTokenLogoutFilter filter = new JwtTokenLogoutFilter(jwtTokenFilter(), jwtTokenLogoutHandler, tokenQueryService, redisCommandService, redisQueryService);
+        filter.setRequestMatcher("/api/v1/auth/logout");
+        return filter;
     }
 
     @Bean

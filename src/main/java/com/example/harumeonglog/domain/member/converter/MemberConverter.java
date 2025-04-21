@@ -20,14 +20,8 @@ public class MemberConverter {
                 .image(member.getImage())
                 .nickname(member.getNickname())
                 .birth(member.getBirth())
+                .updatedAt(member.getUpdatedAt())
                 .build();
     }
 
-    public static MemberResponse.MemberLoginResponse toMemberLoginResponse(Long memberId, String accessToken, String refreshToken) {
-        return MemberResponse.MemberLoginResponse.builder()
-                .memberId(memberId)
-                .accessToken(accessToken)
-                .refreshToken(refreshToken)
-                .build();
-    }
 }

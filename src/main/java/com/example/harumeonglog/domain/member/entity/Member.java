@@ -54,4 +54,12 @@ public class Member extends BaseEntity {
     public void updateCurrentPetId(Long currentPetId) {
         this.currentPetId = currentPetId;
     }
+    public void softDelete() {
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public void cancelSoftDelete() {
+        this.deletedAt = null;
+    }
+
 }

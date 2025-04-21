@@ -1,4 +1,4 @@
-package com.example.harumeonglog.domain.member.service;
+package com.example.harumeonglog.domain.auth.service;
 
 import com.example.harumeonglog.global.security.domain.CustomUserDetails;
 

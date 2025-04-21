@@ -11,9 +11,6 @@ import com.example.harumeonglog.domain.post.service.PostCommandService;
 import com.example.harumeonglog.domain.post.service.PostQueryService;
 
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +27,7 @@ public class PostController implements PostControllerSpecification {
 
     @GetMapping
     public CustomResponse<PostResponse.PostPreviewListResponse> getPosts(
-            @RequestParam(name = "search") String search,
+            @RequestParam(name = "search", required = false) String search,
             @RequestParam(name = "postRequestCategory") PostRequestCategory postRequestCategory,
             @RequestParam(name = "cursor") Long cursor,
             @RequestParam(name = "size") Integer size
@@ -49,27 +46,30 @@ public class PostController implements PostControllerSpecification {
 
 
     @PostMapping
-    public CustomResponse<Long> createPost(
-            @RequestBody PostRequest.PostCreateRequest postCreateRequest
+    public CustomResponse<PostResponse.PostCreateResponse> createPost(
+            @RequestBody PostRequest.PostCreateRequest postCreateRequest,
+            @AuthenticatedMember Member member
             ) {
-        Post post = postCommandService.createPost(postCreateRequest);
-        return CustomResponse.ok(post.getId());
+        PostResponse.PostCreateResponse postCreateResponse = postCommandService.createPost(postCreateRequest, member);
+        return CustomResponse.ok(postCreateResponse);
     }
 
     @PatchMapping("/{postId}")
-    public CustomResponse<Long> updatePost(
+    public CustomResponse<PostResponse.PostUpdateResponse> updatePost(
             @PathVariable Long postId,
-            @RequestBody PostRequest.PostUpdateRequest postUpdateRequest
+            @RequestBody PostRequest.PostUpdateRequest postUpdateRequest,
+            @AuthenticatedMember Member member
     ) {
-        Post post = postCommandService.updatePost(postId, postUpdateRequest);
-        return CustomResponse.ok(post.getId());
+        PostResponse.PostUpdateResponse postUpdateResponse = postCommandService.updatePost(postId, postUpdateRequest, member);
+        return CustomResponse.ok(postUpdateResponse);
     }
 
     @DeleteMapping("/{postId}")
     public CustomResponse<Void> deletePost(
+            @AuthenticatedMember Member member,
             @PathVariable Long postId
     ) {
-        postCommandService.deletePost(postId);
+        postCommandService.deletePost(postId, member);
         return CustomResponse.ok(null);
     }
 
