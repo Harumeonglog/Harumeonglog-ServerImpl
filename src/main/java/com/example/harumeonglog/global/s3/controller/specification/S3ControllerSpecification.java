@@ -9,10 +9,6 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
-
-import java.util.List;
-import java.util.Map;
 
 @Tag(name = "S3", description = "S3 이미지 업로드 관련 API")
 public interface S3ControllerSpecification {
@@ -20,13 +16,13 @@ public interface S3ControllerSpecification {
 
     @Operation(summary = "S3 단일 이미지 PresignedUrl 발급 by 백종우", description = "domain에 해당하는 S3 단일 이미지의 PresignedUrl을 발급합니다.")
     @ApiResponse(responseCode = "COMMON200", description = "발급성공")
-    @PostMapping("/presigned-url")
+    @PostMapping("/presigned-urls")
     CustomResponse<S3ResponseDTO.S3ResponsePreviewDTO> getPresignedUrl(
             @RequestBody S3RequestDTO.GeneratePresignedUrlRequest request);
 
     @Operation(summary = "S3 복수 이미지 PresignedUrl 발급 by 백종우", description = "domain에 해당하는 S3 복수 이미지의 PresignedUrl을 발급합니다.")
     @ApiResponse(responseCode = "COMMON200", description = "발급성공")
-    @PostMapping("/presigned-urls")
-    public CustomResponse<S3ResponseDTO.S3ResponseListDTO> getPresignedUrls(
+    @PostMapping("/presigned-urls/batch")
+    CustomResponse<S3ResponseDTO.S3ResponseListDTO> getPresignedUrls(
             @RequestBody S3RequestDTO.GeneratePresignedUrlsRequest request);
 }

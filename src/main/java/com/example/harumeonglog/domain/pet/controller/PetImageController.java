@@ -13,9 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-import java.util.Map;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/pet-images")
@@ -45,14 +42,14 @@ public class PetImageController implements PetImageControllerSpecification {
 //        return CustomResponse.ok(petImageQueryService.recentImages());
 //    }
 
-    @GetMapping("/image/{imageId}")
+    @GetMapping("/{imageId}")
     public CustomResponse<PetImageResponse.GetImageResponse> getImage(
             @PathVariable Long imageId,
             @AuthenticationPrincipal Member member) {
         return CustomResponse.ok(petImageQueryService.getImage(imageId, member));
     }
 
-    @DeleteMapping("/image/{imageId}")
+    @DeleteMapping("/{imageId}")
     public CustomResponse<String> deleteImage(
             @PathVariable Long imageId,
             @AuthenticationPrincipal Member member) {

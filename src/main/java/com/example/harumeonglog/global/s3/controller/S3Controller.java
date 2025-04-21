@@ -20,13 +20,13 @@ public class S3Controller implements S3ControllerSpecification {
 
     private final S3Service s3Service;
 
-    @PostMapping("/presigned-url")
+    @PostMapping("/presigned-urls")
     public CustomResponse<S3ResponseDTO.S3ResponsePreviewDTO> getPresignedUrl(
             @RequestBody S3RequestDTO.GeneratePresignedUrlRequest request) {
         return CustomResponse.ok(s3Service.generatePresignedUrl(request));
     }
 
-    @PostMapping("/presigned-urls")
+    @PostMapping("/presigned-urls/batch")
     public CustomResponse<S3ResponseDTO.S3ResponseListDTO> getPresignedUrls(
             @RequestBody S3RequestDTO.GeneratePresignedUrlsRequest request) {
         return CustomResponse.ok(s3Service.generatePresignedUrls(request));

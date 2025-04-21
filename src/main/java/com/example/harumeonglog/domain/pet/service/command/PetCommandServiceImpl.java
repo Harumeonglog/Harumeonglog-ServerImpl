@@ -116,8 +116,8 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
-    public void changeCurrentPet(PetRequest.ChangeCurrentPetRequest request, Member member) {
-        Pet pet = findPetById(request.getPetId());
+    public void changeCurrentPet(Long petId, Member member) {
+        Pet pet = findPetById(petId);
 
         // 해당 MEMBER, PET 관계 확인
         memberPetRepository.findByMemberAndPet(member, pet)

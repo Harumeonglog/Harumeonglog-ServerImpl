@@ -1,6 +1,5 @@
 package com.example.harumeonglog.domain.pet.dto.request;
 
-import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import com.example.harumeonglog.domain.pet.entity.enums.Gender;
 import com.example.harumeonglog.domain.pet.entity.enums.PetSize;
 import lombok.Getter;

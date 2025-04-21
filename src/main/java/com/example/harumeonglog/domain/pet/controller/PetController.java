@@ -4,24 +4,20 @@ package com.example.harumeonglog.domain.pet.controller;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.pet.controller.specification.PetControllerSpecification;
 import com.example.harumeonglog.domain.pet.dto.request.PetRequest;
+import com.example.harumeonglog.domain.pet.dto.request.PetRequest.AddPetRequest;
+import com.example.harumeonglog.domain.pet.dto.request.PetRequest.ChangePetInfoRequest;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.AddPetResponse;
 import com.example.harumeonglog.domain.pet.dto.response.PetResponse.ChangePetInfoResponse;
+import com.example.harumeonglog.domain.pet.service.command.PetCommandService;
 import com.example.harumeonglog.domain.pet.service.query.PetQueryService;
 import com.example.harumeonglog.global.common.response.CustomResponse;
-import com.example.harumeonglog.domain.pet.dto.request.PetRequest.AddPetRequest;
-import com.example.harumeonglog.domain.pet.dto.request.PetRequest.ChangeCurrentPetRequest;
-import com.example.harumeonglog.domain.pet.dto.request.PetRequest.ChangePetInfoRequest;
-import com.example.harumeonglog.domain.pet.dto.request.PetRequest.InviteRequest;
-import com.example.harumeonglog.domain.pet.service.command.PetCommandService;
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -57,23 +53,23 @@ public class PetController implements PetControllerSpecification {
         return CustomResponse.ok(petQueryService.getPets(cursor, size, member));
     }
 
-    @GetMapping("/current")
-    public CustomResponse<PetResponse.PetListPreviewResponse> getChangePet(
+    @GetMapping("/active")
+    public CustomResponse<PetResponse.PetListPreviewResponse> getActivePets(
             @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
             @RequestParam(defaultValue = "10") int size,  // 페이지 크기
             @AuthenticatedMember Member member) {
         return CustomResponse.ok(petQueryService.getChangePet(cursor, size, member));
     }
 
-    @PatchMapping("/current")
+    @PatchMapping("/{petId}/status/active")
     public CustomResponse<String> updateCurrentPet(
-            @RequestBody ChangeCurrentPetRequest request,
+            @PathVariable Long petId,
             @AuthenticatedMember Member member) {
-        petCommandService.changeCurrentPet(request, member);
+        petCommandService.changeCurrentPet(petId, member);
         return CustomResponse.ok("변경 완료");
     }
 
-    @GetMapping("/home")
+    @GetMapping("/active/primary")
     public CustomResponse<PetResponse.MainPetResponse> getCurrentPet(@AuthenticatedMember Member member){
         return CustomResponse.ok(petQueryService.getMainPet(member));
     }
@@ -86,7 +82,7 @@ public class PetController implements PetControllerSpecification {
         return CustomResponse.ok("펫 삭제 완료");
     }
 
-    @PostMapping("/{petId}/invite")
+    @PostMapping("/{petId}/members")
     public CustomResponse<String> invite(
             @PathVariable Long petId,
             @RequestBody PetRequest.InviteListRequest request,
@@ -95,7 +91,7 @@ public class PetController implements PetControllerSpecification {
         return CustomResponse.ok("초대 완료");
     }
 
-    @GetMapping("/search-member")
+    @GetMapping("/members")
     public CustomResponse<PetResponse.SearchMemberResponse> searchMember(
             @RequestParam String email,
             @RequestParam(required = false) Long cursor,

@@ -47,8 +47,8 @@ public interface PetControllerSpecification {
     );
 
     @Operation(summary = "현재 펫 변경 시 보유 펫 조회 API by 백종우",description = "대표 펫 변경 시 보유 펫 조회")
-    @GetMapping("/current")
-    CustomResponse<PetResponse.PetListPreviewResponse> getChangePet(
+    @GetMapping("/active")
+    CustomResponse<PetResponse.PetListPreviewResponse> getActivePets(
             @RequestParam(required = false) Long cursor, // 커서 (마지막 펫 ID)
             @RequestParam(defaultValue = "10") int size,  // 페이지 크기
             @AuthenticatedMember Member member) ;
@@ -57,9 +57,9 @@ public interface PetControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "변경 성공")
     })
-    @PatchMapping("/current")
+    @PatchMapping("/{petId}/status/active")
     CustomResponse<String> updateCurrentPet(
-            @RequestBody PetRequest.ChangeCurrentPetRequest request,
+            @PathVariable Long petId,
             @AuthenticatedMember Member member
     );
 
@@ -75,7 +75,7 @@ public interface PetControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "초대 성공")
     })
-    @PostMapping("/{petId}/invite")
+    @PostMapping("/{petId}/members")
     CustomResponse<String> invite(
             @PathVariable Long petId,
             @RequestBody PetRequest.InviteListRequest request,
@@ -86,7 +86,7 @@ public interface PetControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "검색 성공")
     })
-    @GetMapping("/search-member")
+    @GetMapping("/members")
     CustomResponse<PetResponse.SearchMemberResponse> searchMember(
             @RequestParam String email,
             @RequestParam(required = false) Long cursor,
@@ -98,6 +98,6 @@ public interface PetControllerSpecification {
     @ApiResponses({
             @ApiResponse(responseCode = "COMMON200", description = "검색 성공")
     })
-    @GetMapping("/home")
+    @GetMapping("/active/primary")
     CustomResponse<PetResponse.MainPetResponse> getCurrentPet(@AuthenticatedMember Member member);
 }
