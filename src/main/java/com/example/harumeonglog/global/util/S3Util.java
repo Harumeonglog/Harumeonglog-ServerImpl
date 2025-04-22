@@ -44,6 +44,19 @@ public class S3Util {
     }
 
 
+
+    // S3 파일 삭제
+    public void deleteFile(String key) {
+        if (key == null && key.trim().isEmpty()) {
+            throw new S3Exception(S3ErrorCode.NOT_FOUND);
+        }
+        try {
+            amazonS3Client.deleteObject(s3ConfigData.getBucket(), key);
+        } catch (AmazonS3Exception e) {
+            throw new S3Exception(S3ErrorCode.DELETE_FAILED);
+        }
+    }
+
     public String getUrlFromKey(String key) {
         if (key == null || key.isEmpty()) {
             return null;
@@ -59,18 +72,5 @@ public class S3Util {
         expTimeMillis += 1000 * 60 * expirationMinutes; // 분 단위로 계산
         expiration.setTime(expTimeMillis);
         return expiration;
-    }
-
-
-    // S3 파일 삭제
-    public void deleteFile(String key) {
-        if (key == null && key.trim().isEmpty()) {
-            throw new S3Exception(S3ErrorCode.NOT_FOUND);
-        }
-        try {
-            amazonS3Client.deleteObject(s3ConfigData.getBucket(), key);
-        } catch (AmazonS3Exception e) {
-            throw new S3Exception(S3ErrorCode.DELETE_FAILED);
-        }
     }
 }
