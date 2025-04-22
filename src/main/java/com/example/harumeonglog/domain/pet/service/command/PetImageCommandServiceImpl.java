@@ -31,21 +31,6 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
     private final MemberPetRepository memberPetRepository;
     private final S3Util s3Util;
 
-    // Pet 엔티티 조회
-    private Pet findPetById(Long petId) {
-        return petRepository.findById(petId)
-                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
-    }
-
-    // 사용자 OWNER 검증
-    private void validateOwnerAccess(Member member, Pet pet) {
-        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
-                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
-
-        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
-            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
-        }
-    }
 
     @Override
     public PetImageResponse.AddImagesResponse addImage(PetImageRequest.AddImageRequest request) {
@@ -82,8 +67,24 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
         Pet pet = findPetById(petId);
         validateOwnerAccess(member, pet);
 
-        // S3 파일 삭제 및 DB 삭제
-        petImages.forEach(image -> s3Util.deleteFile(image.getImageKey()));
+        // DB 삭제
+        petImageRepository.deleteAll(petImages);
+    }
+
+    // Pet 엔티티 조회
+    private Pet findPetById(Long petId) {
+        return petRepository.findById(petId)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
+    }
+
+    // 사용자 OWNER 검증
+    private void validateOwnerAccess(Member member, Pet pet) {
+        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+
+        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
+            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
+        }
     }
 
 }

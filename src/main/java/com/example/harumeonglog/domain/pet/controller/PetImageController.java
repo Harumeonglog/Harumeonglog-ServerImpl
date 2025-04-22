@@ -15,20 +15,20 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/v1/pet-images")
+@RequestMapping("/api/v1/pets")
 @Tag(name = "PetImage", description = "Pet 이미지 관련 API")
 public class PetImageController implements PetImageControllerSpecification {
 
     private final PetImageCommandService petImageCommandService;
     private final PetImageQueryService petImageQueryService;
 
-    @PostMapping
+    @PostMapping("/images")
     public CustomResponse<PetImageResponse.AddImagesResponse> addImages(
             @RequestBody PetImageRequest.AddImageRequest request){
         return CustomResponse.created(petImageCommandService.addImage(request));
     }
 
-    @GetMapping("/{petId}")
+    @GetMapping("/{petId}/images")
     public CustomResponse<PetImageResponse.GetImagesResponse> getImages(
             @PathVariable Long petId,
             @RequestParam(required = false) Long cursor,
@@ -42,14 +42,14 @@ public class PetImageController implements PetImageControllerSpecification {
 //        return CustomResponse.ok(petImageQueryService.recentImages());
 //    }
 
-    @GetMapping("/{imageId}")
+    @GetMapping("/images/{imageId}")
     public CustomResponse<PetImageResponse.GetImageResponse> getImage(
             @PathVariable Long imageId,
             @AuthenticationPrincipal Member member) {
         return CustomResponse.ok(petImageQueryService.getImage(imageId, member));
     }
 
-    @DeleteMapping("/{imageId}")
+    @DeleteMapping("/images/{imageId}")
     public CustomResponse<String> deleteImage(
             @PathVariable Long imageId,
             @AuthenticationPrincipal Member member) {
@@ -57,7 +57,7 @@ public class PetImageController implements PetImageControllerSpecification {
         return CustomResponse.ok("이미지 삭제 완료");
     }
 
-    @DeleteMapping("/{petId}")
+    @DeleteMapping("/{petId}/images")
     public CustomResponse<String> deleteImages(
             @PathVariable Long petId,
             @RequestBody DeleteImagesRequest request,

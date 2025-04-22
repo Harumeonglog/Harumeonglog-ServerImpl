@@ -31,25 +31,6 @@ public class PetCommandServiceImpl implements PetCommandService {
     private final MemberRepository memberRepository;
     private final S3Util s3Util;
 
-    // ========== 내부 메서드 ==========
-
-    // Pet 엔티티 조회
-    private Pet findPetById(Long petId) {
-        return petRepository.findById(petId)
-                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
-    }
-
-
-    // 사용자 OWNER 검증
-    private void validateOwnerAccess(Member member, Pet pet) {
-        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
-                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
-
-        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
-            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
-        }
-    }
-
 
     // ========== 외부 메서드 ==========
 
@@ -168,6 +149,25 @@ public class PetCommandServiceImpl implements PetCommandService {
             // MemberPet 생성 및 저장
             MemberPet memberPet = MemberPetConverter.toMemberPet(invitedMember, pet, role);
             memberPetRepository.save(memberPet);
+        }
+    }
+
+// ========== 내부 메서드 ==========
+
+    // Pet 엔티티 조회
+    private Pet findPetById(Long petId) {
+        return petRepository.findById(petId)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
+    }
+
+
+    // 사용자 OWNER 검증
+    private void validateOwnerAccess(Member member, Pet pet) {
+        MemberPet memberPet = memberPetRepository.findByMemberAndPet(member, pet)
+                .orElseThrow(() -> new PetException(PetErrorCode.NOT_IN_GROUP));
+
+        if (!memberPet.getRole().equals(MemberPetRole.OWNER)) {
+            throw new PetException(PetErrorCode.NOT_ALLOWED_ROLE);
         }
     }
 

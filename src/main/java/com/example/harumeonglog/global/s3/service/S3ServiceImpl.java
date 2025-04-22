@@ -22,27 +22,7 @@ public class S3ServiceImpl implements S3Service {
 
     private final S3Util s3Util;
 
-    private String geneerateImageKey(Long entityId, S3Domain domain, String filename){
-        String uuid = UUID.randomUUID().toString();
-        String imageKey;
 
-        if (entityId == null) {
-            // 임시 저장소 경로
-            imageKey = String.format("%s/temp/%s/%s", domain.name().toLowerCase(), uuid, filename);
-        } else {
-            // 특정 엔티티에 연결된 경로
-            imageKey = String.format("%s/%d/%s/%s", domain.name().toLowerCase(), entityId, uuid, filename);
-        }
-        return imageKey;
-    }
-
-    private String generatePresignedUrl(String imageKey, String contentType){
-        return s3Util.generatePresignedUrlForUpload(
-                imageKey,
-                contentType,
-                -1, // 클라이언트에서 ContentLength를 지정하도록 함
-                3); // 10분 유효
-    }
 
     @Override
     public S3ResponseDTO.S3ResponsePreviewDTO generatePresignedUrl(S3RequestDTO.GeneratePresignedUrlRequest request) {
@@ -70,5 +50,27 @@ public class S3ServiceImpl implements S3Service {
                 .collect(Collectors.toList());
 
         return S3Converter.toS3ResponseListDTO(imageList);
+    }
+
+    private String geneerateImageKey(Long entityId, S3Domain domain, String filename){
+        String uuid = UUID.randomUUID().toString();
+        String imageKey;
+
+        if (entityId == null) {
+            // 임시 저장소 경로
+            imageKey = String.format("%s/temp/%s/%s", domain.name().toLowerCase(), uuid, filename);
+        } else {
+            // 특정 엔티티에 연결된 경로
+            imageKey = String.format("%s/%d/%s/%s", domain.name().toLowerCase(), entityId, uuid, filename);
+        }
+        return imageKey;
+    }
+
+    private String generatePresignedUrl(String imageKey, String contentType){
+        return s3Util.generatePresignedUrlForUpload(
+                imageKey,
+                contentType,
+                -1, // 클라이언트에서 ContentLength를 지정하도록 함
+                3); // 10분 유효
     }
 }

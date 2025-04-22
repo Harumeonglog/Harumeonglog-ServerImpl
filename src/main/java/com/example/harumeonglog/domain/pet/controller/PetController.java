@@ -15,8 +15,6 @@ import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -29,12 +27,10 @@ public class PetController implements PetControllerSpecification {
     private final PetQueryService petQueryService;
 
     @PostMapping
-    public ResponseEntity<CustomResponse<AddPetResponse>> addPet(
+    public CustomResponse<AddPetResponse> addPet(
             @RequestBody AddPetRequest request,
             @AuthenticatedMember Member member) {
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(CustomResponse.created(petCommandService.addPet(request, member)));
+        return CustomResponse.created(petCommandService.addPet(request, member));
     }
 
     @PatchMapping("/{petId}")

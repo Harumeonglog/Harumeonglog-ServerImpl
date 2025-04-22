@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @Tag(name = "Pet", description = "Pet 관련 API")
@@ -20,7 +19,7 @@ public interface PetControllerSpecification {
             @ApiResponse(responseCode = "COMMON201", description = "펫 등록 성공")
     })
     @PostMapping
-    ResponseEntity<CustomResponse<PetResponse.AddPetResponse>> addPet(
+    CustomResponse<PetResponse.AddPetResponse> addPet(
                                                                       @RequestBody PetRequest.AddPetRequest request,
                                                                       @AuthenticatedMember Member member);
 
