@@ -9,5 +9,6 @@ public class CommentRequest {
     @Builder
     public static class CommentCreateRequest {
         private String content;
+        private Long parentId;
     }
 }
