@@ -9,28 +9,27 @@ import com.example.harumeonglog.domain.member.converter.MemberConverter;
 import com.example.harumeonglog.domain.member.entity.Member;
 
 import java.util.List;
+import java.util.Set;
 
 public class CommentConverter {
 
-    public static CommentResponse.CommentPreviewListResponse toCommentPreviewListResponse(List<Comment> commentList, Boolean hasNext, Long cursor) {
-
-        List<CommentPreviewResponse> commentPreviewResponseStream = commentList.stream().map(CommentConverter::toCommentPreviewResponse).toList();
+    public static CommentResponse.CommentPreviewListResponse toCommentPreviewListResponse(List<CommentPreviewResponse> commentList, Boolean hasNext, Long cursor) {
 
         return CommentResponse.CommentPreviewListResponse.builder()
-                .items(commentPreviewResponseStream)
+                .items(commentList)
                 .cursor(cursor)
                 .hasNext(hasNext)
                 .build();
     }
 
-    private static CommentPreviewResponse toCommentPreviewResponse(Comment comment) {
+    public static CommentPreviewResponse toCommentPreviewResponse(Comment comment, Set<Long> isBlocked) {
 
-        List<CommentCommentPreviewResponse> commentcommentReponseList = comment.getCommentList().stream().map(CommentConverter::toCommentCommentPreviewResponse).toList();
+        List<CommentCommentPreviewResponse> commentcommentReponseList = comment.getCommentList().stream().map((c)->toCommentCommentPreviewResponse(c, isBlocked)).toList();
 
         return CommentPreviewResponse.builder()
                 .commentId(comment.getId())
                 .memberInfoResponse(MemberConverter.toMemberInfoResponse(comment.getMember()))
-                .content(comment.getContent())
+                .content(comment.getDeletedAt() != null || isBlocked.contains(comment.getId()) ? "차단 혹은 삭제된 댓글 입니다.": comment.getContent())
                 .commentcommentResponseList(commentcommentReponseList)
                 .build();
     }
@@ -50,12 +49,12 @@ public class CommentConverter {
                 .build();
     }
 
-    private static CommentCommentPreviewResponse toCommentCommentPreviewResponse(Comment comment) {
+    private static CommentCommentPreviewResponse toCommentCommentPreviewResponse(Comment comment, Set<Long> isBlocked) {
 
         return CommentCommentPreviewResponse.builder()
                 .commentId(comment.getId())
                 .memberInfoResponse(MemberConverter.toMemberInfoResponse(comment.getMember()))
-                .content(comment.getContent())
+                .content(comment.getDeletedAt() != null || isBlocked.contains(comment.getId()) ? "차단 혹은 삭제된 댓글 입니다.": comment.getContent())
                 .build();
     }
 }

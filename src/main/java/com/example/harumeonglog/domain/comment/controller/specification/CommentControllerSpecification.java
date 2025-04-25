@@ -26,7 +26,8 @@ public interface CommentControllerSpecification {
     CustomResponse<CommentResponse.CommentPreviewListResponse> getComments(
             @PathVariable Long postId,
             @RequestParam Long cursor,
-            @RequestParam Integer size
+            @RequestParam Integer size,
+            @AuthenticatedMember Member member
     );
 
     @Operation(summary = "Comment 삭제 API by 김준환", description = "comment 삭제합니다.")

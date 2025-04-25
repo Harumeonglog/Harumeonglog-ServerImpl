@@ -75,4 +75,8 @@ public class Comment extends BaseEntity {
         this.post = post;
         post.getCommentList().add(this);
     }
+
+    public void blockCommentContent() {
+        this.content = "차단한 댓글 입니다.";
+    }
 }
