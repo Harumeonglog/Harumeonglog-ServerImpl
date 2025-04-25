@@ -1,74 +1,65 @@
 package com.example.harumeonglog.domain.walk.controller;
 
 import com.example.harumeonglog.domain.member.entity.Member;
-import com.example.harumeonglog.domain.pet.entity.Pet;
-import com.example.harumeonglog.domain.walk.entity.Walk;
+import com.example.harumeonglog.domain.walk.controller.specification.WalkControllerSpecification;
+import com.example.harumeonglog.domain.walk.service.WalkCommandService;
+import com.example.harumeonglog.domain.walk.service.WalkQueryService;
 import com.example.harumeonglog.global.common.response.CustomResponse;
-import com.example.harumeonglog.domain.walk.dto.request.MemberWalkRequest;
 import com.example.harumeonglog.domain.walk.dto.request.WalkRequest;
-import com.example.harumeonglog.domain.walk.dto.response.MemberWalkResponse;
-import com.example.harumeonglog.domain.walk.dto.response.WalkPetResponse;
 import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
-import com.example.harumeonglog.domain.walk.service.MemberWalkService;
-import com.example.harumeonglog.domain.walk.service.WalkService;
+import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
-@RequestMapping("/walks")
+@RequestMapping("/api/v1/walks")
 @RequiredArgsConstructor
-public class WalkController {
+public class WalkController implements WalkControllerSpecification {
 
-    private final WalkService walkService;
-    private final MemberWalkService memberWalkService;
+    private final WalkCommandService walkCommandService;
+    private final WalkQueryService walkQueryService;
 
     @PostMapping
-    public ResponseEntity<CustomResponse<WalkResponse.WalkCreateResponse>> createWalk(@RequestBody WalkRequest.WalkCreateRequest walkCreateRequest) {
-        Walk walk = walkService.createWalk(walkCreateRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).body(CustomResponse.created(null));
+    public CustomResponse<WalkResponse.WalkStartResponse> startWalk(@RequestBody WalkRequest.WalkStartRequest walkCreateRequest) {
+        WalkResponse.WalkStartResponse response = walkCommandService.startWalk(walkCreateRequest);
+        return CustomResponse.created(response);
     }
 
     @GetMapping
     public CustomResponse<WalkResponse.WalkSearchListResponse> getWalkList(@RequestParam(value = "sort", defaultValue = "RECOMMEND") String sort,
                                                                        @RequestParam(value = "cursor", required = false) Long cursor,
                                                                        @RequestParam(value = "size", defaultValue = "10") int offset) {
-        WalkResponse.WalkSearchListResponse response = walkService.getWalkList(sort, cursor, offset);
+        WalkResponse.WalkSearchListResponse response = walkQueryService.getWalkList(sort, cursor, offset);
         return CustomResponse.ok(response);
     }
 
     @GetMapping("/{walkId}")
     public CustomResponse<WalkResponse.WalkDetailResponse> getWalk(@PathVariable Long walkId) {
-        WalkResponse.WalkDetailResponse response = walkService.getWalkDetails(walkId);
+        WalkResponse.WalkDetailResponse response = walkQueryService.getWalkDetails(walkId);
         return CustomResponse.ok(response);
     }
 
     @GetMapping("/pets")
-    public CustomResponse<WalkPetResponse.WalkPetListResponse> getPetList() {
-        // TODO: Annotation으로 변경 필요
-        Member member = Member.builder().build();
-        List<Pet> pets = memberWalkService.getPets(member);
-        return CustomResponse.ok(WalkPetResponse.WalkPetListResponse.from(pets));
+    public CustomResponse<WalkResponse.WalkAvailablePetListResponse> getAvailablePetList(@AuthenticatedMember Member member) {
+        WalkResponse.WalkAvailablePetListResponse pets = walkQueryService.getAvailablePets(member);
+        return CustomResponse.ok(pets);
     }
 
     @PostMapping("/members")
-    public CustomResponse<MemberWalkResponse.WalkMemberListResponse> getMemberList(@RequestBody MemberWalkRequest.PetMemberRequest request) {
-        List<Member> members = memberWalkService.getMembers(request);
-        return CustomResponse.ok(MemberWalkResponse.WalkMemberListResponse.from(members));
+    public CustomResponse<WalkResponse.WalkAvailableMemberListResponse> getAvailableMemberList(@RequestBody WalkRequest.AvailableMemberRequest request) {
+        WalkResponse.WalkAvailableMemberListResponse members = walkQueryService.getAvailableMembers(request);
+        return CustomResponse.ok(members);
     }
 
     @PatchMapping("/{walkId}")
     public CustomResponse<WalkResponse.WalkShareResponse> shareWalk(@PathVariable Long walkId) {
-        Walk walk = walkService.shareWalk(walkId);
-        return CustomResponse.ok(null);
+        WalkResponse.WalkShareResponse response = walkCommandService.shareWalk(walkId);
+        return CustomResponse.ok(response);
     }
 
     @PostMapping("/{walkId}")
     public CustomResponse<WalkResponse.WalkLikeResponse> likeWalk(@PathVariable Long walkId) {
-        Walk walk = walkService.likeWalk(walkId);
-        return CustomResponse.ok(null);
+        WalkResponse.WalkLikeResponse response = walkCommandService.likeWalk(walkId);
+        return CustomResponse.ok(response);
     }
 }

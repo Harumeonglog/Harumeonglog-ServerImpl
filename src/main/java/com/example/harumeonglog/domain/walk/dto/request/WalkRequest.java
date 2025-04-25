@@ -8,7 +8,7 @@ import java.util.List;
 public class WalkRequest {
 
     @Getter
-    public static class WalkCreateRequest {
+    public static class WalkStartRequest {
 
         private final List<Long> petId;
         private final List<Long> memberId;
@@ -19,7 +19,7 @@ public class WalkRequest {
         private final Integer time;
         private final List<Track> tracks;
 
-        public WalkCreateRequest(
+        public WalkStartRequest(
                 @JsonProperty("petId") List<Long> petId,
                 @JsonProperty("memberId") List<Long> memberId,
                 @JsonProperty("title") String title,
@@ -37,6 +37,17 @@ public class WalkRequest {
             this.distance = distance;
             this.time = time;
             this.tracks = tracks;
+        }
+    }
+
+    @Getter
+    public static class AvailableMemberRequest {
+        private final List<Long> petId;
+
+        public AvailableMemberRequest(
+                @JsonProperty("petId") List<Long> petId
+        ) {
+            this.petId = petId;
         }
     }
 
