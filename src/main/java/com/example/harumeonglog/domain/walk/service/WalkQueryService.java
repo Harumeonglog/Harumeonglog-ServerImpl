@@ -6,7 +6,7 @@ import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
 
 public interface WalkQueryService {
     WalkResponse.WalkAvailablePetListResponse getAvailablePets(Member member);
-    WalkResponse.WalkAvailableMemberListResponse getAvailbleMembers(WalkRequest.AvailableMemberRequest dto);
+    WalkResponse.WalkAvailableMemberListResponse getAvailableMembers(WalkRequest.AvailableMemberRequest dto);
     WalkResponse.WalkSearchListResponse getWalkList(String sort, Long cursor, int offset);
     WalkResponse.WalkDetailResponse getWalkDetails(Long walkId);
 }

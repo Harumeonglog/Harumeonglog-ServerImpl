@@ -15,6 +15,12 @@ import java.util.Optional;
 public interface MemberPetRepository extends JpaRepository<MemberPet, Long> {
     Optional<MemberPet> findByMemberAndPet(Member member, Pet pet);
 
+    @Query("SELECT mp FROM MemberPet mp JOIN FETCH mp.pet p WHERE mp.member.id = :memberId")
+    List<MemberPet> findByMember(@Param("memberId") Long memberId);
+
+    @Query("SELECT mp FROM MemberPet mp JOIN FETCH mp.member m WHERE mp.pet.id = :petId")
+    List<MemberPet> findByPet(@Param("petId") Long petId);
+
     @Query("""
         SELECT mp
         FROM MemberPet mp

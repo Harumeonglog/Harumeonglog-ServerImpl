@@ -39,12 +39,14 @@ public class WalkController implements WalkControllerSpecification {
         return CustomResponse.ok(response);
     }
 
+    // TODO: 추후 커서 페이지네이션 필요
     @GetMapping("/pets")
     public CustomResponse<WalkResponse.WalkAvailablePetListResponse> getAvailablePetList(@AuthenticatedMember Member member) {
         WalkResponse.WalkAvailablePetListResponse pets = walkQueryService.getAvailablePets(member);
         return CustomResponse.ok(pets);
     }
 
+    // TODO: 추후 커서 페이지네이션 필요
     @PostMapping("/members")
     public CustomResponse<WalkResponse.WalkAvailableMemberListResponse> getAvailableMemberList(@RequestBody WalkRequest.AvailableMemberRequest request) {
         WalkResponse.WalkAvailableMemberListResponse members = walkQueryService.getAvailableMembers(request);
