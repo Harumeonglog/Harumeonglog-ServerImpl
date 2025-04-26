@@ -2,6 +2,7 @@ package com.example.harumeonglog.domain.event.converter;
 
 import com.example.harumeonglog.domain.event.dto.request.EventRequest;
 import com.example.harumeonglog.domain.event.dto.response.EventResponse;
+import com.example.harumeonglog.domain.event.dto.response.EventResponse.MedicineEventDetailResponse;
 import com.example.harumeonglog.domain.event.entity.*;
 import com.example.harumeonglog.domain.event.entity.enums.RepeatDay;
 import com.example.harumeonglog.domain.member.entity.Member;
@@ -50,6 +51,7 @@ public class EventConverter {
                         .category(request.getCategory())
                         .member(member)
                         .pet(pet)
+                        .time(request.getTime())
                         .isOriginalEvent(isOriginalEvent)
                         .originalEventId(originalEventId)
                         .build();
@@ -66,6 +68,7 @@ public class EventConverter {
                         .category(request.getCategory())
                         .member(member)
                         .pet(pet)
+                        .time(request.getTime())
                         .details(request.getDetails())
                         .isOriginalEvent(isOriginalEvent)
                         .originalEventId(originalEventId)
@@ -83,6 +86,7 @@ public class EventConverter {
                         .category(request.getCategory())
                         .member(member)
                         .pet(pet)
+                        .time(request.getTime())
                         .hospitalName(request.getHospitalName())
                         .department(request.getDepartment())
                         .cost(request.getCost())
@@ -103,6 +107,7 @@ public class EventConverter {
                         .category(request.getCategory())
                         .member(member)
                         .pet(pet)
+                        .time(request.getTime())
                         .medicineName(request.getMedicineName())
                         .details(request.getDetails())
                         .isOriginalEvent(isOriginalEvent)
@@ -121,6 +126,7 @@ public class EventConverter {
                         .category(request.getCategory())
                         .member(member)
                         .pet(pet)
+                        .time(request.getTime())
                         .distance(request.getDistance())
                         .duration(request.getDuration())
                         .isOriginalEvent(isOriginalEvent)
@@ -142,7 +148,7 @@ public class EventConverter {
 
 
 
-    public static EventResponse.EventPreviewResponse toEventDto(Event event) {
+    public static EventResponse.EventPreviewResponse toEventPreviewDto(Event event) {
         return EventResponse.EventPreviewResponse.builder()
                 .id(event.getId())
                 .done(event.getDone())
@@ -152,7 +158,7 @@ public class EventConverter {
 
     public static EventResponse.EventDayResponse toEventDayResponse(Slice<Event> eventSlice) {
         List<EventResponse.EventPreviewResponse> content = eventSlice.getContent().stream()
-                .map(EventConverter::toEventDto)
+                .map(EventConverter::toEventPreviewDto)
                 .collect(Collectors.toList());
 
         Long nextCursor = content.isEmpty() ? null : content.get(content.size() - 1).getId();
@@ -177,5 +183,108 @@ public class EventConverter {
         };
     }
 
+
+
+
+    public static EventResponse.BaseEventResponse toBaseEventResponse(Event event) {
+        switch (event.getCategory()) {
+            case BATH:
+                return toBathEventResponse(event);
+            case GENERAL:
+                return toGeneralEventResponse((GeneralEvent) event);
+            case HOSPITAL:
+                return toHospitalEventResponse((HospitalEvent) event);
+            case MEDICINE:
+                return toMedicineEventResponse((MedicineEvent) event);
+            case WALK:
+                return toWalkEventResponse((WalkEvent) event);
+            default:
+                throw new EventException(EventErrorCode.INVALID_CATEGORY);
+        }
+    }
+
+    // BATH 응답 변환
+    private static EventResponse.BathEventDetailResponse toBathEventResponse(Event event) {
+        return EventResponse.BathEventDetailResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .date(event.getDate())
+                .isRepeated(event.getIsRepeated())
+                .expiredDate(event.getExpiredDate())
+                .hasNotice(event.getHasNotice())
+                .category(event.getCategory())
+                .time(event.getTime())
+                .repeatDays(event.getRepeatDays())
+                .build();
+    }
+
+    // GENERAL 응답 변환
+    private static EventResponse.GeneralEventDetailResponse toGeneralEventResponse(GeneralEvent event) {
+        return EventResponse.GeneralEventDetailResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .date(event.getDate())
+                .isRepeated(event.getIsRepeated())
+                .expiredDate(event.getExpiredDate())
+                .hasNotice(event.getHasNotice())
+                .category(event.getCategory())
+                .details(event.getDetails())
+                .time(event.getTime())
+                .repeatDays(event.getRepeatDays())
+                .build();
+    }
+
+    // HOSPITAL 응답 변환
+    private static EventResponse.HospitalEventDetailResponse toHospitalEventResponse(HospitalEvent event) {
+        return EventResponse.HospitalEventDetailResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .date(event.getDate())
+                .isRepeated(event.getIsRepeated())
+                .expiredDate(event.getExpiredDate())
+                .hasNotice(event.getHasNotice())
+                .category(event.getCategory())
+                .hospitalName(event.getHospitalName())
+                .department(event.getDepartment())
+                .cost(event.getCost())
+                .details(event.getDetails())
+                .time(event.getTime())
+                .repeatDays(event.getRepeatDays())
+                .build();
+    }
+
+    // MEDICINE 응답 변환
+    private static EventResponse.MedicineEventDetailResponse toMedicineEventResponse(MedicineEvent event) {
+        return EventResponse.MedicineEventDetailResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .date(event.getDate())
+                .isRepeated(event.getIsRepeated())
+                .expiredDate(event.getExpiredDate())
+                .hasNotice(event.getHasNotice())
+                .category(event.getCategory())
+                .medicineName(event.getMedicineName())
+                .details(event.getDetails())
+                .time(event.getTime())
+                .repeatDays(event.getRepeatDays())
+                .build();
+    }
+
+    // WALK 응답 변환
+    private static EventResponse.WalkEventDetailResponse toWalkEventResponse(WalkEvent event) {
+        return EventResponse.WalkEventDetailResponse.builder()
+                .id(event.getId())
+                .title(event.getTitle())
+                .date(event.getDate())
+                .isRepeated(event.getIsRepeated())
+                .expiredDate(event.getExpiredDate())
+                .hasNotice(event.getHasNotice())
+                .category(event.getCategory())
+                .distance(event.getDistance())
+                .duration(event.getDuration())
+                .time(event.getTime())
+                .repeatDays(event.getRepeatDays())
+                .build();
+    }
 
 }

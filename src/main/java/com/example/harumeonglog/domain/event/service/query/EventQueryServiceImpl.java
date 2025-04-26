@@ -6,6 +6,8 @@ import com.example.harumeonglog.domain.event.entity.Event;
 import com.example.harumeonglog.domain.event.entity.enums.EventCategory;
 import com.example.harumeonglog.domain.event.repository.EventRepository;
 import com.example.harumeonglog.domain.member.entity.Member;
+import com.example.harumeonglog.global.error.code.EventErrorCode;
+import com.example.harumeonglog.global.error.exception.EventException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -38,6 +40,9 @@ public class EventQueryServiceImpl implements EventQueryService{
 
     @Override
     public EventResponse.BaseEventResponse getEvent(Long eventId) {
-        return null;
+        Event event = eventRepository.findById(eventId).orElseThrow(
+                () -> new EventException(EventErrorCode.NOT_FOUND));
+
+        return EventConverter.toBaseEventResponse(event);
     }
 }

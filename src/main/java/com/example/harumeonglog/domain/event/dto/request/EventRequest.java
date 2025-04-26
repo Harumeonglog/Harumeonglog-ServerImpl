@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 public class EventRequest {
@@ -20,6 +21,7 @@ public class EventRequest {
         private LocalDate expiredDate;
         private List<RepeatDay> repeatDays;
         private Boolean hasNotice;
+        private LocalTime time;
         private EventCategory category;
         // 카테고리별 필드 (선택적)
         private String details;        // GENERAL, HOSPITAL, MEDICINE

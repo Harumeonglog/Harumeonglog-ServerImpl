@@ -13,6 +13,7 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 @Entity
@@ -56,6 +57,9 @@ public class Event{
 
     @Column(name = "has_notice", nullable = false)
     private Boolean hasNotice;
+
+    @Column(name = "time", nullable = false)
+    private LocalTime time;
 
     @Column(name = "done", nullable = false)
     private Boolean done;

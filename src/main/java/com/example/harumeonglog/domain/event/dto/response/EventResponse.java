@@ -2,12 +2,14 @@ package com.example.harumeonglog.domain.event.dto.response;
 
 
 import com.example.harumeonglog.domain.event.entity.enums.EventCategory;
+import com.example.harumeonglog.domain.event.entity.enums.RepeatDay;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class EventResponse {
@@ -25,17 +27,17 @@ public class EventResponse {
         private String title;
         private LocalDate date;
         private Boolean isRepeated;
+        private List<RepeatDay> repeatDays;
         private LocalDate expiredDate;
         private Boolean hasNotice;
         private EventCategory category;
+        private LocalTime time;
     }
 
     @Getter
     @SuperBuilder
     public static class GeneralEventDetailResponse extends BaseEventResponse {
         private String details;
-
-
     }
 
     @Getter
