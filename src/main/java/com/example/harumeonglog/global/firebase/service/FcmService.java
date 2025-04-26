@@ -1,6 +1,7 @@
 package com.example.harumeonglog.global.firebase.service;
 
 import com.example.harumeonglog.domain.member.entity.Member;
+import com.example.harumeonglog.domain.member.entity.enums.NoticeType;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.domain.member.repository.NoticeRepository;
 import com.example.harumeonglog.global.discord.DiscordApiUtil;
@@ -23,7 +24,7 @@ public class FcmService {
     private final MemberRepository memberRepository;
     private final DiscordApiUtil discordApiUtil;
 
-    public void sendPushNotification(Member receiver, String title, String body, Notification alarmDetailType) {
+    public void sendPushNotification(Member receiver, String title, String body, NoticeType noticeType) {
         if (receiver.getDeviceId() == null) {
             return;
         }
@@ -36,7 +37,7 @@ public class FcmService {
                 .build();
 
         ApnsFcmOptions apnsFcmOptions = ApnsFcmOptions.builder()
-                .setAnalyticsLabel(alarmDetailType.toString())
+                .setAnalyticsLabel(noticeType.toString())
                 .build();
 
         ApnsConfig apnsConfig = ApnsConfig.builder()
