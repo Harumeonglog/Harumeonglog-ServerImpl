@@ -36,5 +36,6 @@ public class MemberCommandServiceImpl implements MemberCommandService {
     @Override
     public void saveFCM(Member member, MemberRequest.FCMRequest fcmRequest) {
         member.updateFCMToken(fcmRequest.getFcmToken());
+        memberRepository.save(member);
     }
 }
