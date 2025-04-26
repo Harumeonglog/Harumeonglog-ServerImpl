@@ -48,9 +48,6 @@ public class Member extends BaseEntity {
 
     private String deviceId;
 
-    @OneToOne(mappedBy = "member")
-    private Setting setting;
-
     public void update(String nickname, String image) {
          this.nickname = nickname;
          this.image = image;
