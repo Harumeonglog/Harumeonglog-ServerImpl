@@ -12,7 +12,6 @@ import java.util.List;
 public class EventRequest {
 
     @Getter
-    @Setter
     public static class EventRequestDTO {
         private String title;
         private LocalDate date;
