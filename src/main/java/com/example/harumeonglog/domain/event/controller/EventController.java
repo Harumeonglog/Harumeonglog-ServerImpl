@@ -54,8 +54,9 @@ public class EventController implements EventControllerSpecification {
     }
 
     @DeleteMapping("/{eventId}")
-    public CustomResponse<String> deleteEvent(@PathVariable Long eventId){
-        eventCommandService.deleteEvent(eventId);
+    public CustomResponse<String> deleteEvent(@PathVariable Long eventId,
+                                              @AuthenticatedMember Member member){
+        eventCommandService.deleteEvent(member, eventId);
         return CustomResponse.ok("일정 삭제가 완료되었습니다.");
     }
 

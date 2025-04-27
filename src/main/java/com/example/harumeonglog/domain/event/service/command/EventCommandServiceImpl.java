@@ -85,8 +85,13 @@ public class EventCommandServiceImpl implements EventCommandService {
 
 
     @Override
-    public void deleteEvent(Long eventId) {
+    public void deleteEvent(Member member, Long eventId) {
+        Event event = eventRepository.findById(eventId)
+                .orElseThrow(() -> new EventException(PetErrorCode.NOT_FOUND));
 
+        checkMemberRole(member, event.getPet());
+
+        event.softDelete();
     }
 
     @Override

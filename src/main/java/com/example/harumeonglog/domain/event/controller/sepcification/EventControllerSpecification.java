@@ -58,8 +58,14 @@ public interface EventControllerSpecification {
             @PathVariable Long eventId,
             @RequestBody EventRequest.EventRequestDTO request);
 
+
+    @Operation(summary = "일정 삭제 API by 백종우", description = "특정 id의 일정을 삭제합니다.")
+    @ApiResponses({
+            @ApiResponse(responseCode = "COMMON200", description = "일정 삭제 성공")
+    })
     @DeleteMapping("/{eventId}")
-    CustomResponse<String> deleteEvent(@PathVariable Long eventId);
+    CustomResponse<String> deleteEvent(@PathVariable Long eventId,
+                                       @AuthenticatedMember Member member);
 
     @PatchMapping("/{eventId}")
     CustomResponse<EventResponse.EventCompleteResponse> completeEvent(@PathVariable Long eventId);

@@ -106,4 +106,12 @@ public class Event{
     public void updateId(Long eventId){
         this.id = eventId;
     }
+
+    public void softDelete(){
+        this.deletedAt = LocalDateTime.now();
+    }
+
+    public void restore(){
+        this.deletedAt = null;
+    }
 }
