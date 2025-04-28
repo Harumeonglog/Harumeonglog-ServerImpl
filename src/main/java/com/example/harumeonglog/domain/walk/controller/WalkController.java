@@ -50,16 +50,17 @@ public class WalkController implements WalkControllerSpecification {
     }
 
     @GetMapping
-    public CustomResponse<WalkResponse.WalkSearchListResponse> getWalkList(@RequestParam(value = "sort", defaultValue = "RECOMMEND") String sort,
-                                                                       @RequestParam(value = "cursor", required = false) Long cursor,
-                                                                       @RequestParam(value = "size", defaultValue = "10") int offset) {
-        WalkResponse.WalkSearchListResponse response = walkQueryService.getWalkList(sort, cursor, offset);
+    public CustomResponse<WalkResponse.WalkSearchListResponse> getWalkList(@AuthenticatedMember Member member,
+                                                                           @RequestParam(value = "sort", defaultValue = "RECOMMEND") String sort,
+                                                                           @RequestParam(value = "cursor", required = false) Long cursor,
+                                                                           @RequestParam(value = "size", defaultValue = "10") int offset) {
+        WalkResponse.WalkSearchListResponse response = walkQueryService.getWalkList(member, sort, cursor, offset);
         return CustomResponse.ok(response);
     }
 
     @GetMapping("/{walkId}")
-    public CustomResponse<WalkResponse.WalkDetailResponse> getWalk(@PathVariable Long walkId) {
-        WalkResponse.WalkDetailResponse response = walkQueryService.getWalkDetails(walkId);
+    public CustomResponse<WalkResponse.WalkDetailResponse> getWalk(@AuthenticatedMember Member member, @PathVariable Long walkId) {
+        WalkResponse.WalkDetailResponse response = walkQueryService.getWalkDetails(member, walkId);
         return CustomResponse.ok(response);
     }
 

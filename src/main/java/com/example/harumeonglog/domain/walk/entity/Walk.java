@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Getter
@@ -51,6 +53,9 @@ public class Walk extends BaseEntity {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @OneToMany(mappedBy = "walk", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Track> trackList = new ArrayList<>();
 
     public void updateTitle(String title) {
         this.title = title;

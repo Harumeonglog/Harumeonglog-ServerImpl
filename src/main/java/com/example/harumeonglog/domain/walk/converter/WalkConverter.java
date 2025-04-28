@@ -7,6 +7,7 @@ import com.example.harumeonglog.domain.walk.entity.Track;
 import com.example.harumeonglog.domain.walk.entity.Walk;
 import com.example.harumeonglog.domain.walk.entity.WalkPosition;
 import com.example.harumeonglog.domain.walk.entity.enums.WalkStatus;
+import com.example.harumeonglog.global.util.DistanceUtil;
 
 import java.util.Collection;
 import java.util.List;
@@ -109,6 +110,46 @@ public class WalkConverter {
                 .items(items)
                 .hasNext(hasNext)
                 .cursor(cursor)
+                .build();
+    }
+
+    public static WalkResponse.WalkSearchResponse toWalkSearchResponse(Walk walk, String nickname, Boolean isLike) {
+        return WalkResponse.WalkSearchResponse.builder()
+                .id(walk.getId())
+                .title(walk.getTitle())
+                .time(walk.getTime())
+                .distance(DistanceUtil.getDistanceWithString(walk.getDistance()))
+                .walkLikeNum(walk.getWalkLikeNum())
+                .isLike(isLike)
+                .memberNickname(nickname)
+                .build();
+    }
+
+    public static WalkResponse.WalkDetailResponse toWalkDetailResponse(Walk walk, String nickname, Boolean isLike) {
+        return WalkResponse.WalkDetailResponse.builder()
+                .id(walk.getId())
+                .title(walk.getTitle())
+                .walkLikeNum(walk.getWalkLikeNum())
+                .distance(DistanceUtil.getDistanceWithString(walk.getDistance()))
+                .time(walk.getTime())
+                .memberNickname(nickname)
+                .isLike(isLike)
+                .tracks(walk.getTrackList().stream().map(WalkConverter::toWalkResponseTrack).toList())
+                .build();
+
+    }
+
+    public static WalkResponse.Track toWalkResponseTrack(Track track) {
+        return WalkResponse.Track.builder()
+                .trackId(track.getId())
+                .positions(track.getWalkPositionList().stream().map(WalkConverter::toWalkResponsePosition).toList())
+                .build();
+    }
+
+    public static WalkResponse.Position toWalkResponsePosition(WalkPosition walkPosition) {
+        return WalkResponse.Position.builder()
+                .latitude(walkPosition.getLatitude())
+                .longitude(walkPosition.getLongitude())
                 .build();
     }
 

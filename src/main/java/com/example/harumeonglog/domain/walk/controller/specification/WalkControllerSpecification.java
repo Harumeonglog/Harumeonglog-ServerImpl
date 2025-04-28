@@ -4,11 +4,13 @@ import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.walk.dto.request.WalkRequest;
 import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
 import com.example.harumeonglog.global.common.response.CustomResponse;
+import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
 public interface WalkControllerSpecification {
@@ -30,7 +32,17 @@ public interface WalkControllerSpecification {
 
     @Operation(summary = "산책 위치 추가 API by 서정모", description = "산책 좌표 추가할 때 사용하는 API")
     @Parameter(name = "trackId", description = "경로 ID")
-    CustomResponse<WalkResponse.PositionCreateResponse> addPosition(@PathVariable Long trackId, @RequestBody WalkRequest.PositionRequest request);
+    CustomResponse<WalkResponse.PositionCreateResponse> addPosition(Long trackId, WalkRequest.PositionRequest request);
+
+    @Operation(summary = "산책 전체 조회 API by 서정모", description = "산책 전체 조회 API, SORT 부분 미완성")
+    CustomResponse<WalkResponse.WalkSearchListResponse> getWalkList(Member member,
+                                                                    String sort,
+                                                                    Long cursor,
+                                                                    int offset);
+
+    @Operation(summary = "산책 하나의 세부정보 조회 API by 서정모", description = "산책 세부 정보 조회")
+    @Parameter(name = "walkId", description = "산책 ID")
+    CustomResponse<WalkResponse.WalkDetailResponse> getWalk(@AuthenticatedMember Member member, @PathVariable Long walkId);
 
     @Operation(summary = "산책 가능한 펫 API by 서정모", description = "산책 가능한 펫들 가져오는 API")
     CustomResponse<WalkResponse.WalkAvailablePetListResponse> getAvailablePetList(Member member);

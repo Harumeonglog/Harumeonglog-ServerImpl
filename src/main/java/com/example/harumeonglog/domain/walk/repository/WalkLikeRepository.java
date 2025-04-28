@@ -9,4 +9,5 @@ import java.util.Optional;
 
 public interface WalkLikeRepository extends JpaRepository<WalkLike, Long> {
     Optional<WalkLike> findByMemberAndWalk(Member member, Walk walk);
+    boolean existsByMemberAndWalk(Member member, Walk walk);
 }

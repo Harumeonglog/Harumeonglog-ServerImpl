@@ -9,8 +9,8 @@ import com.example.harumeonglog.domain.walk.entity.enums.WalkStatus;
 public interface WalkQueryService {
     WalkResponse.WalkAvailablePetListResponse getAvailablePets(Member member);
     WalkResponse.WalkAvailableMemberListResponse getAvailableMembers(WalkRequest.AvailableMemberRequest dto);
-    WalkResponse.WalkSearchListResponse getWalkList(String sort, Long cursor, int offset);
-    WalkResponse.WalkDetailResponse getWalkDetails(Long walkId);
+    WalkResponse.WalkSearchListResponse getWalkList(Member member, String sort, Long cursor, int offset);
+    WalkResponse.WalkDetailResponse getWalkDetails(Member member, Long walkId);
 
     Walk findById(Long walkId);
     boolean hasStatus(Walk walk, WalkStatus... walkStatus);
