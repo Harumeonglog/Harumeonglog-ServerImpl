@@ -31,6 +31,16 @@ public class CommentController implements CommentControllerSpecification {
         return CustomResponse.ok(commentPreviewListResponse);
     }
 
+    @GetMapping("/comments/me")
+    public CustomResponse<CommentResponse.CommentPreviewListResponse> getMyComments(
+            @AuthenticatedMember Member member,
+            @RequestParam Long cursor,
+            @RequestParam Integer size
+    ) {
+        CommentResponse.CommentPreviewListResponse commentPreviewListResponse = commentQueryService.getMyComments(member, cursor, size);
+        return CustomResponse.ok(commentPreviewListResponse);
+    }
+
     @PostMapping("/comments/{commentId}/reports")
     public CustomResponse<Void> reportComment(
             @PathVariable Long commentId,
