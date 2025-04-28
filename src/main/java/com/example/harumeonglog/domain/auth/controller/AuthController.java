@@ -45,7 +45,7 @@ public class AuthController implements AuthControllerSpecification {
     @PostMapping("/login/test")
     public String loginTest() {
         CustomUserDetails customUserDetails = customDetailService.loadUserById(1L);
-        String accessToken = jwtUtil.createAccessToken(customUserDetails);
+        String accessToken = jwtUtil.createRefreshToken(customUserDetails);
         System.out.println(accessToken);
         return accessToken;
     }
