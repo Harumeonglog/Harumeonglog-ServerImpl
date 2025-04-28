@@ -77,6 +77,12 @@ public class WalkController implements WalkControllerSpecification {
         return CustomResponse.ok(members);
     }
 
+    @PatchMapping("/{walkId}/titles")
+    public CustomResponse<WalkResponse.WalkUpdateResponse> updateWalk(@PathVariable Long walkId, @RequestBody WalkRequest.WalkUpdateRequest request) {
+        WalkResponse.WalkUpdateResponse response = walkCommandService.updateWalk(walkId, request);
+        return CustomResponse.ok(response);
+    }
+
     @PatchMapping("/{walkId}")
     public CustomResponse<WalkResponse.WalkShareResponse> shareWalk(@PathVariable Long walkId) {
         WalkResponse.WalkShareResponse response = walkCommandService.shareWalk(walkId);

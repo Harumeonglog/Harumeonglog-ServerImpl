@@ -120,4 +120,12 @@ public class WalkConverter {
                 .updatedAt(walkPosition.getUpdatedAt())
                 .build();
     }
+
+    public static WalkResponse.WalkUpdateResponse toWalkUpdateResponse(Walk walk) {
+        return WalkResponse.WalkUpdateResponse.builder()
+                .walkId(walk.getId())
+                .title(walk.getTitle())
+                .updatedAt(walk.getUpdatedAt())
+                .build();
+    }
 }

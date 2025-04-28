@@ -52,6 +52,10 @@ public class Walk extends BaseEntity {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+    public void updateTitle(String title) {
+        this.title = title;
+    }
+
     public void updateWalkStatus(WalkStatus walkStatus) {
         this.status = walkStatus;
     }

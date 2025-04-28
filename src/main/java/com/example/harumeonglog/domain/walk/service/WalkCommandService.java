@@ -10,6 +10,7 @@ public interface WalkCommandService {
     WalkResponse.WalkResumeResponse resumeWalk(Long walkId, WalkRequest.WalkResumeRequest request);
     WalkResponse.WalkEndResponse endWalk(Long walkId);
     WalkResponse.PositionCreateResponse addPosition(WalkRequest.PositionRequest request, Long trackId);
+    WalkResponse.WalkUpdateResponse updateWalk(Long walkId, WalkRequest.WalkUpdateRequest request);
     WalkResponse.WalkShareResponse shareWalk(Long id);
     WalkResponse.WalkLikeResponse likeWalk(Member member, Long walkId);
 }

@@ -110,6 +110,14 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     }
 
     @Override
+    public WalkResponse.WalkUpdateResponse updateWalk(Long walkId, WalkRequest.WalkUpdateRequest request) {
+        Walk walk = walkQueryService.findById(walkId);
+
+        walk.updateTitle(request.getTitle());
+        return WalkConverter.toWalkUpdateResponse(walk);
+    }
+
+    @Override
     public WalkResponse.WalkShareResponse shareWalk(Long id) {
         Walk walk = walkQueryService.findById(id);
 

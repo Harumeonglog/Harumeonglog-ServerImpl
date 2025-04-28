@@ -38,6 +38,10 @@ public interface WalkControllerSpecification {
     @Operation(summary = "산책 가능한 사용자 API by 서정모", description = "산책 가능한 사용자 가져오는 API")
     CustomResponse<WalkResponse.WalkAvailableMemberListResponse> getAvailableMemberList(WalkRequest.AvailableMemberRequest request);
 
+    @Operation(summary = "산책 정보 변경 API by 서정모", description = "산책 정보 변경하는 API")
+    @Parameter(name = "walkId", description = "산책 ID")
+    CustomResponse<WalkResponse.WalkUpdateResponse> updateWalk(Long walkId, WalkRequest.WalkUpdateRequest request);
+
     @Operation(summary = "산책 공유 API by 서정모", description = "산책 공유하는 API")
     @Parameter(name = "walkId", description = "산책 ID")
     CustomResponse<WalkResponse.WalkShareResponse> shareWalk(Long walkId);

@@ -136,6 +136,14 @@ public class WalkResponse {
 
     @Getter
     @Builder
+    public static class WalkUpdateResponse {
+        private Long walkId;
+        private String title;
+        private LocalDateTime updatedAt;
+    }
+
+    @Getter
+    @Builder
     public static class Track {
         private Long trackId;
         private List<Position> positions;

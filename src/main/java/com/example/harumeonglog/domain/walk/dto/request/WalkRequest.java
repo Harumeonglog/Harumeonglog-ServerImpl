@@ -1,5 +1,6 @@
 package com.example.harumeonglog.domain.walk.dto.request;
 
+import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Getter;
 
@@ -64,6 +65,17 @@ public class WalkRequest {
         ) {
             this.latitude = latitude;
             this.longitude = longitude;
+        }
+    }
+
+    @Getter
+    public static class WalkUpdateRequest {
+        private final String title;
+
+        public WalkUpdateRequest(
+                @JsonProperty("title") String title
+        ) {
+            this.title = title;
         }
     }
 }
