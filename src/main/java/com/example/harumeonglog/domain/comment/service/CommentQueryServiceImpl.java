@@ -62,4 +62,26 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 
         return CommentConverter.toCommentPreviewListResponse(responses, commentSlice.hasNext(), nextCursor);
     }
+
+    @Override
+    public CommentResponse.CommentMyPreviewListResponse getMyComments(Member member, Long cursor, Integer size) {
+        if (cursor == 0) {
+            cursor = Long.MAX_VALUE;
+        }
+
+        Slice<Comment> commentSlice = commentRepository.findCommentSliceByMyMember(member, cursor, PageRequest.of(0, size));
+
+        List<Comment> commentList = commentSlice.toList();
+
+        List<CommentResponse.CommentMyPreviewResponse> responses = commentList.stream()
+                .map(CommentConverter::toCommentMyPreviewResponse)
+                .toList();
+
+        Long nextCursor = null;
+        if (!commentList.isEmpty() && commentSlice.hasNext()) {
+            nextCursor = commentList.get(commentList.size() - 1).getId();
+        }
+
+        return CommentConverter.toCommentMyPreviewListResponse(responses, commentSlice.hasNext(), nextCursor);
+    }
 }
