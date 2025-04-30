@@ -11,6 +11,7 @@ public class PostRequest {
     @Getter
     public static class PostCreateRequest {
         private PostCategory postCategory;
+        private String title;
         private String content;
         private List<String> postImageList;
     }
@@ -18,6 +19,7 @@ public class PostRequest {
     @Getter
     public static class PostUpdateRequest {
         private PostCategory postCategory;
+        private String title;
         private String content;
         private List<String> postImageList;
     }

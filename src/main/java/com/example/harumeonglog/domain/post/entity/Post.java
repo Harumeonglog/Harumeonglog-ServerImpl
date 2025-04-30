@@ -61,7 +61,8 @@ public class Post extends BaseEntity {
     private List<PostImage> postImageList = new ArrayList<>();
 
     // 비즈니스 함수
-    public void update(String content, PostCategory category, List<PostImage> postImageList) {
+    public void update(String title, String content, PostCategory category, List<PostImage> postImageList) {
+        this.title = title;
         this.content = content;
         this.category = category;
 
