@@ -6,9 +6,12 @@ import com.example.harumeonglog.domain.member.dto.response.MemberResponse;
 import com.example.harumeonglog.domain.member.dto.response.SettingResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.common.response.CustomResponse;
+import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 public interface MemberControllerSpecification {
 
@@ -41,4 +44,14 @@ public interface MemberControllerSpecification {
             @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
     })
     CustomResponse<SettingResponse.SettingUpdateResponse> updateSetting(Member member, SettingRequest.SettingUpdateRequest request);
+
+    @Operation(summary = "FCM 저장 API by 김준환", description = "로그인 후 써주시면 됩니다.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "COMMON200", description = "성공입니다.")
+    })
+    @PatchMapping("/fcm-tokens")
+    CustomResponse<Void> saveFCM(
+            @AuthenticatedMember Member member,
+            @RequestBody MemberRequest.FCMRequest fcmRequest
+    );
 }
