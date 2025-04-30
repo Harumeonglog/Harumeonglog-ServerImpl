@@ -1,7 +1,7 @@
-package com.example.harumeonglog.global.common.repository;
+package com.example.harumeonglog.global.outbox.repository;
 
-import com.example.harumeonglog.global.common.entity.OutBox;
-import com.example.harumeonglog.global.common.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.entity.OutBox;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

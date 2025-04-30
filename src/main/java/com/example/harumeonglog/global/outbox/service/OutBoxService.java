@@ -1,7 +1,7 @@
-package com.example.harumeonglog.global.common.service;
+package com.example.harumeonglog.global.outbox.service;
 
-import com.example.harumeonglog.global.common.entity.OutBox;
-import com.example.harumeonglog.global.common.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.entity.OutBox;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
 
 import java.util.List;
 

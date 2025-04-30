@@ -1,4 +1,4 @@
-package com.example.harumeonglog.global.common.dto;
+package com.example.harumeonglog.global.outbox.dto;
 
 import lombok.Builder;
 import lombok.Getter;

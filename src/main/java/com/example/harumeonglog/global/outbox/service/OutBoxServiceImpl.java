@@ -1,9 +1,9 @@
-package com.example.harumeonglog.global.common.service;
+package com.example.harumeonglog.global.outbox.service;
 
-import com.example.harumeonglog.global.common.converter.OutBoxConverter;
-import com.example.harumeonglog.global.common.entity.OutBox;
-import com.example.harumeonglog.global.common.entity.enums.EventType;
-import com.example.harumeonglog.global.common.repository.OutBoxRepository;
+import com.example.harumeonglog.global.outbox.converter.OutBoxConverter;
+import com.example.harumeonglog.global.outbox.entity.OutBox;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.repository.OutBoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;

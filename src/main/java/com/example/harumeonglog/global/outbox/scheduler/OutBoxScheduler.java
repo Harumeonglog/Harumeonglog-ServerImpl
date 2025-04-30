@@ -1,12 +1,12 @@
-package com.example.harumeonglog.global.common.scheduler;
+package com.example.harumeonglog.global.outbox.scheduler;
 
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.NoticeType;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
-import com.example.harumeonglog.global.common.dto.FcmPayload;
-import com.example.harumeonglog.global.common.entity.OutBox;
-import com.example.harumeonglog.global.common.entity.enums.EventType;
-import com.example.harumeonglog.global.common.service.OutBoxService;
+import com.example.harumeonglog.global.outbox.dto.FcmPayload;
+import com.example.harumeonglog.global.outbox.entity.OutBox;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.service.OutBoxService;
 import com.example.harumeonglog.global.common.util.JsonUtils;
 import com.example.harumeonglog.global.firebase.service.FcmService;
 import lombok.RequiredArgsConstructor;

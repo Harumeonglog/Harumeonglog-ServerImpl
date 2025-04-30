@@ -1,6 +1,7 @@
-package com.example.harumeonglog.global.common.entity;
+package com.example.harumeonglog.global.outbox.entity;
 
-import com.example.harumeonglog.global.common.entity.enums.EventType;
+import com.example.harumeonglog.global.common.entity.BaseEntity;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
 import jakarta.persistence.*;
 import lombok.*;
 

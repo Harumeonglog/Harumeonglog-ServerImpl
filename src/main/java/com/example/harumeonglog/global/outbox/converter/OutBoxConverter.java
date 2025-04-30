@@ -1,7 +1,7 @@
-package com.example.harumeonglog.global.common.converter;
+package com.example.harumeonglog.global.outbox.converter;
 
-import com.example.harumeonglog.global.common.entity.OutBox;
-import com.example.harumeonglog.global.common.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.entity.OutBox;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
 
 public class OutBoxConverter {
 
