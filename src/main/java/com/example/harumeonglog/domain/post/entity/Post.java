@@ -31,7 +31,7 @@ public class Post extends BaseEntity {
     @Builder.Default
     private Long postLikeNum = 0L;
 
-    @Column(name = "content")
+    @Column(name = "content", length = 2000)
     private String content;
 
     @Column(name = "post_report_num", nullable = false)
