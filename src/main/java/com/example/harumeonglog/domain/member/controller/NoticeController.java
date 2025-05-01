@@ -11,10 +11,12 @@ import com.example.harumeonglog.global.validation.annotation.CheckCursorValidati
 import com.example.harumeonglog.global.validation.annotation.CheckSizeValidation;
 import io.swagger.v3.oas.annotations.Parameter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/api/v1")
 public class NoticeController implements NoticeControllerSpecification {
 
