@@ -20,13 +20,10 @@ import com.example.harumeonglog.global.error.code.WalkErrorCode;
 import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.WalkException;
-import com.example.harumeonglog.global.util.DistanceUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.Collection;
 
 @Service
@@ -84,16 +81,16 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     }
 
     @Override
-    public WalkResponse.WalkEndResponse endWalk(Long walkId) {
+    public WalkResponse.WalkEndResponse endWalk(Long walkId, WalkRequest.WalkEndRequest request) {
         Walk walk = walkQueryService.findById(walkId);
 
         if (!walkQueryService.hasStatus(walk, WalkStatus.PROCESS, WalkStatus.PAUSE)) {
             throw new WalkException(WalkErrorCode.CANNOT_CHANGE_STATUS);
         }
 
-        // 시간 반영
-        updateTime(walk);
         walk.updateWalkStatus(WalkStatus.DONE);
+        walk.updateTime(request.getTime());
+        walk.addDistance(request.getDistance());
         return WalkConverter.toWalkEndResponse(walk);
     }
 
@@ -151,11 +148,7 @@ public class WalkCommandServiceImpl implements WalkCommandService {
             return lastPosition;
         }
 
-        WalkPosition newWalkPosition = createWalkPosition(track, latitude, longitude);
-
-        // 거리 반영
-        updateWalkDistance(track.getWalk(), lastPosition, newWalkPosition);
-        return newWalkPosition;
+        return createWalkPosition(track, latitude, longitude);
     }
 
     private WalkPosition createWalkPosition(Track track, Double latitude, Double longitude) {
@@ -197,16 +190,5 @@ public class WalkCommandServiceImpl implements WalkCommandService {
                     new MemberException(MemberErrorCode.NOT_FOUND));
             memberWalkCommandService.createMemberWalk(foundMember, walk);
         });
-    }
-
-    private void updateWalkDistance(Walk walk,WalkPosition lastPosition, WalkPosition newPosition) {
-        double distance = DistanceUtil.getDistance(lastPosition.getLatitude(), lastPosition.getLongitude(), newPosition.getLatitude(), newPosition.getLongitude());
-        walk.addDistance(distance);
-    }
-
-    private void updateTime(Walk walk) {
-        LocalDateTime now = LocalDateTime.now();
-        long time = ChronoUnit.MINUTES.between(walk.getCreatedAt(), now);
-        walk.updateTime(time);
     }
 }
