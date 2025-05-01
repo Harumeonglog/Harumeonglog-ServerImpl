@@ -5,6 +5,8 @@ import com.example.harumeonglog.domain.comment.dto.response.CommentResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
+import com.example.harumeonglog.global.validation.annotation.CheckCursorValidation;
+import com.example.harumeonglog.global.validation.annotation.CheckSizeValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -25,8 +27,8 @@ public interface CommentControllerSpecification {
     @GetMapping("/posts/{postId}/comments")
     CustomResponse<CommentResponse.CommentPreviewListResponse> getComments(
             @PathVariable Long postId,
-            @RequestParam Long cursor,
-            @RequestParam Integer size,
+            @RequestParam @CheckCursorValidation Long cursor,
+            @RequestParam @CheckSizeValidation Integer size,
             @AuthenticatedMember Member member
     );
 
@@ -34,8 +36,8 @@ public interface CommentControllerSpecification {
     @GetMapping("/comments/me")
     CustomResponse<CommentResponse.CommentMyPreviewListResponse> getMyComments(
             @AuthenticatedMember Member member,
-            @RequestParam Long cursor,
-            @RequestParam Integer size
+            @RequestParam @CheckCursorValidation Long cursor,
+            @RequestParam @CheckSizeValidation Integer size
     );
 
     @Operation(summary = "Comment 삭제 API by 김준환", description = "comment 삭제합니다.")
