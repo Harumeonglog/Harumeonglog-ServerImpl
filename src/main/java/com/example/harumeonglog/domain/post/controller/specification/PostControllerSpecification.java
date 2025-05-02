@@ -6,6 +6,8 @@ import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
+import com.example.harumeonglog.global.validation.annotation.CheckCursorValidation;
+import com.example.harumeonglog.global.validation.annotation.CheckSizeValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -23,8 +25,8 @@ public interface PostControllerSpecification {
     CustomResponse<PostResponse.PostPreviewListResponse> getPosts(
             @RequestParam(name = "search") String search,
             @RequestParam(name = "postRequestCategory") PostRequestCategory postRequestCategory,
-            @RequestParam(name = "cursor") Long cursor,
-            @RequestParam(name = "size") Integer size
+            @RequestParam(name = "cursor") @CheckCursorValidation Long cursor,
+            @RequestParam(name = "size") @CheckSizeValidation Integer size
     );
 
     @Operation(summary = "게시물 상세 조회 API by 김준환",description = "게시물 상세 조회")
@@ -100,8 +102,8 @@ public interface PostControllerSpecification {
     })
     @GetMapping("/me")
     CustomResponse<PostResponse.PostPreviewListResponse> getMyPost(
-            @RequestParam(name = "cursor") Long cursor,
-            @RequestParam(name = "size") Integer size,
+            @RequestParam(name = "cursor") @CheckCursorValidation Long cursor,
+            @RequestParam(name = "size") @CheckSizeValidation Integer size,
             @AuthenticatedMember Member member
     );
 
@@ -111,8 +113,8 @@ public interface PostControllerSpecification {
     })
     @GetMapping("/me/likes")
     CustomResponse<PostResponse.PostPreviewListResponse> getMyLikePost(
-            @RequestParam(name = "cursor") Long cursor,
-            @RequestParam(name = "size") Integer size,
+            @RequestParam(name = "cursor") @CheckCursorValidation Long cursor,
+            @RequestParam(name = "size") @CheckSizeValidation Integer size,
             @AuthenticatedMember Member member
     );
 }

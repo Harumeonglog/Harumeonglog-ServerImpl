@@ -4,6 +4,8 @@ import com.example.harumeonglog.domain.member.dto.response.NoticeResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.global.common.response.CustomResponse;
 import com.example.harumeonglog.global.security.annotation.AuthenticatedMember;
+import com.example.harumeonglog.global.validation.annotation.CheckCursorValidation;
+import com.example.harumeonglog.global.validation.annotation.CheckSizeValidation;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -24,8 +26,8 @@ public interface NoticeControllerSpecification {
     @GetMapping("/notices")
     CustomResponse<NoticeResponse.NoticeListResponse> getNotices(
             @AuthenticatedMember Member member,
-            @RequestParam(name = "cursor") Long cursor,
-            @RequestParam(name = "size") Integer size
+            @RequestParam(name = "cursor") @CheckCursorValidation Long cursor,
+            @RequestParam(name = "size") @CheckSizeValidation Integer size
     );
 
     @Operation(summary = "notice 삭제 API by 김준환", description = "notice를 삭제합니다")
