@@ -8,7 +8,7 @@ public interface WalkCommandService {
     WalkResponse.WalkStartResponse startWalk(Member member, WalkRequest.WalkStartRequest request);
     WalkResponse.WalkPauseResponse pauseWalk(Long walkId);
     WalkResponse.WalkResumeResponse resumeWalk(Long walkId, WalkRequest.WalkResumeRequest request);
-    WalkResponse.WalkEndResponse endWalk(Long walkId);
+    WalkResponse.WalkEndResponse endWalk(Long walkId, WalkRequest.WalkEndRequest request);
     WalkResponse.PositionCreateResponse addPosition(WalkRequest.PositionRequest request, Long trackId);
     WalkResponse.WalkUpdateResponse updateWalk(Long walkId, WalkRequest.WalkUpdateRequest request);
     WalkResponse.WalkShareResponse shareWalk(Long id);

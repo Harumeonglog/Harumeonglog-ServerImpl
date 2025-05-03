@@ -44,6 +44,20 @@ public class WalkRequest {
     }
 
     @Getter
+    public static class WalkEndRequest {
+        private final Long time;
+        private final Double distance;
+
+        public WalkEndRequest(
+                @JsonProperty("time") Long time,
+                @JsonProperty("distance") Double distance
+        ) {
+            this.time = time;
+            this.distance = distance;
+        }
+    }
+
+    @Getter
     public static class AvailableMemberRequest {
         private final List<Long> petId;
 

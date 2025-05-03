@@ -38,8 +38,8 @@ public class WalkController implements WalkControllerSpecification {
     }
 
     @PatchMapping("/{walkId}/end")
-    public CustomResponse<WalkResponse.WalkEndResponse> endWalk(@PathVariable Long walkId) {
-        WalkResponse.WalkEndResponse response = walkCommandService.endWalk(walkId);
+    public CustomResponse<WalkResponse.WalkEndResponse> endWalk(@PathVariable Long walkId, @RequestBody WalkRequest.WalkEndRequest request) {
+        WalkResponse.WalkEndResponse response = walkCommandService.endWalk(walkId, request);
         return CustomResponse.ok(response);
     }
 
@@ -78,13 +78,13 @@ public class WalkController implements WalkControllerSpecification {
         return CustomResponse.ok(members);
     }
 
-    @PatchMapping("/{walkId}/titles")
+    @PatchMapping("/{walkId}")
     public CustomResponse<WalkResponse.WalkUpdateResponse> updateWalk(@PathVariable Long walkId, @RequestBody WalkRequest.WalkUpdateRequest request) {
         WalkResponse.WalkUpdateResponse response = walkCommandService.updateWalk(walkId, request);
         return CustomResponse.ok(response);
     }
 
-    @PatchMapping("/{walkId}")
+    @PatchMapping("/{walkId}/share")
     public CustomResponse<WalkResponse.WalkShareResponse> shareWalk(@PathVariable Long walkId) {
         WalkResponse.WalkShareResponse response = walkCommandService.shareWalk(walkId);
         return CustomResponse.ok(response);
