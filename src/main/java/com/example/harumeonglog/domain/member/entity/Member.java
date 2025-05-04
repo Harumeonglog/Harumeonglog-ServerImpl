@@ -5,7 +5,6 @@ import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -26,9 +25,6 @@ public class Member extends BaseEntity {
 
     @Column(name = "nickname", nullable = false)
     private String nickname;
-
-    @Column(name = "birth")
-    private LocalDate birth;
 
     @Column(name = "social_type", nullable = false)
     @Enumerated(EnumType.STRING)

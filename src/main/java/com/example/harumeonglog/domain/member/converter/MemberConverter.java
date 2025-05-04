@@ -19,7 +19,6 @@ public class MemberConverter {
                 .memberId(member.getId())
                 .image(member.getImage())
                 .nickname(member.getNickname())
-                .birth(member.getBirth())
                 .updatedAt(member.getUpdatedAt())
                 .build();
     }
