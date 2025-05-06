@@ -37,7 +37,6 @@ public class KakaoOAuth2Service extends OAuth2ServiceImpl {
         return OAuth2Converter.toOAuth2LoginRequest(
                 claims.get(EMAIL, String.class),
                 claims.get(NICKNAME, String.class),
-                null,
                 SocialType.KAKAO,
                 claims.get(IMAGE, String.class),
                 claims.getSubject()
