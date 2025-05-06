@@ -72,6 +72,8 @@ cors:
     - http://localhost:5501
     - http://localhost:3453
     - http://localhost:8800
+    - http://api.haru-official.click
+    - https://api.haru-official.click
   methods:
     - GET
     - POST
