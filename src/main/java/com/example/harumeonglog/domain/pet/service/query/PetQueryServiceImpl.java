@@ -35,18 +35,6 @@ public class PetQueryServiceImpl implements PetQueryService {
     private final PetRepository petRepository;
 
 
-    // 사용자에 대한 memberPet 페이지네이션
-    private Slice<MemberPet> fetchMemberPetSliceWithCursor(Long cursor, int size, Member member) {
-        Pageable pageable = PageRequest.of(0, size);
-
-        if (cursor == null || cursor == 0L) {
-            return memberPetRepository.findFirstPageByMemberId(member.getId(), pageable);
-        } else {
-            return memberPetRepository.findByMemberAndCursor(member.getId(), cursor, pageable);
-        }
-    }
-
-
     @Override
     public PetResponse.GetPetsResponse getPets(Long cursor, int size, Member member) {
         // 페이징 처리된 멤버펫 관계 조회
@@ -88,9 +76,24 @@ public class PetQueryServiceImpl implements PetQueryService {
 
     @Override
     public PetResponse.MainPetResponse getMainPet(Member member) {
+        if(member.getCurrentPetId() == null) {
+            throw new PetException(PetErrorCode.CURRENT_PET_NOT_FOUND);
+        }
+
         Pet pet = petRepository.findById(member.getCurrentPetId()).orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
         String mainImage = s3Util.getUrlFromKey(pet.getMainImage());
         return PetConverter.toMainPetResponse(pet, mainImage);
+    }
+
+    // 사용자에 대한 memberPet 페이지네이션
+    private Slice<MemberPet> fetchMemberPetSliceWithCursor(Long cursor, int size, Member member) {
+        Pageable pageable = PageRequest.of(0, size);
+
+        if (cursor == null || cursor == 0L) {
+            return memberPetRepository.findFirstPageByMemberId(member.getId(), pageable);
+        } else {
+            return memberPetRepository.findByMemberAndCursor(member.getId(), cursor, pageable);
+        }
     }
 
 
