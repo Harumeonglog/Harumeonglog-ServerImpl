@@ -12,4 +12,12 @@ public class OutBoxConverter {
                     .processed(false)
                     .build();
     }
+
+    public static OutBox toS3OutBox(String payload) {
+        return OutBox.builder()
+                .eventType(EventType.S3)
+                .payload(payload)
+                .processed(false)
+                .build();
+    }
 }

@@ -64,6 +64,15 @@ public class S3Util {
         return s3ConfigData.getBaseUrl() + key;
     }
 
+    // S3 객체 존재 여부 확인
+    public boolean isObjectExists(String key) {
+        try {
+            return amazonS3Client.doesObjectExist(s3ConfigData.getBucket(), key);
+        } catch (AmazonS3Exception e) {
+            throw new S3Exception(S3ErrorCode.NOT_FOUND);
+        }
+    }
+
 
     // Presigned URL의 만료 시간 설정
     private Date getExpirationDate(int expirationMinutes) {

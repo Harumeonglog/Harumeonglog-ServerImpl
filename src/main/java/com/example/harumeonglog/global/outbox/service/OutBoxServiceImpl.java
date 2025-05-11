@@ -39,4 +39,14 @@ public class OutBoxServiceImpl implements OutBoxService {
     public void updateFailedFCMOutBox(List<OutBox> failedOutBox) {
         outBoxRepository.updateFailedFCMOutBox(failedOutBox);
     }
+
+    @Override
+    public void updateSuccessS3OutBox(List<OutBox> outBoxList) {
+        outBoxRepository.updateSuccessS3OutBox(outBoxList);
+    }
+
+    @Override
+    public void updateFailedS3OutBox(List<OutBox> failedOutBox) {
+        outBoxRepository.updateFailedS3OutBox(failedOutBox);
+    }
 }
