@@ -17,22 +17,13 @@ public class PostConverter {
 
     public static PostResponse.PostDetailResponse toPostDetailResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, List<String> imageList) {
 
-        // 현재 시각
-        LocalDateTime now = LocalDateTime.now();
-
-        // 생성 시각
-        LocalDateTime createdAt = post.getCreatedAt();
-
-        // 시간 차이 계산 (ChronoUnit.HOURS 사용)
-        long elapsedTime = ChronoUnit.HOURS.between(createdAt, now);
-
         return PostResponse.PostDetailResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .content(post.getContent())
                 .postCategory(post.getCategory())
                 .memberInfoResponse(memberInfoResponse)
-                .elapsedTime(elapsedTime)
+                .createdAt(post.getCreatedAt())
                 .likeNum(post.getPostLikeNum())
                 .commentNum(post.getCommentNum())
                 .postImageList(imageList)
@@ -41,20 +32,11 @@ public class PostConverter {
 
     public static PostResponse.PostPreviewResponse toPostPreviewResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, String image) {
 
-        // 현재 시각
-        LocalDateTime now = LocalDateTime.now();
-
-        // 생성 시각
-        LocalDateTime createdAt = post.getCreatedAt();
-
-        // 시간 차이 계산 (ChronoUnit.HOURS 사용)
-        long elapsedTime = ChronoUnit.HOURS.between(createdAt, now);
-
         return PostResponse.PostPreviewResponse.builder()
                 .postId(post.getId())
                 .title(post.getTitle())
                 .postCategory(post.getCategory())
-                .elapsedTime(elapsedTime)
+                .createdAt(post.getCreatedAt())
                 .content(post.getContent())
                 .likeNum(post.getPostLikeNum())
                 .commentNum(post.getCommentNum())
