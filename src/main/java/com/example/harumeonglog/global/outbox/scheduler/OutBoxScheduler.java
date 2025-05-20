@@ -3,15 +3,17 @@ package com.example.harumeonglog.global.outbox.scheduler;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.NoticeType;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
+import com.example.harumeonglog.global.common.util.JsonUtils;
 import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.exception.JsonDeserializationException;
 import com.example.harumeonglog.global.error.exception.MemberException;
+import com.example.harumeonglog.global.firebase.service.FcmService;
 import com.example.harumeonglog.global.outbox.dto.FcmPayload;
 import com.example.harumeonglog.global.outbox.entity.OutBox;
 import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import com.example.harumeonglog.global.outbox.repository.OutBoxRepository;
 import com.example.harumeonglog.global.outbox.service.OutBoxService;
-import com.example.harumeonglog.global.common.util.JsonUtils;
-import com.example.harumeonglog.global.firebase.service.FcmService;
+import com.example.harumeonglog.global.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,6 +22,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Component
 @Slf4j
@@ -29,8 +33,10 @@ public class OutBoxScheduler {
     private final OutBoxService outBoxService;
     private final MemberRepository memberRepository;
     private final FcmService fcmService;
+    private final S3Util s3Util;
 
     private static final int MAX_RETRY_COUNT = 3;
+    private final OutBoxRepository outBoxRepository;
 
     @Scheduled(fixedDelay = 10000)
     @Transactional
@@ -77,5 +83,29 @@ public class OutBoxScheduler {
         if (!failedOutBox.isEmpty()) {
             outBoxService.updateFailedFCMOutBox(failedOutBox);
         }
+    }
+
+    @Scheduled(fixedRate = 3600000)
+    @Transactional
+    public void processOutBoxAboutS3() {
+        List<OutBox> events = outBoxRepository.findByEventTypeAndProcessedFalse(EventType.S3);
+        events.forEach(event -> {
+            try {
+                String imageKey = event.getPayload();
+                if (s3Util.isObjectExists(imageKey)) {
+                    log.info("S3 파일 확인 성공: key={}", imageKey);
+                    s3Util.deleteFile(imageKey);
+                } else {
+                    log.warn("S3 파일이 존재하지 않음: key={}", imageKey);
+                    event.increaseRetryCount();
+                    if(event.getRetryCount() >= MAX_RETRY_COUNT) {
+                        log.error("최대 재시도 횟수 초과. OutBox 제거: key={}", imageKey);
+                    }
+                }
+            } catch (Exception e) {
+                log.error("S3 파일 확인 실패 (key={}): {}", event.getPayload(), e.getMessage(), e);
+                event.increaseRetryCount();
+            }
+        });
     }
 }

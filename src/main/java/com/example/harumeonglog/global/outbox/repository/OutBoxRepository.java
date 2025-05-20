@@ -2,12 +2,14 @@ package com.example.harumeonglog.global.outbox.repository;
 
 import com.example.harumeonglog.global.outbox.entity.OutBox;
 import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import io.lettuce.core.dynamic.annotation.Param;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface OutBoxRepository extends JpaRepository<OutBox, Long> {
 
@@ -21,4 +23,8 @@ public interface OutBoxRepository extends JpaRepository<OutBox, Long> {
     @Modifying
     @Query("update OutBox o set o.retryCount = o.retryCount + 1 where o in :failedOutBox")
     void updateFailedFCMOutBox(List<OutBox> failedOutBox);
+
+    Optional<OutBox> findByPayloadAndEventType(String payload, EventType eventType);
+
+    List<OutBox> findByEventTypeAndProcessedFalse(EventType eventType);
 }

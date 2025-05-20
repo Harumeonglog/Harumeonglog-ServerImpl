@@ -13,12 +13,14 @@ import com.example.harumeonglog.domain.pet.repository.PetImageRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.exception.PetException;
-import com.example.harumeonglog.global.util.S3Util;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import com.example.harumeonglog.global.util.OutboxUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -29,7 +31,7 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
     private final PetImageRepository petImageRepository;
     private final PetRepository petRepository;
     private final MemberPetRepository memberPetRepository;
-    private final S3Util s3Util;
+    private final OutboxUtil outboxUtil;
 
 
     @Override
@@ -46,7 +48,14 @@ public class PetImageCommandServiceImpl implements PetImageCommandService {
                 .map(PetImage::getId)
                 .toList();
 
-        return PetImageConverter.toAddImagesResponse(imageKeys);
+        // Outbox 상태 변경
+        request.getImageKeys().forEach(
+                outboxUtil::changeS3OutboxStatus);
+
+        LocalDateTime time = savedImages.isEmpty() ? LocalDateTime.now().withNano(0) : savedImages.get(0).getCreatedAt();
+
+
+        return PetImageConverter.toAddImagesResponse(imageKeys, time);
     }
 
     @Override

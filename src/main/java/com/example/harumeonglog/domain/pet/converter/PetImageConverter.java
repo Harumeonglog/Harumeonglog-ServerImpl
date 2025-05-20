@@ -6,6 +6,7 @@ import com.example.harumeonglog.domain.pet.entity.PetImage;
 import com.example.harumeonglog.global.util.S3Util;
 import org.springframework.data.domain.Slice;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 
@@ -17,9 +18,11 @@ public class PetImageConverter {
                 .build();
     }
 
-    public static PetImageResponse.AddImagesResponse toAddImagesResponse(List<Long> petImages) {
+    public static PetImageResponse.AddImagesResponse toAddImagesResponse(List<Long> petImages, LocalDateTime time) {
         return PetImageResponse.AddImagesResponse.builder()
                 .imageIds(petImages)
+                .createdAt(time)
+                .updatedAt(time)
                 .build();
     }
 

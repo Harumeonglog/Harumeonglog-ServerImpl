@@ -30,6 +30,7 @@ public class OutBoxServiceImpl implements OutBoxService {
         return outBoxRepository.findTopOutBox(maxRetryCount, eventType, PageRequest.of(0, batchSize));
     }
 
+
     @Override
     public void updateSuccessFCMOutBox(List<OutBox> outBoxList) {
         outBoxRepository.updateSuccessFCMOutBox(outBoxList);
@@ -39,4 +40,5 @@ public class OutBoxServiceImpl implements OutBoxService {
     public void updateFailedFCMOutBox(List<OutBox> failedOutBox) {
         outBoxRepository.updateFailedFCMOutBox(failedOutBox);
     }
+
 }

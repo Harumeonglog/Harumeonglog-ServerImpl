@@ -17,6 +17,8 @@ import com.example.harumeonglog.global.error.code.S3ErrorCode;
 import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.S3Exception;
+import com.example.harumeonglog.global.outbox.entity.enums.EventType;
+import com.example.harumeonglog.global.util.OutboxUtil;
 import com.example.harumeonglog.global.util.S3Util;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,7 @@ public class PetCommandServiceImpl implements PetCommandService {
     private final MemberPetRepository memberPetRepository;
     private final MemberRepository memberRepository;
     private final S3Util s3Util;
+    private final OutboxUtil outboxUtil;
 
 
     // ========== 외부 메서드 ==========
@@ -53,6 +56,12 @@ public class PetCommandServiceImpl implements PetCommandService {
 
             // member의 currentPetId 지정
             member.updateCurrentPetId(pet.getId());
+
+            // Outbox 상태 변경
+            if(!s3Util.isObjectExists(request.getMainImageKey())) {
+                throw new S3Exception(S3ErrorCode.NOT_FOUND);
+            }
+            outboxUtil.changeS3OutboxStatus(request.getMainImageKey());
 
             return PetConverter.toAddPetResponse(savedPet);
         } catch (Exception e) {
@@ -88,6 +97,12 @@ public class PetCommandServiceImpl implements PetCommandService {
             );
 
             String imageUrl = s3Util.getUrlFromKey(newMainImageKey);
+
+            // Outbox 상태 변경
+            if(!s3Util.isObjectExists(request.getNewMainImageKey())) {
+                throw new S3Exception(S3ErrorCode.NOT_FOUND);
+            }
+            outboxUtil.changeS3OutboxStatus(request.getNewMainImageKey());
 
             // 응답 DTO 반환
             return PetConverter.toChangePetInfoResponse(pet, imageUrl);
