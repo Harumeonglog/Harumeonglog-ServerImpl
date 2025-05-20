@@ -68,7 +68,7 @@ public class PostCommandServiceImpl implements PostCommandService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
         PostLike postLike = postLikeRepository.findByPostAndMember(post, member);
-        if (postLike != null) {
+        if (false) {
             post.fixLikeNum(-1L);
             postLikeRepository.delete(postLike);
         } else {

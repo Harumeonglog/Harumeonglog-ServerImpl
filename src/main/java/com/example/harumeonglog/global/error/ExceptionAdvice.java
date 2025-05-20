@@ -71,7 +71,10 @@ public class ExceptionAdvice {
         List<String> uniqueConstraintNames = List.of(
                 "uk_comment_block_comment_member",
                 "uk_comment_like_comment_member",
-                "uk_comment_report_comment_member"
+                "uk_comment_report_comment_member",
+                "uk_post_report_post_member",
+                "uk_post_block_post_member",
+                "uk_post_like_post_member"
         );
 
         if (message != null && uniqueConstraintNames.stream().anyMatch(message::contains)) {
