@@ -30,7 +30,7 @@ import java.util.Optional;
 import static org.apache.tomcat.util.codec.binary.Base64.decodeBase64;
 
 @RequiredArgsConstructor
-public abstract class OAuth2ServiceImpl implements OAuth2Service {
+public abstract class AbstractOAuth2Service implements OAuth2Service {
 
     private final MemberRepository memberRepository;
     private final SettingRepository settingRepository;

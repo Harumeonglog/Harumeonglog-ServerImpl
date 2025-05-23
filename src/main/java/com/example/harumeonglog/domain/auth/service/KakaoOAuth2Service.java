@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Service
-public class KakaoOAuth2Service extends OAuth2ServiceImpl {
+public class KakaoOAuth2Service extends AbstractOAuth2Service {
 
     private static final String EMAIL = "email";
     private static final String NICKNAME = "nickname";
