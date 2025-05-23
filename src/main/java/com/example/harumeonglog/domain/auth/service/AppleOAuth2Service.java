@@ -10,7 +10,7 @@ import io.jsonwebtoken.Claims;
 import org.springframework.stereotype.Service;
 
 @Service
-public class AppleOAuth2Service extends OAuth2ServiceImpl {
+public class AppleOAuth2Service extends AbstractOAuth2Service {
 
     private final WebClientUtil webClientUtil;
     public AppleOAuth2Service(MemberRepository memberRepository,
@@ -20,16 +20,19 @@ public class AppleOAuth2Service extends OAuth2ServiceImpl {
         this.webClientUtil = webClientUtil;
     }
 
+    //TODO: 구현 예정
     @Override
     protected OAuth2Response.OAuth2PublicKeyResponse getProperKeyInfo(OAuth2Response.OAuth2IdTokenHeader tokenHeader) {
         return null;
     }
 
+    //TODO: 구현 예정
     @Override
     protected OAuth2Request.OAuth2LoginRequest getLoginInfo(Claims claims) throws AuthException {
         return null;
     }
 
+    //TODO: 구현 예정
     @Override
     protected boolean isValidLoginInfo(Claims claims) {
         return false;
