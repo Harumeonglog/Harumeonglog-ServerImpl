@@ -8,6 +8,7 @@ import com.example.harumeonglog.domain.post.converter.PostConverter;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
+import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
 import com.example.harumeonglog.global.error.code.PostErrorCode;
 import com.example.harumeonglog.global.error.exception.PostException;
@@ -27,6 +28,7 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private final PostRepository postRepository;
     private final S3Util s3Util;
+    private final PostLikeRepository postLikeRepository;
 
     @Override
     public PostResponse.PostPreviewListResponse getPosts(Long cursor, Integer size, String search, PostRequestCategory postRequestCategory) {
@@ -45,12 +47,15 @@ public class PostQueryServiceImpl implements PostQueryService {
     }
 
     @Override
-    public PostResponse.PostDetailResponse getPost(Long postId) {
+    public PostResponse.PostDetailResponse getPost(Member owner,Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
         List<String> postImageList = post.getPostImageList().stream()
                 .map((p)->s3Util.getUrlFromKey(p.getPostImageKeyName()))
                 .toList();
-        return PostConverter.toPostDetailResponse(post, MemberConverter.toMemberInfoResponse(post.getMember(), s3Util), postImageList);
+
+        Boolean isLiked = postLikeRepository.existsByPostAndMember(post, owner);
+
+        return PostConverter.toPostDetailResponse(post, MemberConverter.toMemberInfoResponse(post.getMember(), s3Util), postImageList, isLiked);
     }
 
     @Override

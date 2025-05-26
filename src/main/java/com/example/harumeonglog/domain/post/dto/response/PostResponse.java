@@ -47,6 +47,7 @@ public class PostResponse {
         private LocalDateTime createdAt;
         private Long likeNum;
         private Long commentNum;
+        private Boolean isLiked;
         private PostCategory postCategory;
         private MemberInfoResponse memberInfoResponse;
         private List<String> postImageList;

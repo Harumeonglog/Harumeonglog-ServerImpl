@@ -54,7 +54,7 @@ public class PostController {
     public CustomResponse<PostResponse.PostDetailResponse> getPost(
             @PathVariable Long postId, @AuthenticatedMember Member member
     ) {
-        PostResponse.PostDetailResponse postDetailResponse = postQueryService.getPost(postId);
+        PostResponse.PostDetailResponse postDetailResponse = postQueryService.getPost(member, postId);
         return CustomResponse.ok(postDetailResponse);
     }
 
