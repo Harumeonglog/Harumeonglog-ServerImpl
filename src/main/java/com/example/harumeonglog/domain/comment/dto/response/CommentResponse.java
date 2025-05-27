@@ -23,7 +23,7 @@ public class CommentResponse {
         private Long commentId;
         private String content;
         private MemberResponse.MemberInfoResponse memberInfoResponse;
-        private LocalDateTime createAt;
+        private LocalDateTime createdAt;
         private List<CommentCommentPreviewResponse> commentcommentResponseList;
     }
 
@@ -40,7 +40,7 @@ public class CommentResponse {
     public static class CommentCommentPreviewResponse {
         private Long commentId;
         private String content;
-        private LocalDateTime createAt;
+        private LocalDateTime createdAt;
         private MemberResponse.MemberInfoResponse memberInfoResponse;
     }
 
@@ -57,6 +57,6 @@ public class CommentResponse {
     public static class CommentMyPreviewResponse {
         private Long commentId;
         private String content;
-        private LocalDateTime createAt;
+        private LocalDateTime createdAt;
     }
 }

@@ -33,7 +33,7 @@ public class CommentConverter {
                 .commentId(comment.getId())
                 .memberInfoResponse(MemberConverter.toMemberInfoResponse(comment.getMember(), s3Util))
                 .content(isBlockOrDeletedComment(comment, isBlocked))
-                .createAt(comment.getCreatedAt())
+                .createdAt(comment.getCreatedAt())
                 .commentcommentResponseList(commentcommentReponseList)
                 .build();
     }
@@ -59,7 +59,7 @@ public class CommentConverter {
                 .commentId(comment.getId())
                 .memberInfoResponse(MemberConverter.toMemberInfoResponse(comment.getMember(), s3Util))
                 .content(isBlockOrDeletedComment(comment, isBlocked))
-                .createAt(comment.getCreatedAt())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 
@@ -76,7 +76,7 @@ public class CommentConverter {
         return CommentMyPreviewResponse.builder()
                 .commentId(comment.getId())
                 .content(comment.getContent())
-                .createAt(comment.getCreatedAt())
+                .createdAt(comment.getCreatedAt())
                 .build();
     }
 
