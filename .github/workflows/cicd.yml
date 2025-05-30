@@ -57,7 +57,7 @@ jobs:
     steps:
       - name: Create .env file # 각자 맞는 환경 변수 투입
         run: |
-          echo "DB_USERNAME=${{ secrets.ENV }}" >> .env
+          echo "${{ secrets.ENV }}" >> .env
 
       - name: SCP .env file to EC2
         uses: appleboy/scp-action@master
