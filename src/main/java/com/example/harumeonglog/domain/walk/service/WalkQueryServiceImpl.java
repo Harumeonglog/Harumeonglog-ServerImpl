@@ -9,6 +9,7 @@ import com.example.harumeonglog.domain.walk.dto.request.WalkRequest;
 import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
 import com.example.harumeonglog.domain.walk.entity.Walk;
 import com.example.harumeonglog.domain.walk.entity.enums.WalkStatus;
+import com.example.harumeonglog.domain.walk.enums.WalkSort;
 import com.example.harumeonglog.domain.walk.repository.MemberWalkRepository;
 import com.example.harumeonglog.domain.walk.repository.WalkLikeRepository;
 import com.example.harumeonglog.domain.walk.repository.WalkRepository;
@@ -52,12 +53,23 @@ public class WalkQueryServiceImpl implements WalkQueryService {
     public WalkResponse.WalkSearchListResponse getWalkList(Member member, String sort, Long cursor, int offset) {
         Pageable pageable = PageRequest.of(0, offset);
 
+        Long initialCursorValue = 0L;
         Slice<Walk> walks;
-        if (cursor.equals(0L)) {
-            cursor = Long.MAX_VALUE;
+        if (sort.equalsIgnoreCase(WalkSort.DISTANCE.name())) {
+            walks = cursor.equals(initialCursorValue) ? walkRepository.findAllByIsSharedIsTrueOrderByDistanceDescIdDesc(pageable) :
+                    walkRepository.findAllByDistanceDesc(cursor, pageable);
         }
-        // FIXME: Sort에 따른 쿼리 수정 필요
-        walks = walkRepository.findAllByDistance(cursor, pageable);
+        else if (sort.equalsIgnoreCase(WalkSort.TIME.name())) {
+            walks = cursor.equals(initialCursorValue) ? walkRepository.findAllByIsSharedIsTrueOrderByTimeDescIdDesc(pageable) :
+                    walkRepository.findAllByTimeDesc(cursor, pageable);
+        }
+        else if (sort.equalsIgnoreCase(WalkSort.RECOMMEND.name())) {
+            walks = cursor.equals(initialCursorValue) ? walkRepository.findAllByIsSharedIsTrueOrderByWalkLikeNumDescIdDesc(pageable) :
+                    walkRepository.findAllByWalkLikeNumDesc(cursor, pageable);
+        }
+        else {
+            throw new WalkException(WalkErrorCode.UNSUPPORTED_SORT);
+        }
 
         return buildWalkSearchListResponse(member, walks);
     }
@@ -88,11 +100,11 @@ public class WalkQueryServiceImpl implements WalkQueryService {
         }
 
         List<WalkResponse.WalkSearchResponse> responses = new ArrayList<>();
+        // FIXME: 쿼리 수정 필요 offset 만큼 쿼리 생성
         walks.forEach(walk ->
             responses.add(WalkConverter.toWalkSearchResponse(
                     walk,
                     memberWalkRepository.findTopByWalkOrderByCreatedAtAsc(walk).getMember().getNickname(),
-                    // FIXME: 쿼리 수정 필요
                     walkLikeRepository.existsByMemberAndWalk(member, walk)
             ))
         );
