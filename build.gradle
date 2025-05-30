@@ -70,10 +70,6 @@ jar {
     enabled = false
 }
 
-jar {
-    enabled = false
-}
-
 // Querydsl 설정
 def generated = 'src/main/generated'
 
