@@ -77,6 +77,13 @@ public class PostQueryServiceImpl implements PostQueryService {
         return buildPostPreviewListResponse(postSlice, member);
     }
 
+    @Override
+    public PostResponse.HomePostListRequest getHomePosts() {
+        List<Post> firstPostsByAllCategory = postRepository.findFirstPostsByAllCategory();
+
+        return PostConverter.toHomePostListRequest(firstPostsByAllCategory);
+    }
+
     private Long normalizeCursor(Long cursor) {
         return (cursor == 0) ? Long.MAX_VALUE : cursor;
     }
