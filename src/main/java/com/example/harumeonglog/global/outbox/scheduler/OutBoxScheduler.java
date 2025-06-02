@@ -88,7 +88,8 @@ public class OutBoxScheduler {
     @Scheduled(fixedRate = 3600000)
     @Transactional
     public void processOutBoxAboutS3() {
-        List<OutBox> events = outBoxRepository.findByEventTypeAndProcessedFalse(EventType.S3);
+        List<OutBox> events = outBoxRepository.findByEventTypeAndProcessedFalseAndRetryCountLessThan(
+                EventType.S3, MAX_RETRY_COUNT);
         events.forEach(event -> {
             try {
                 String imageKey = event.getPayload();
