@@ -14,10 +14,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -156,5 +159,63 @@ class PostCommandServiceImplTest {
                 "좋아요 수가 비정상적으로 계산되었습니다."
         );
     }
-  
+
+    @Test
+    @DisplayName("여러 명이 동시에 하나의 게시글을 좋아요할 때 동시성 문제 없이 정확히 처리되는가")
+    void concurrencyMultiMemberLikeTest() throws InterruptedException {
+        // given
+        Member writer = Member.builder()
+                .email("example@example.com")
+                .nickname("example")
+                .providerId("example")
+                .socialType(SocialType.KAKAO).build();
+
+        memberRepository.save(writer);
+
+        Post post = postRepository.save(
+                Post.builder()
+                        .category(PostCategory.INFO)
+                        .content("내용")
+                        .title("제목")
+                        .member(writer)
+                        .postLikeNum(0L)
+                        .build()
+        );
+
+        int threadCount = 100;
+        ExecutorService executorService = Executors.newFixedThreadPool(10);
+        CountDownLatch latch = new CountDownLatch(threadCount);
+
+        List<Member> members = IntStream.range(0, threadCount)
+                .mapToObj(i -> Member.builder()
+                        .email("user" + i + "@test.com")
+                        .nickname("user" + i)
+                        .providerId("provider" + i)
+                        .socialType(SocialType.KAKAO)
+                        .build())
+                .map(memberRepository::save)
+                .collect(Collectors.toList());
+
+        // when
+        for (int i = 0; i < threadCount; i++) {
+            final int idx = i;
+            executorService.execute(() -> {
+                try {
+                    postCommandService.likePost(post.getId(), members.get(idx));
+                } finally {
+                    latch.countDown();
+                }
+            });
+        }
+
+        latch.await();
+
+        // then
+        Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
+        System.out.println("최종 좋아요 수: " + updatedPost.getPostLikeNum());
+
+        assertEquals(threadCount, updatedPost.getPostLikeNum());
+    }
+
+
 }
