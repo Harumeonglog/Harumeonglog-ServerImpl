@@ -70,6 +70,7 @@ public class PostCommandServiceImpl implements PostCommandService {
         PostLike postLike = postLikeRepository.findByPostAndMember(post, member);
         if (postLike != null) {
             postLikeRepository.delete(postLike);
+            postLikeRepository.flush();
             postRepository.updatePostUnLikeNumByPost(post);
         } else {
             postLikeRepository.save(PostLikeConverter.toPostLike(post, member));
