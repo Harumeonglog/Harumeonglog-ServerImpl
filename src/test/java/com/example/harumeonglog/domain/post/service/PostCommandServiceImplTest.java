@@ -9,6 +9,7 @@ import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
 import com.example.harumeonglog.domain.post.entity.PostLike;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
+import com.example.harumeonglog.domain.post.repository.PostImageRepository;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -16,6 +17,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,6 +44,8 @@ class PostCommandServiceImplTest {
     private PostCommandService postCommandService;
     @Autowired
     private PostLikeRepository postLikeRepository;
+    @Autowired
+    private PostImageRepository postImageRepository;
 
     @Test
     @DisplayName("게시글 좋아요 수가 정상적으로 증가한다")
@@ -222,39 +226,55 @@ class PostCommandServiceImplTest {
     }
 
     @Test
-    @DisplayName("게시물 생성이 잘 되는 가")
+    @DisplayName("게시물 생성이 잘 되는가")
+    @Transactional
     void isPostCreate() {
         // given
         Member writer = Member.builder()
                 .email("example@example.com")
                 .nickname("example")
                 .providerId("example")
-                .socialType(SocialType.KAKAO).build();
+                .socialType(SocialType.KAKAO)
+                .build();
 
         memberRepository.save(writer);
 
+        List<String> imageKeys = List.of("test1", "test2");
+
         PostRequest.PostCreateRequest postCreateRequest = PostRequest.PostCreateRequest.builder()
                 .postCategory(PostCategory.INFO)
-                .postImageList(List.of("test1", "test2"))
+                .postImageList(imageKeys)
                 .content("내용")
                 .title("제목")
                 .build();
 
         // when
-        PostResponse.PostCreateResponse post = postCommandService.createPost(postCreateRequest, writer);
+        PostResponse.PostCreateResponse response = postCommandService.createPost(postCreateRequest, writer);
 
         // then
-        Post savedPost = postRepository.findById(post.getPostId()).orElseThrow();
+        Post savedPost = postRepository.findById(response.getPostId())
+                .orElseThrow(() -> new AssertionError("Post가 저장되지 않았습니다."));
 
-        assertNotNull(savedPost.getId());
+        assertNotNull(savedPost.getId(), "게시물 ID는 null이 아니어야 합니다.");
         assertEquals("제목", savedPost.getTitle());
         assertEquals("내용", savedPost.getContent());
         assertEquals(PostCategory.INFO, savedPost.getCategory());
         assertEquals(0, savedPost.getPostLikeNum());
         assertEquals(0, savedPost.getCommentNum());
         assertEquals(0, savedPost.getPostReportNum());
-        assertNull(savedPost.getDeletedAt());
-    }
+        assertNull(savedPost.getDeletedAt(), "deletedAt은 null이어야 합니다.");
 
+        List<PostImage> postImageList = postImageRepository.findAllByPost(savedPost);
+
+        List<String> savedImageKeys = postImageList
+                .stream()
+                .map(PostImage::getPostImageKeyName)
+                .toList();
+
+        assertEquals(imageKeys.size(), savedImageKeys.size(), "이미지 개수가 일치해야 합니다.");
+        assertTrue(savedImageKeys.containsAll(imageKeys), "모든 이미지 키가 저장되어야 합니다.");
+
+        assertEquals(savedPost.getMember().getNickname(), "example");
+    }
 
 }
