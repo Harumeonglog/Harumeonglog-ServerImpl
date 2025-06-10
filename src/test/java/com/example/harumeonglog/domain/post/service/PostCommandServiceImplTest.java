@@ -15,6 +15,8 @@ import com.example.harumeonglog.domain.post.repository.PostRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
@@ -32,6 +34,8 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 class PostCommandServiceImplTest {
+
+    private static final Logger log = LoggerFactory.getLogger(PostCommandServiceImplTest.class);
 
     @Autowired
     private PostRepository postRepository;
@@ -83,8 +87,7 @@ class PostCommandServiceImplTest {
         Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
         assertEquals(1L, updatedPost.getPostLikeNum());
 
-        // 로그 확인용
-        System.out.println("최종 좋아요 수: " + updatedPost.getPostLikeNum());
+        log.info("최종 좋아요 수: " + updatedPost.getPostLikeNum());
     }
 
     @Test
@@ -148,7 +151,7 @@ class PostCommandServiceImplTest {
 
         // then
         Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        System.out.println("최종 좋아요 수: " + updatedPost.getPostLikeNum());
+        log.info("최종 좋아요 수: " + updatedPost.getPostLikeNum());
 
         // 좋아요 수가 0 또는 1이 아니면 동시성 문제 발생 가능
         assertTrue(
@@ -201,7 +204,7 @@ class PostCommandServiceImplTest {
 
         // then
         Post updatedPost = postRepository.findById(post.getId()).orElseThrow();
-        System.out.println("최종 좋아요 수: " + updatedPost.getPostLikeNum());
+        log.info("최종 좋아요 수: " + updatedPost.getPostLikeNum());
 
         assertEquals(threadCount, updatedPost.getPostLikeNum());
     }
