@@ -83,11 +83,11 @@ public class PostCommandServiceImpl implements PostCommandService {
 
         PostReport postReport = postReportRepository.findByPostAndMember(post, member);
         if (postReport != null) {
-            post.fixReportNum(-1L);
             postReportRepository.delete(postReport);
+            postRepository.updatePostUnReportNumByPost(post);
         } else {
-            post.fixReportNum(1L);
             postReportRepository.save(PostReportConverter.toPostReport(post, member));
+            postRepository.updatePostReportNumByPost(post);
         }
     }
 
