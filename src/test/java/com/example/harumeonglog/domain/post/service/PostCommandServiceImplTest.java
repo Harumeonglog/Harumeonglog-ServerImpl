@@ -13,6 +13,7 @@ import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
+import com.example.harumeonglog.global.error.exception.PostException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -184,6 +185,39 @@ class PostCommandServiceImplTest {
         assertThat(member.getNickname()).isEqualTo(TEST_NICKNAME);
         assertThat(member.getProviderId()).isEqualTo(TEST_PROVIDERID);
         assertThat(member.getSocialType()).isEqualTo(TEST_SOCIALTYPE);
+    }
+
+    @Test
+    @DisplayName("게시글 수정 시 없는 존재하지 않는 게시글이면 에러가 잘 나나")
+    void updatePostPostNullTest() {
+        // given
+        Post rawPost = Post.builder()
+                .title("title")
+                .content("content")
+                .member(this.member)
+                .category(PostCategory.INFO)
+                .build();
+
+        PostImage postImage = PostImage.builder()
+                .postImageKeyName("testImage1")
+                .build();
+
+        rawPost.addPostImage(postImage);
+
+        postRepository.save(rawPost);
+
+        List<String> updateTestImageList = List.of("updateTestImage1");
+
+        PostRequest.PostUpdateRequest postUpdateRequest = PostRequest.PostUpdateRequest.builder()
+                .title("updateTitle")
+                .content("updateContent")
+                .postCategory(PostCategory.ETC)
+                .postImageList(updateTestImageList)
+                .build();
+
+        // when + then
+        String message = assertThrows(PostException.class, () -> postCommandService.updatePost(2L, postUpdateRequest, this.member)).getMessage();
+        assertThat(message).isEqualTo("게시물을 찾지 못했습니다.");
     }
 
     @Test
