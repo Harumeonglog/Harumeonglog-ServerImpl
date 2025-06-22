@@ -12,6 +12,7 @@ import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,13 @@ class PostCommandServiceImplTest {
                     .providerId(this.providerId)
                     .socialType(this.socialType)
                     .build());
+    }
+
+    @AfterEach
+    void clean() {
+        postRepository.deleteAll();
+        memberRepository.deleteAll();
+        postLikeRepository.deleteAll();
     }
 
     @Test
