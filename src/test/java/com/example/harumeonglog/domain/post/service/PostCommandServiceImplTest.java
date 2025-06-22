@@ -304,6 +304,16 @@ class PostCommandServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글 좋아요 시 없는 존재하지 않는 게시글이면 에러가 잘 나나")
+    void likePostPostNullTest() {
+        // given
+
+        // when + then
+        String message = assertThrows(PostException.class, () -> postCommandService.likePost(1L, this.member)).getMessage();
+        assertThat(message).isEqualTo("게시물을 찾지 못했습니다.");
+    }
+
+    @Test
     @DisplayName("한 명이 한번에 여러 번의 좋아요를 눌렀을 때 원자적으로 처리가 되는가")
     void concurrencyLikeTest() throws InterruptedException {
         // given
