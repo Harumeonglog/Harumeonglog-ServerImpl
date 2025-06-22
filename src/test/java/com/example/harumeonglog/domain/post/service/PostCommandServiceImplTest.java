@@ -5,6 +5,7 @@ import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
+import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostCreateResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
 import com.example.harumeonglog.domain.post.entity.PostLike;
@@ -19,10 +20,14 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
+import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.TestPropertySource;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -30,10 +35,17 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 @ActiveProfiles("test")
+@TestPropertySource(properties = {
+        "LOCAL_DB_URL=jdbc:h2:mem:testdb",
+        "LOCAL_DB_USERNAME=sa",
+        "LOCAL_DB_PW=",
+        "JWT_SECRET=testjwttestjwttestjwttestjwttestjwttestjwt"
+})
 class PostCommandServiceImplTest {
 
     private static final Logger log = LoggerFactory.getLogger(PostCommandServiceImplTest.class);
@@ -46,10 +58,9 @@ class PostCommandServiceImplTest {
 
     @Autowired
     private PostCommandService postCommandService;
+
     @Autowired
     private PostLikeRepository postLikeRepository;
-    @Autowired
-    private PostImageRepository postImageRepository;
 
     private Member member;
 
@@ -70,9 +81,47 @@ class PostCommandServiceImplTest {
 
     @AfterEach
     void clean() {
+        postLikeRepository.deleteAll();
         postRepository.deleteAll();
         memberRepository.deleteAll();
-        postLikeRepository.deleteAll();
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("게시글이 잘 생성되는 가")
+    void createPostTest() {
+        // given
+        List<String> postImageList = List.of("testImage1", "testImage2", "testImage3");
+
+        PostRequest.PostCreateRequest postCreateRequest = PostRequest.PostCreateRequest.builder()
+                .title("title")
+                .content("content")
+                .postCategory(PostCategory.INFO)
+                .postImageList(postImageList)
+                .build();
+
+        // when
+        postCommandService.createPost(postCreateRequest, this.member);
+
+        // then
+        List<Post> posts = postRepository.findAll();
+        assertThat(posts.size()).isEqualTo(1);
+
+        // post 관련 테스트
+        Post post = posts.get(0);
+        assertThat(post.getTitle()).isEqualTo("title");
+        assertThat(post.getContent()).isEqualTo("content");
+        assertThat(post.getCategory()).isEqualTo(PostCategory.INFO);
+        assertThat(post.getPostImageList().size()).isEqualTo(postImageList.size());
+        assertThat(post.getPostImageList()).extracting("postImageKeyName")
+                .containsExactly("testImage1", "testImage2", "testImage3");
+
+        // member 관련 테스트
+        Member member = post.getMember();
+        assertThat(member.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(member.getNickname()).isEqualTo(TEST_NICKNAME);
+        assertThat(member.getProviderId()).isEqualTo(TEST_PROVIDERID);
+        assertThat(member.getSocialType()).isEqualTo(TEST_SOCIALTYPE);
     }
 
     @Test
@@ -216,47 +265,6 @@ class PostCommandServiceImplTest {
         log.info("최종 좋아요 수: " + updatedPost.getPostLikeNum());
 
         assertEquals(threadCount, updatedPost.getPostLikeNum());
-    }
-
-    @Test
-    @DisplayName("게시물 생성이 잘 되는가")
-    @Transactional
-    void isPostCreate() {
-        // given
-        List<String> imageKeys = List.of("test1", "test2");
-
-        PostRequest.PostCreateRequest postCreateRequest = PostRequest.PostCreateRequest.builder()
-                .postCategory(PostCategory.INFO)
-                .postImageList(imageKeys)
-                .content("내용")
-                .title("제목")
-                .build();
-
-        // when
-        PostResponse.PostCreateResponse response = postCommandService.createPost(postCreateRequest, member);
-
-        // then
-        Post savedPost = postRepository.findById(response.getPostId())
-                .orElseThrow(() -> new AssertionError("Post가 저장되지 않았습니다."));
-
-        assertNotNull(savedPost.getId(), "게시물 ID는 null이 아니어야 합니다.");
-        assertEquals("제목", savedPost.getTitle());
-        assertEquals("내용", savedPost.getContent());
-        assertEquals(PostCategory.INFO, savedPost.getCategory());
-        assertEquals(0, savedPost.getPostLikeNum());
-        assertEquals(0, savedPost.getCommentNum());
-        assertEquals(0, savedPost.getPostReportNum());
-        assertNull(savedPost.getDeletedAt(), "deletedAt은 null이어야 합니다.");
-
-        List<PostImage> postImageList = postImageRepository.findAllByPost(savedPost);
-
-        List<String> savedImageKeys = postImageList
-                .stream()
-                .map(PostImage::getPostImageKeyName)
-                .toList();
-
-        assertEquals(imageKeys.size(), savedImageKeys.size(), "이미지 개수가 일치해야 합니다.");
-        assertTrue(savedImageKeys.containsAll(imageKeys), "모든 이미지 키가 저장되어야 합니다.");
     }
 
 }
