@@ -52,18 +52,19 @@ class PostCommandServiceImplTest {
     private PostImageRepository postImageRepository;
 
     private Member member;
-    private final String email = "example@example.com";
-    private final String nickname = "example";
-    private final String providerId = "example";
-    private final SocialType socialType = SocialType.KAKAO;
+
+    private final String TEST_EMAIL = "example@example.com";
+    private final String TEST_NICKNAME = "example";
+    private final String TEST_PROVIDERID = "example";
+    private final SocialType TEST_SOCIALTYPE = SocialType.KAKAO;
 
     @BeforeEach
     void setup() {
         this.member = memberRepository.save(Member.builder()
-                    .email(this.email)
-                    .nickname(this.nickname)
-                    .providerId(this.providerId)
-                    .socialType(this.socialType)
+                    .email(this.TEST_EMAIL)
+                    .nickname(this.TEST_NICKNAME)
+                    .providerId(this.TEST_PROVIDERID)
+                    .socialType(this.TEST_SOCIALTYPE)
                     .build());
     }
 
