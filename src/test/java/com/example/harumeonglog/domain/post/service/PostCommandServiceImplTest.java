@@ -128,6 +128,64 @@ class PostCommandServiceImplTest {
         assertThat(member.getSocialType()).isEqualTo(TEST_SOCIALTYPE);
     }
 
+    @Transactional
+    @Test
+    @DisplayName("게시글 수정이 잘 되는가")
+    void updatePostTest() {
+        // given
+        Post rawPost = Post.builder()
+                .title("title")
+                .content("content")
+                .member(this.member)
+                .category(PostCategory.INFO)
+                .build();
+
+        PostImage postImage = PostImage.builder()
+                        .postImageKeyName("testImage1")
+                        .build();
+
+        rawPost.addPostImage(postImage);
+
+        Post savedPost = postRepository.save(rawPost);
+
+        List<String> updateTestImageList = List.of("updateTestImage1");
+
+        PostRequest.PostUpdateRequest postUpdateRequest = PostRequest.PostUpdateRequest.builder()
+                .title("updateTitle")
+                .content("updateContent")
+                .postCategory(PostCategory.ETC)
+                .postImageList(updateTestImageList)
+                .build();
+
+
+        // when
+        postCommandService.updatePost(savedPost.getId(), postUpdateRequest, this.member);
+
+        // then
+        List<Post> posts = postRepository.findAll();
+        assertThat(posts.size()).isEqualTo(1);
+
+        // post 관련
+        Post post = posts.get(0);
+        assertThat(post.getTitle()).isEqualTo("updateTitle");
+        assertThat(post.getContent()).isEqualTo("updateContent");
+        assertThat(post.getCategory()).isEqualTo(PostCategory.ETC);
+        assertThat(post.getPostReportNum()).isEqualTo(0L);
+        assertThat(post.getPostLikeNum()).isEqualTo(0L);
+        assertThat(post.getCommentNum()).isEqualTo(0L);
+        assertThat(post.getDeletedAt()).isNull();
+        assertThat(post.getPostImageList().size()).isEqualTo(updateTestImageList.size());
+        assertThat(post.getPostImageList()).extracting("postImageKeyName")
+                .containsExactly("updateTestImage1");
+
+        // member 관련 테스트
+        Member member = post.getMember();
+        assertThat(member.getEmail()).isEqualTo(TEST_EMAIL);
+        assertThat(member.getNickname()).isEqualTo(TEST_NICKNAME);
+        assertThat(member.getProviderId()).isEqualTo(TEST_PROVIDERID);
+        assertThat(member.getSocialType()).isEqualTo(TEST_SOCIALTYPE);
+    }
+
     @Test
     @DisplayName("게시글 좋아요 수가 정상적으로 증가한다")
     void postLikeTest() {
