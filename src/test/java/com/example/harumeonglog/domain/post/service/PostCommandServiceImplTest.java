@@ -187,6 +187,35 @@ class PostCommandServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시글이 잘 삭제 되는가")
+    void deletePostTest() {
+        // given
+        Post rawPost = Post.builder()
+                .title("title")
+                .content("content")
+                .member(this.member)
+                .category(PostCategory.INFO)
+                .build();
+
+        PostImage postImage = PostImage.builder()
+                .postImageKeyName("testImage1")
+                .build();
+
+        rawPost.addPostImage(postImage);
+
+        Post savedPost = postRepository.save(rawPost);
+
+        // when
+        postCommandService.deletePost(savedPost.getId(), this.member);
+
+        // then
+        List<Post> posts = postRepository.findAll();
+        assertThat(posts.size()).isEqualTo(1);
+        Post post = posts.get(0);
+        assertThat(post.getDeletedAt()).isNotNull();
+    }
+
+    @Test
     @DisplayName("게시글 좋아요 수가 정상적으로 증가한다")
     void postLikeTest() {
         // given
