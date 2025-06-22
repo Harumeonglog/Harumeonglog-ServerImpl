@@ -191,21 +191,6 @@ class PostCommandServiceImplTest {
     @DisplayName("게시글 수정 시 없는 존재하지 않는 게시글이면 에러가 잘 나나")
     void updatePostPostNullTest() {
         // given
-        Post rawPost = Post.builder()
-                .title("title")
-                .content("content")
-                .member(this.member)
-                .category(PostCategory.INFO)
-                .build();
-
-        PostImage postImage = PostImage.builder()
-                .postImageKeyName("testImage1")
-                .build();
-
-        rawPost.addPostImage(postImage);
-
-        postRepository.save(rawPost);
-
         List<String> updateTestImageList = List.of("updateTestImage1");
 
         PostRequest.PostUpdateRequest postUpdateRequest = PostRequest.PostUpdateRequest.builder()
