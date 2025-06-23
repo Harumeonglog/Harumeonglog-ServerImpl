@@ -9,6 +9,8 @@ import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostDetailResponse;
+import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPreviewListResponse;
+import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPreviewResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
@@ -24,7 +26,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -44,9 +48,6 @@ class PostQueryServiceImplTest {
 
     @Autowired
     private PostRepository postRepository;
-
-    @Autowired
-    private S3Util s3Util;
 
     @Autowired
     private PostQueryService postQueryService;
@@ -107,7 +108,7 @@ class PostQueryServiceImplTest {
         PostRequestCategory postCategory = PostRequestCategory.ETC;
 
         // when
-        PostResponse.PostPreviewListResponse response =
+        PostPreviewListResponse response =
                 postQueryService.getPosts(cursor, size, name, postCategory, member);
 
         // then
@@ -159,6 +160,50 @@ class PostQueryServiceImplTest {
         assertThat(memberInfoResponse.getEmail()).isEqualTo(member.getEmail());
         assertThat(memberInfoResponse.getNickname()).isEqualTo(member.getNickname());
         assertThat(memberInfoResponse.getImage()).isEqualTo(member.getImage());
+    }
+
+    @Test
+    @DisplayName("내 게시물 조회가 잘 되는가")
+    void getMyPostTest() {
+        // given
+        PostCategory[] categories = PostCategory.values();
+
+        IntStream.range(0, 20).forEach(i -> {
+            PostImage image = PostImage.builder()
+                    .postImageKeyName("testImage" + i)
+                    .build();
+
+            Post post = Post.builder()
+                    .title("post" + i + "title")
+                    .content("post" + i + "content")
+                    .member(member)
+                    .category(categories[i / 4])
+                    .build();
+
+            post.addPostImage(image);
+            postRepository.save(post);
+        });
+
+        Long cursor = 0L;
+        Integer size = 20;
+
+        // when
+        PostPreviewListResponse response = postQueryService.getMyPost(cursor, size, member);
+
+        // then
+        assertEquals(size, response.getItems().size());
+
+        List<PostPreviewResponse> items = response.getItems();
+
+        IntStream.range(0, items.size()).forEach(i -> {
+            PostPreviewResponse item = items.get(i);
+            int expectedIndex = items.size() - 1 - i;
+
+            assertEquals(member.getId(), item.getMemberInfoResponse().getMemberId());
+            assertEquals(item.getPostId(), expectedIndex + 1);
+            assertTrue(item.getTitle().contains("post" + expectedIndex));
+            assertTrue(item.getContent().contains("post" + expectedIndex));
+        });
     }
 
 
