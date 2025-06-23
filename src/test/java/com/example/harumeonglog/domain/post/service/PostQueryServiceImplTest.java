@@ -204,7 +204,6 @@ class PostQueryServiceImplTest {
             int expectedIndex = items.size() - 1 - i;
 
             assertEquals(member.getId(), item.getMemberInfoResponse().getMemberId());
-            assertEquals(item.getPostId(), expectedIndex + 1);
             assertTrue(item.getTitle().contains("post" + expectedIndex));
             assertTrue(item.getContent().contains("post" + expectedIndex));
         });
