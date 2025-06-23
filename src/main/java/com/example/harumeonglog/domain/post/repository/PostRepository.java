@@ -55,4 +55,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """)
     @Modifying
     void updatePostUnLikeNumByPost(Post post);
+
+
+    @Query(value = """
+        UPDATE Post p SET p.postReportNum = p.postReportNum + 1 WHERE p = :post
+    """)
+    @Modifying
+    void updatePostReportNumByPost(Post post);
+
+    @Query(value = """
+        UPDATE Post p SET p.postReportNum = p.postReportNum - 1 WHERE p = :post
+    """)
+    @Modifying
+    void updatePostUnReportNumByPost(Post post);
 }

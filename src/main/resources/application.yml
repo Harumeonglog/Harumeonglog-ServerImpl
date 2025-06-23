@@ -37,6 +37,7 @@ spring:
         app-key: ${KAKAO_APP_KEY}
 
   firebase:
+    enabled: true
     config: ${FIRE_BASE_CONFIG}
 
 jwt:

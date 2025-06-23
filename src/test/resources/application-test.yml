@@ -28,7 +28,7 @@ spring:
       enabled: always
 
   firebase:
-    config: ${FIRE_BASE_CONFIG}
+    enabled: false
 
 jwt:
   secret: ${JWT_SECRET}
