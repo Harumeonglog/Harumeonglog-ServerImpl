@@ -42,11 +42,11 @@ public class PostQueryServiceImpl implements PostQueryService {
         Slice<Post> postSlice;
         if (postRequestCategory.equals(PostRequestCategory.ALL)) {
             postSlice = postRepository.findByContentLikeAndIdLessThanOrderByIdDesc(search, cursor, PageRequest.of(0, size));
-        } else {
-            PostCategory postCategory = PostCategory.valueOf(postRequestCategory.name());
-            postSlice = postRepository.findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(search, cursor, postCategory, PageRequest.of(0, size));
+            return buildPostPreviewListResponse(postSlice, member);
         }
 
+        PostCategory postCategory = PostCategory.valueOf(postRequestCategory.name());
+        postSlice = postRepository.findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(search, cursor, postCategory, PageRequest.of(0, size));
         return buildPostPreviewListResponse(postSlice, member);
     }
 
