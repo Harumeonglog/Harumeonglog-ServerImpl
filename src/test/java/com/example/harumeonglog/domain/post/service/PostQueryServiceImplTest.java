@@ -1,12 +1,10 @@
 package com.example.harumeonglog.domain.post.service;
 
-import com.example.harumeonglog.domain.member.dto.response.MemberResponse;
 import com.example.harumeonglog.domain.member.dto.response.MemberResponse.MemberInfoResponse;
 import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.SocialType;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory;
-import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.HomePostListRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostDetailResponse;
@@ -18,7 +16,6 @@ import com.example.harumeonglog.domain.post.entity.PostLike;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
-import com.example.harumeonglog.global.util.S3Util;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -29,17 +26,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
 @ActiveProfiles("test")
