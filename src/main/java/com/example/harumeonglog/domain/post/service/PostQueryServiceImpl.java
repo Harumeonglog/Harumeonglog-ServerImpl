@@ -53,10 +53,7 @@ public class PostQueryServiceImpl implements PostQueryService {
     @Override
     public PostResponse.PostDetailResponse getPost(Member owner,Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
-        List<String> postImageList = post.getPostImageList().stream()
-                .map((p)->s3Util.getUrlFromKey(p.getPostImageKeyName()))
-                .toList();
-
+        List<String> postImageList = extractImageKeyName(post);
         Boolean isLiked = postLikeRepository.existsByPostAndMember(post, owner);
 
         return PostConverter.toPostDetailResponse(post, MemberConverter.toMemberInfoResponse(post.getMember(), s3Util), postImageList, isLiked);
@@ -125,5 +122,11 @@ public class PostQueryServiceImpl implements PostQueryService {
                 .toList();
 
         return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
+    }
+
+    private List<String> extractImageKeyName(Post post) {
+        return post.getPostImageList().stream()
+                .map((p) -> s3Util.getUrlFromKey(p.getPostImageKeyName()))
+                .toList();
     }
 }
