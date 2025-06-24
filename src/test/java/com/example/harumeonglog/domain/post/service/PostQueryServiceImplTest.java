@@ -119,6 +119,43 @@ class PostQueryServiceImplTest {
     }
 
     @Test
+    @DisplayName("게시물 검색 시 전체 카테고리일 때 정상 작동하는가")
+    void getPostsAllTest() {
+        // given
+        PostCategory[] categories = PostCategory.values();
+
+        IntStream.range(0, 100).forEach(i -> {
+            PostImage image = PostImage.builder()
+                    .postImageKeyName("testImage" + i)
+                    .build();
+
+            Post post = Post.builder()
+                    .title("post" + i + "title")
+                    .content("post" + i + "content")
+                    .member(member)
+                    .category(categories[i / 20])
+                    .build();
+
+            post.addPostImage(image);
+            postRepository.save(post);
+        });
+
+        Long cursor = 0L;
+        Integer size = 20;
+        String name = "post";
+        PostRequestCategory postCategory = PostRequestCategory.ALL;
+
+        // when
+        PostPreviewListResponse response =
+                postQueryService.getPosts(cursor, size, name, postCategory, member);
+
+        // then
+        assertEquals(size, response.getItems().size());
+        assertTrue(response.getItems().stream()
+                .allMatch(p -> p.getContent().contains(name) && p.getTitle().contains(name)));
+    }
+
+    @Test
     @DisplayName("게시물 단건 조회 잘 되는가")
     void getPostTest() {
         // given
