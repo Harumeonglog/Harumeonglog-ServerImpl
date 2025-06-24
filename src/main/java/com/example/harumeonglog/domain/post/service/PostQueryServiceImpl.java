@@ -40,7 +40,7 @@ public class PostQueryServiceImpl implements PostQueryService {
         search = normalizeSearch(search);
 
         Slice<Post> postSlice;
-        if (postRequestCategory.equals(PostRequestCategory.ALL)) {
+        if (postRequestCategory.isAll()) {
             postSlice = postRepository.findByContentLikeAndIdLessThanOrderByIdDesc(search, cursor, PageRequest.of(0, size));
             return buildPostPreviewListResponse(postSlice, member);
         }

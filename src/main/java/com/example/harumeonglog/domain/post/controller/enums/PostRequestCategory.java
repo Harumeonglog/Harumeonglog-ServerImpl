@@ -7,4 +7,9 @@ public enum PostRequestCategory {
     SNS, // SNS
     ETC, // 기타
     ALL // 전부
+    ;
+
+    public boolean isAll() {
+        return ALL.equals(this);
+    }
 }
