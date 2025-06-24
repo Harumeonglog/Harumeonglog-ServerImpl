@@ -45,7 +45,7 @@ public class PostQueryServiceImpl implements PostQueryService {
             return buildPostPreviewListResponse(postSlice, member);
         }
 
-        PostCategory postCategory = PostCategory.valueOf(postRequestCategory.name());
+        PostCategory postCategory = postRequestCategory.toPostCategory();
         postSlice = postRepository.findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(search, cursor, postCategory, PageRequest.of(0, size));
         return buildPostPreviewListResponse(postSlice, member);
     }
