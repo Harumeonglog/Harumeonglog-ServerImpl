@@ -119,7 +119,7 @@ class PostQueryServiceImplTest {
 
     @Test
     @DisplayName("게시물 단건 조회 잘 되는가")
-    void getPostsDefaultTest() {
+    void getPostTest() {
         // given
         PostImage postImage = PostImage.builder()
                 .postImageKeyName("testImage")
