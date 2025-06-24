@@ -8,6 +8,7 @@ import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory;
 import com.example.harumeonglog.domain.post.dto.request.PostRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse;
+import com.example.harumeonglog.domain.post.dto.response.PostResponse.HomePostListRequest;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostDetailResponse;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPreviewListResponse;
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPreviewResponse;
@@ -326,5 +327,74 @@ class PostQueryServiceImplTest {
         assertThat(postPreviewResponse.getTitle()).isEqualTo(post.getTitle());
         assertThat(postPreviewResponse.getContent()).isEqualTo(post.getContent());
         assertThat(postPreviewResponse.getIsLiked()).isTrue();
+    }
+
+    @Test
+    @DisplayName("각 게시글 최근 첫 게시물 조회가 잘 작동하는가")
+    void getHomePostsTest() {
+        // given
+        PostCategory[] categories = PostCategory.values();
+
+        IntStream.range(0, 10).forEach(i -> {
+            Post post = Post.builder()
+                    .title("post" + i + "title")
+                    .content("post" + i + "content")
+                    .member(member)
+                    .category(categories[i / 2])
+                    .build();
+
+            postRepository.save(post);
+        });
+
+        Post infoPost = postRepository.save(Post.builder()
+                .title("InfoPost")
+                .content("post")
+                .member(member)
+                .category(PostCategory.INFO)
+                .build());
+
+        Post ETCPost = postRepository.save(Post.builder()
+                .title("ETCPost")
+                .content("post")
+                .member(member)
+                .category(PostCategory.ETC)
+                .build());
+
+        Post humorPost = postRepository.save(Post.builder()
+                .title("humorPost")
+                .content("post")
+                .member(member)
+                .category(PostCategory.HUMOR)
+                .build());
+
+        Post qnaPost = postRepository.save(Post.builder()
+                .title("qnaPost")
+                .content("post")
+                .member(member)
+                .category(PostCategory.QNA)
+                .build());
+
+        Post snsPost = postRepository.save(Post.builder()
+                .title("SNSPost")
+                .content("post")
+                .member(member)
+                .category(PostCategory.SNS)
+                .build());
+
+        // when
+        HomePostListRequest homePostRequest = postQueryService.getHomePosts();
+
+        // then
+        assertThat(homePostRequest.getHomePostRequestList().size()).isEqualTo(5);
+
+        assertThat(homePostRequest.getHomePostRequestList())
+                .extracting(PostResponse.HomePostRequest::getTitle)
+                .containsExactlyInAnyOrder(
+                        infoPost.getTitle(),
+                        ETCPost.getTitle(),
+                        humorPost.getTitle(),
+                        qnaPost.getTitle(),
+                        snsPost.getTitle()
+                );
     }
 }
