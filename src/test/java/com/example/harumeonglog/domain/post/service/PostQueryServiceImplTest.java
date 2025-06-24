@@ -280,7 +280,6 @@ class PostQueryServiceImplTest {
         assertThat(memberInfoResponse.getImage()).isEqualTo(member.getImage());
     }
 
-    @Transactional
     @Test
     @DisplayName("내가 좋아요 누른 게시물 조회가 잘 작동하는가")
     void getMyLikePostTest() {
