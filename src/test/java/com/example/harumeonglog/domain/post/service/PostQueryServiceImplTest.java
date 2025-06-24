@@ -13,6 +13,7 @@ import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPrevie
 import com.example.harumeonglog.domain.post.dto.response.PostResponse.PostPreviewResponse;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.PostImage;
+import com.example.harumeonglog.domain.post.entity.PostLike;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import com.example.harumeonglog.domain.post.repository.PostLikeRepository;
 import com.example.harumeonglog.domain.post.repository.PostRepository;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -276,5 +278,54 @@ class PostQueryServiceImplTest {
         assertThat(memberInfoResponse.getEmail()).isEqualTo(member.getEmail());
         assertThat(memberInfoResponse.getNickname()).isEqualTo(member.getNickname());
         assertThat(memberInfoResponse.getImage()).isEqualTo(member.getImage());
+    }
+
+    @Transactional
+    @Test
+    @DisplayName("내가 좋아요 누른 게시물 조회가 잘 작동하는가")
+    void getMyLikePostTest() {
+        // given
+        Member other = memberRepository.save(Member.builder()
+                .email(this.TEST_EMAIL)
+                .nickname(this.TEST_NICKNAME)
+                .providerId(this.TEST_PROVIDERID)
+                .socialType(this.TEST_SOCIALTYPE)
+                .build());
+
+        Post post = postRepository.save(Post.builder()
+                .title("title")
+                .content("content")
+                .category(PostCategory.INFO)
+                .member(other)
+                .build());
+
+        postRepository.save(Post.builder()
+                .title("title")
+                .content("content")
+                .category(PostCategory.INFO)
+                .member(other)
+                .build());
+
+        postLikeRepository.save(
+                PostLike.builder()
+                        .post(post)
+                        .member(member)
+                        .build()
+        );
+
+        Long cursor = 0L;
+        Integer size = 20;
+
+        // when
+        PostPreviewListResponse postResponse = postQueryService.getMyLikePost(cursor, size, member);
+
+        // then
+        assertThat(postResponse.getItems().size()).isEqualTo(1);
+        PostPreviewResponse postPreviewResponse = postResponse.getItems().get(0);
+
+        assertThat(postPreviewResponse.getPostId()).isEqualTo(post.getId());
+        assertThat(postPreviewResponse.getTitle()).isEqualTo(post.getTitle());
+        assertThat(postPreviewResponse.getContent()).isEqualTo(post.getContent());
+        assertThat(postPreviewResponse.getIsLiked()).isTrue();
     }
 }
