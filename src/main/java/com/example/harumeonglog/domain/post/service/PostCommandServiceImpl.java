@@ -98,8 +98,8 @@ public class PostCommandServiceImpl implements PostCommandService {
     }
 
     private static void addImage(PostRequest.PostCreateRequest postCreateRequest, Post post) {
-        postCreateRequest.getPostImageList().forEach((s)->{
-            PostImage postImage = PostImageConverter.toPostImage(s);
+        postCreateRequest.getPostImageList().forEach(imageKeyName -> {
+            PostImage postImage = PostImageConverter.toPostImage(imageKeyName);
             post.addPostImage(postImage);
         });
     }
