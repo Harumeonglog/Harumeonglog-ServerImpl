@@ -95,7 +95,7 @@ public class PostQueryServiceImpl implements PostQueryService {
         Long nextCursor = null;
         List<Post> posts = postSlice.toList();
 
-        if (postSlice.hasNext() && posts.size() > 0) {
+        if (postSlice.hasNext() && !posts.isEmpty()) {
             nextCursor = posts.get(posts.size() - 1).getId();
         }
 
