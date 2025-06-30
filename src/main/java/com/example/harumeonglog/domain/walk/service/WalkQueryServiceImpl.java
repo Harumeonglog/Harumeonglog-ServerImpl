@@ -7,6 +7,7 @@ import com.example.harumeonglog.domain.pet.repository.MemberPetRepository;
 import com.example.harumeonglog.domain.walk.converter.WalkConverter;
 import com.example.harumeonglog.domain.walk.dto.request.WalkRequest;
 import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
+import com.example.harumeonglog.domain.walk.entity.MemberWalk;
 import com.example.harumeonglog.domain.walk.entity.Walk;
 import com.example.harumeonglog.domain.walk.entity.enums.WalkStatus;
 import com.example.harumeonglog.domain.walk.enums.WalkSort;
@@ -101,14 +102,20 @@ public class WalkQueryServiceImpl implements WalkQueryService {
             cursor = walks.get(walks.size() - 1).getId();
         }
 
+        List<Long> walkIds = walks.stream().map(Walk::getId).toList();
         List<WalkResponse.WalkSearchResponse> responses = new ArrayList<>();
-        // FIXME: 쿼리 수정 필요 offset 만큼 쿼리 생성
+        Map<Long, String> nicknames = new HashMap<>();
+        for (MemberWalk memberWalk : memberWalkRepository.findMemberNicknameByWalks(walkIds)) {
+            nicknames.put(memberWalk.getWalk().getId(), memberWalk.getMember().getNickname());
+        }
+        List<Long> walkLikeIds = walkLikeRepository.findByWalks(walkIds)
+                .stream().map(walkLike -> walkLike.getWalk().getId()).toList();
         walks.forEach(walk ->
-            responses.add(WalkConverter.toWalkSearchResponse(
-                    walk,
-                    memberWalkRepository.findTopByWalkOrderByCreatedAtAsc(walk).getMember().getNickname(),
-                    walkLikeRepository.existsByMemberAndWalk(member, walk)
-            ))
+                responses.add(WalkConverter.toWalkSearchResponse(
+                        walk,
+                        nicknames.getOrDefault(walk.getId(), "알 수 없음"),
+                        walkLikeIds.contains(walk.getId())
+                ))
         );
 
         return WalkConverter.toWalkSearchListResponse(responses, cursor, hasNext);
