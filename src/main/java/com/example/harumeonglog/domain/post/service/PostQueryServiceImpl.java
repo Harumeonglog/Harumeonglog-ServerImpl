@@ -95,7 +95,7 @@ public class PostQueryServiceImpl implements PostQueryService {
         Long nextCursor = null;
         List<Post> posts = postSlice.toList();
 
-        if (postSlice.hasNext() && !posts.isEmpty()) {
+        if (hasNextCursor(postSlice, posts)) {
             nextCursor = posts.get(posts.size() - 1).getId();
         }
 
@@ -121,6 +121,10 @@ public class PostQueryServiceImpl implements PostQueryService {
                 .toList();
 
         return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
+    }
+
+    private boolean hasNextCursor(Slice<Post> postSlice, List<Post> posts) {
+        return postSlice.hasNext() && !posts.isEmpty();
     }
 
     private List<String> extractImageKeyName(Post post) {
