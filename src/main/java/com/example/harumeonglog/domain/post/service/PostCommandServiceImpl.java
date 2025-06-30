@@ -86,14 +86,18 @@ public class PostCommandServiceImpl implements PostCommandService {
     public void reportPost(Long postId, Member member) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
-        PostReport postReport = postReportRepository.findByPostAndMember(post, member);
-        if (postReport != null) {
-            postReportRepository.delete(postReport);
-            postRepository.updatePostUnReportNumByPost(post);
-        } else {
-            postReportRepository.save(PostReportConverter.toPostReport(post, member));
-            postRepository.updatePostReportNumByPost(post);
-        }
+        Optional<PostReport> postReport = postReportRepository.findByPostAndMember(post, member);
+
+        postReport.ifPresentOrElse(
+                report -> {
+                    postReportRepository.delete(report);
+                    postRepository.updatePostUnReportNumByPost(post);
+                },
+                () -> {
+                    postReportRepository.save(PostReportConverter.toPostReport(post, member));
+                    postRepository.updatePostReportNumByPost(post);
+                }
+        );
     }
 
     private void isOwnPost(Member member, Post post) {
