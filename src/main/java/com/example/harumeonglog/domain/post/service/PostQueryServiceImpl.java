@@ -129,7 +129,7 @@ public class PostQueryServiceImpl implements PostQueryService {
 
     private List<String> extractImageKeyName(Post post) {
         return post.getPostImageList().stream()
-                .map((p) -> s3Util.getUrlFromKey(p.getPostImageKeyName()))
+                .map(postImage -> s3Util.getUrlFromKey(postImage.getPostImageKeyName()))
                 .toList();
     }
 }
