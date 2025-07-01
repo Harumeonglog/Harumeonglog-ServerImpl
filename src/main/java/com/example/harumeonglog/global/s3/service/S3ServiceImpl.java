@@ -30,45 +30,44 @@ public class S3ServiceImpl implements S3Service {
 
     private List<String> acceptImageType = List.of("image/jpeg", "image/png", "image/gif", "image/jpg");
 
-
-    @Override
-    public S3ResponseDTO.S3ResponsePreviewDTO generatePresignedUrl(S3RequestDTO.GeneratePresignedUrlRequest request) {
-        // imageKey 생성
-        String imageKey = geneerateImageKey(request.getEntityId(), request.getDomain(), request.getImage().getFilename());
-
-        if (!acceptImageType.contains(request.getImage().getContentType())) {
-            throw new S3Exception(S3ErrorCode.INVALID_TYPE);
-        }
-
-        // Presigned URL 생성
-        String presignedUrl = generatePresignedUrl(imageKey, request.getImage().getContentType());
-
-        // Outbox 생성
-        OutBox outBox = OutBoxConverter.toS3OutBox(imageKey);
-        outBoxRepository.save(outBox);
-
-        return S3Converter.toS3ResponsePreviewDTO(presignedUrl, imageKey);
-    }
-
     @Override
     public S3ResponseDTO.S3ResponseListDTO generatePresignedUrls(S3RequestDTO.GeneratePresignedUrlsRequest request) {
-        List<S3ResponseDTO.S3ResponsePreviewDTO> imageList = request.getImages().stream()
-                .map(image -> {
-                    // imageKey 생성
-                    String imageKey = geneerateImageKey(request.getEntityId(), request.getDomain(), image.getFilename());
+        List<S3ResponseDTO.EntityImageResponse> entityResponses = request.getEntities().stream()
+                .map(entityRequest -> {
+                    List<S3ResponseDTO.S3ResponsePreviewDTO> imageList = entityRequest.getImages().stream()
+                            .map(image -> {
+                                // 이미지 타입 검증
+                                if (!acceptImageType.contains(image.getContentType())) {
+                                    throw new S3Exception(S3ErrorCode.INVALID_TYPE);
+                                }
 
-                    // Presigned URL 생성
-                    String presignedUrl = generatePresignedUrl(imageKey, image.getContentType());
+                                // imageKey 생성
+                                String imageKey = generateImageKey(
+                                        entityRequest.getEntityId(),
+                                        request.getDomain(),
+                                        image.getFilename()
+                                );
 
-                    return S3Converter.toS3ResponsePreviewDTO(presignedUrl, imageKey);
+                                // Presigned URL 생성
+                                String presignedUrl = generatePresignedUrl(imageKey, image.getContentType());
+
+                                // Outbox 생성
+                                OutBox outBox = OutBoxConverter.toS3OutBox(imageKey);
+                                outBoxRepository.save(outBox);
+
+                                return S3Converter.toS3ResponsePreviewDTO(presignedUrl, imageKey);
+                            })
+                            .collect(Collectors.toList());
+
+                    return S3Converter.toEntityImageResponse(entityRequest.getEntityId(), imageList);
                 })
                 .collect(Collectors.toList());
 
-        return S3Converter.toS3ResponseListDTO(imageList);
+        return S3Converter.toS3ResponseDTO(entityResponses);
     }
 
 
-    private String geneerateImageKey(Long entityId, S3Domain domain, String filename){
+    private String generateImageKey(Long entityId, S3Domain domain, String filename) {
         String uuid = UUID.randomUUID().toString();
         String imageKey;
 
@@ -82,11 +81,11 @@ public class S3ServiceImpl implements S3Service {
         return imageKey;
     }
 
-    private String generatePresignedUrl(String imageKey, String contentType){
+    private String generatePresignedUrl(String imageKey, String contentType) {
         return s3Util.generatePresignedUrlForUpload(
                 imageKey,
                 contentType,
-                -1, // 클라이언트에서 ContentLength를 지정하도록 함
-                3); // 10분 유효
+                -1,
+                3);
     }
 }
