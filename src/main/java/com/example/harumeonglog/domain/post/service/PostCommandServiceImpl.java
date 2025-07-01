@@ -21,6 +21,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -34,10 +35,7 @@ public class PostCommandServiceImpl implements PostCommandService {
     public PostResponse.PostCreateResponse createPost(PostRequest.PostCreateRequest postCreateRequest, Member member) {
         Post post = PostConverter.toPost(postCreateRequest, member);
 
-        postCreateRequest.getPostImageList().forEach((s)->{
-            PostImage postImage = PostImageConverter.toPostImage(s);
-            post.addPostImage(postImage);
-        });
+        addImage(postCreateRequest, post);
 
         return PostConverter.toPostCreateResponse(postRepository.save(post));
     }
@@ -67,28 +65,43 @@ public class PostCommandServiceImpl implements PostCommandService {
     public void likePost(Long postId, Member member) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
-        PostLike postLike = postLikeRepository.findByPostAndMember(post, member);
-        if (postLike != null) {
-            postLikeRepository.delete(postLike);
-            postRepository.updatePostUnLikeNumByPost(post);
-        } else {
-            postLikeRepository.save(PostLikeConverter.toPostLike(post, member));
-            postRepository.updatePostLikeNumByPost(post);
-        }
+        Optional<PostLike> postLike = postLikeRepository.findByPostAndMember(post, member);
+
+        postLike.ifPresentOrElse(
+                like -> {
+                    postLikeRepository.delete(like);
+                    postRepository.updatePostUnLikeNumByPost(post);
+                },
+                () -> {
+                    postLikeRepository.save(PostLikeConverter.toPostLike(post, member));
+                    postRepository.updatePostLikeNumByPost(post);
+                }
+        );
     }
 
     @Override
     public void reportPost(Long postId, Member member) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
 
-        PostReport postReport = postReportRepository.findByPostAndMember(post, member);
-        if (postReport != null) {
-            postReportRepository.delete(postReport);
-            postRepository.updatePostUnReportNumByPost(post);
-        } else {
-            postReportRepository.save(PostReportConverter.toPostReport(post, member));
-            postRepository.updatePostReportNumByPost(post);
-        }
+        Optional<PostReport> postReport = postReportRepository.findByPostAndMember(post, member);
+
+        postReport.ifPresentOrElse(
+                report -> {
+                    postReportRepository.delete(report);
+                    postRepository.updatePostUnReportNumByPost(post);
+                },
+                () -> {
+                    postReportRepository.save(PostReportConverter.toPostReport(post, member));
+                    postRepository.updatePostReportNumByPost(post);
+                }
+        );
+    }
+
+    private void addImage(PostRequest.PostCreateRequest postCreateRequest, Post post) {
+        postCreateRequest.getPostImageList().forEach(imageKeyName -> {
+            PostImage postImage = PostImageConverter.toPostImage(imageKeyName);
+            post.addPostImage(postImage);
+        });
     }
 
     private void isOwnPost(Member member, Post post) {

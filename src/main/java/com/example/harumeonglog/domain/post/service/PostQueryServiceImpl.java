@@ -95,11 +95,10 @@ public class PostQueryServiceImpl implements PostQueryService {
         Long nextCursor = null;
         List<Post> posts = postSlice.toList();
 
-        if (postSlice.hasNext() && posts.size() > 0) {
+        if (hasNextCursor(postSlice, posts)) {
             nextCursor = posts.get(posts.size() - 1).getId();
         }
 
-        // ✅ 좋아요 여부를 한 번에 조회
         List<PostLike> postLikes = postLikeRepository.findByPostInAndMember(posts, member);
         Set<Long> likedPostIds = postLikes.stream()
                 .map(postLike -> postLike.getPost().getId())
@@ -124,9 +123,13 @@ public class PostQueryServiceImpl implements PostQueryService {
         return PostConverter.toPostPreviewListResponse(postPreviewResponses, nextCursor, postSlice.hasNext());
     }
 
+    private boolean hasNextCursor(Slice<Post> postSlice, List<Post> posts) {
+        return postSlice.hasNext() && !posts.isEmpty();
+    }
+
     private List<String> extractImageKeyName(Post post) {
         return post.getPostImageList().stream()
-                .map((p) -> s3Util.getUrlFromKey(p.getPostImageKeyName()))
+                .map(postImage -> s3Util.getUrlFromKey(postImage.getPostImageKeyName()))
                 .toList();
     }
 }
