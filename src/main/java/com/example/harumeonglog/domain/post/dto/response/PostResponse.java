@@ -35,7 +35,6 @@ public class PostResponse {
         private PostCategory postCategory;
         private MemberInfoResponse memberInfoResponse;
         private String imageKeyName;
-        private Boolean isOwn;
     }
 
     @Getter

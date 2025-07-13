@@ -30,7 +30,7 @@ public class PostConverter {
                 .build();
     }
 
-    public static PostResponse.PostPreviewResponse toPostPreviewResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, String image, Boolean isLiked, Boolean isOwn) {
+    public static PostResponse.PostPreviewResponse toPostPreviewResponse(Post post, MemberResponse.MemberInfoResponse memberInfoResponse, String image, Boolean isLiked) {
 
         return PostResponse.PostPreviewResponse.builder()
                 .postId(post.getId())
@@ -43,7 +43,6 @@ public class PostConverter {
                 .commentNum(post.getCommentNum())
                 .memberInfoResponse(memberInfoResponse)
                 .imageKeyName(image)
-                .isOwn(isOwn)
                 .build();
     }
 
