@@ -23,7 +23,6 @@ import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.S3Exception;
 import com.example.harumeonglog.global.firebase.service.FcmService;
-import com.example.harumeonglog.global.util.FcmUtil;
 import com.example.harumeonglog.global.util.OutboxUtil;
 import com.example.harumeonglog.global.util.S3Util;
 import lombok.RequiredArgsConstructor;
@@ -108,10 +107,13 @@ public class PetCommandServiceImpl implements PetCommandService {
             String imageUrl = s3Util.getUrlFromKey(newMainImageKey);
 
             // Outbox 상태 변경
-            if(!s3Util.isObjectExists(request.getNewMainImageKey())) {
-                throw new S3Exception(S3ErrorCode.NOT_FOUND);
+            if (request.getNewMainImageKey() != null && !request.getNewMainImageKey().isEmpty()) {
+                if (!s3Util.isObjectExists(request.getNewMainImageKey())) {
+                    throw new S3Exception(S3ErrorCode.NOT_FOUND);
+                }
+                outboxUtil.changeS3OutboxStatus(request.getNewMainImageKey());
             }
-            outboxUtil.changeS3OutboxStatus(request.getNewMainImageKey());
+
 
             // 응답 DTO 반환
             return PetConverter.toChangePetInfoResponse(pet, imageUrl);
@@ -133,17 +135,22 @@ public class PetCommandServiceImpl implements PetCommandService {
     }
 
     @Override
-    public void deletePet(Long petId, Member member) {
+    public void deletePet(Long petId, Long memberId) {
         Pet pet = findPetById(petId);
 
-        // 권한 검증
-        validateOwnerAccess(member, pet);
+        //삭제할 member
+        Member deleteMember = memberRepository.findById(memberId).orElseThrow(
+                () -> new MemberException(MemberErrorCode.NOT_FOUND));
 
-        // Pet soft delete
-        pet.softDelete();
+        MemberPet deleteMemberPet = memberPetRepository.findByMemberAndPet(deleteMember, pet).orElseThrow(
+                () -> new PetException(PetErrorCode.NOT_IN_GROUP));
 
-        // MemberPet hard delete
-        memberPetRepository.deleteByPet(pet);
+        memberPetRepository.delete(deleteMemberPet);
+
+        if(memberPetRepository.countByPet(pet) == 0 || memberPetRepository.countByPetAndRole(pet, MemberPetRole.OWNER) == 0){
+            pet.softDelete();
+            memberPetRepository.deleteAllByPet(pet);
+        }
     }
 
     @Override
@@ -186,8 +193,7 @@ public class PetCommandServiceImpl implements PetCommandService {
     @Override
     public void responseInvite(Long petId, PetRequest.InviteResponseRequest request, Member member) {
         // 펫 존재 확인
-        Pet pet = petRepository.findById(petId)
-                .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
+        Pet pet = findPetById(petId);
 
         // 초대 존재 확인
         Invitation invitation = invitationRepository.findByPetAndReceiver(pet, member)
@@ -216,7 +222,7 @@ public class PetCommandServiceImpl implements PetCommandService {
 
     // Pet 엔티티 조회
     private Pet findPetById(Long petId) {
-        return petRepository.findById(petId)
+        return petRepository.findByIdAndDeletedAtIsNull(petId)
                 .orElseThrow(() -> new PetException(PetErrorCode.NOT_FOUND));
     }
 
