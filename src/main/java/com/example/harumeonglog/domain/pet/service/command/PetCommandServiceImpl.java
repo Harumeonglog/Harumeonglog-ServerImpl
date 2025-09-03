@@ -165,8 +165,13 @@ public class PetCommandServiceImpl implements PetCommandService {
             Member invitedMember = memberRepository.findById(invite.getMemberId())
                     .orElseThrow(() -> new MemberException(MemberErrorCode.NOT_FOUND));
 
-            // 이미 초대된 상태인지 확인
+            // 1. 이미 멤버로 가입된 상태인지 확인
             if (memberPetRepository.findByMemberAndPet(invitedMember, pet).isPresent()) {
+                throw new PetException(PetErrorCode.ALREADY_MEMBER);
+            }
+
+            // 2. 이미 초대가 발송된 상태인지 확인
+            if (invitationRepository.findByPetAndReceiver(pet, invitedMember).isPresent()) {
                 throw new PetException(PetErrorCode.ALREADY_INVITED);
             }
 
