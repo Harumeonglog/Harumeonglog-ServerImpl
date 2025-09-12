@@ -24,6 +24,7 @@ public class NoticeConverter {
                 .content(notice.getContent())
                 .createdAt(notice.getCreatedAt())
                 .senderName(notice.getSenderName())
+                .noticeType(notice.getNoticeType())
                 .build();
     }
 
