@@ -27,7 +27,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     @Query("select p " +
             "from Post p join fetch p.member m " +
-            "where p.member = :member and p.id < :cursor order by p.id desc")
+            "where p.member = :member and p.deletedAt is null and p.id < :cursor order by p.id desc")
     Slice<Post> findByMemberAndDeletedAtIsNullAndIdLessThanOrderByIdDesc(Member member, Long cursor, Pageable pageable);
 
     @Query("select p " +
