@@ -37,7 +37,7 @@ import java.util.List;
 public class WalkCommandServiceImpl implements WalkCommandService {
 
     private static final String DEFAULT_TITLE_FORMAT = "%s 산책";
-    private static final String DEFAULT_DETAILS = "시간: %s";
+    private static final String DEFAULT_DETAILS = "%s시 %s분 시작, %s시 %s분 종료";
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
@@ -208,20 +208,21 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     }
 
     private void createEventAfterWalk(Walk walk, WalkRequest.WalkEndRequest request) {
-        EventRequest.EventRequestDTO dto = createEventRequest(request);
+        EventRequest.EventRequestDTO dto = createEventRequest(request, walk);
         List<Member> members = memberWalkQueryService.findByWalk(walk.getId()).stream().map(MemberWalk::getMember).toList();
         List<Pet> pets = walkPetQueryService.findByWalk(walk.getId()).stream().map(WalkPet::getPet).toList();
 
-        for (Member member : members) {
-            for (Pet pet : pets) {
+        for (Pet pet : pets) {
+            for (Member member : members) {
                 if (checkOwnPet(member, pet)) {
                     eventCommandService.createEventAfterWalk(dto, member, pet);
+                    break;
                 }
             }
         }
     }
 
-    private EventRequest.EventRequestDTO createEventRequest(WalkRequest.WalkEndRequest request) {
+    private EventRequest.EventRequestDTO createEventRequest(WalkRequest.WalkEndRequest request, Walk walk) {
         LocalDate today = LocalDate.now();
         LocalTime time = LocalTime.now();
         return EventRequest.EventRequestDTO.builder()
@@ -233,7 +234,7 @@ public class WalkCommandServiceImpl implements WalkCommandService {
                 .hasNotice(false)
                 .time(time)
                 .category(EventCategory.WALK)
-                .details(String.format(DEFAULT_DETAILS, time))
+                .details(String.format(DEFAULT_DETAILS, walk.getCreatedAt().getHour(), walk.getCreatedAt().getMinute(), time.getHour(), time.getMinute()))
                 .distance(String.valueOf(request.getDistance()))
                 .duration(String.valueOf(request.getTime()))
                 .build();
