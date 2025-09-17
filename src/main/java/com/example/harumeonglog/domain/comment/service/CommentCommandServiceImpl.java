@@ -27,6 +27,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.example.harumeonglog.global.error.code.CommentErrorCode.OWN_COMMENT_LIKE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -103,6 +105,10 @@ public class CommentCommandServiceImpl implements CommentCommandService {
     @Override
     public void likeComment(Long commentId, Member member) {
         Comment comment = commentRepository.findById(commentId).orElseThrow(() -> new CommentException(CommentErrorCode.NOT_FOUND));
+
+        if (comment.getMember().equals(member)) {
+            throw new CommentException(OWN_COMMENT_LIKE);
+        }
 
         CommentLike commentLike = commentLikeRepository.findByCommentAndMember(comment, member);
 

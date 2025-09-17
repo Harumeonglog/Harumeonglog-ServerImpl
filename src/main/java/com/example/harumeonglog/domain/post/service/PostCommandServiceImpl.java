@@ -26,6 +26,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
+import static com.example.harumeonglog.global.error.code.PostErrorCode.OWN_POST_LIKE;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -69,6 +71,10 @@ public class PostCommandServiceImpl implements PostCommandService {
     @Override
     public void likePost(Long postId, Member member) {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PostException(PostErrorCode.NOT_FOUND));
+
+        if (post.getMember().equals(member)) {
+            throw new PostException(OWN_POST_LIKE);
+        }
 
         Optional<PostLike> postLike = postLikeRepository.findByPostAndMember(post, member);
 
