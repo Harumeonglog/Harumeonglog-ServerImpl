@@ -27,7 +27,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.Collection;
 import java.util.List;
 
@@ -36,10 +35,8 @@ import java.util.List;
 @Transactional
 public class WalkCommandServiceImpl implements WalkCommandService {
 
-    private static final String DEFAULT_TITLE_FORMAT = "%s 산책";
+    private static final String DEFAULT_TITLE_FORMAT = "%s시 산책";
     private static final String DEFAULT_DETAILS = "%s시 %s분 시작, %s시 %s분 종료";
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
 
     private final WalkRepository walkRepository;
     private final PetRepository petRepository;
@@ -226,7 +223,7 @@ public class WalkCommandServiceImpl implements WalkCommandService {
         LocalDate today = LocalDate.now();
         LocalTime time = LocalTime.now();
         return EventRequest.EventRequestDTO.builder()
-                .title(String.format(DEFAULT_TITLE_FORMAT, today.format(DATE_FORMATTER)))
+                .title(String.format(DEFAULT_TITLE_FORMAT, walk.getCreatedAt().getHour()))
                 .date(today)
                 .isRepeated(false)
                 .expiredDate(null)
