@@ -1,20 +1,15 @@
 package com.example.harumeonglog.global.s3.scheduler;
 
-import com.amazonaws.services.s3.AmazonS3;
-import com.amazonaws.services.s3.model.ListObjectsV2Request;
-import com.amazonaws.services.s3.model.ListObjectsV2Result;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.example.harumeonglog.domain.member.repository.MemberRepository;
 import com.example.harumeonglog.domain.pet.repository.PetImageRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
 import com.example.harumeonglog.domain.post.repository.PostImageRepository;
-import com.example.harumeonglog.global.data.S3ConfigData;
 import com.example.harumeonglog.global.util.S3Util;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -30,7 +25,7 @@ public class S3CleanupScheduler {
     private final S3Util s3Util;
 
     // 매일 새벽 3시에 실행
-    @Scheduled(cron = "0 0 4 * * ?")
+    @Scheduled(cron = "0 0 3 * * ?")
     @Transactional
     public void cleanupDbKeysNotInS3() {
         log.info("=== DB → S3 동기화 시작 ===");
