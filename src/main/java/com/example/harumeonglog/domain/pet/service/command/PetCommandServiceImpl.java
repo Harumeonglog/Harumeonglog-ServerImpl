@@ -145,11 +145,16 @@ public class PetCommandServiceImpl implements PetCommandService {
         MemberPet deleteMemberPet = memberPetRepository.findByMemberAndPet(deleteMember, pet).orElseThrow(
                 () -> new PetException(PetErrorCode.NOT_IN_GROUP));
 
-        memberPetRepository.delete(deleteMemberPet);
+        // 펫에 아무도 없을 경우 조건 확인
+        boolean lastMember = memberPetRepository.countByPet(pet) == 1;
+        boolean noOwner = memberPetRepository.countByPetAndRole(pet, MemberPetRole.OWNER) == 0;
 
-        if(memberPetRepository.countByPet(pet) == 0 || memberPetRepository.countByPetAndRole(pet, MemberPetRole.OWNER) == 0){
+        // 아무도 없을 경우 분기
+        if (lastMember || noOwner) {
             pet.softDelete();
             memberPetRepository.deleteAllByPet(pet);
+        } else {
+            memberPetRepository.delete(deleteMemberPet);
         }
     }
 
