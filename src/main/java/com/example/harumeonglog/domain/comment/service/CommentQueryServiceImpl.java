@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static com.example.harumeonglog.domain.comment.converter.CommentConverter.toCommentMyPreviewResponse;
+
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
@@ -53,7 +55,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
 
         List<CommentResponse.CommentPreviewResponse> responses = commentList.stream()
                 .map(comment -> {
-                    return CommentConverter.toCommentPreviewResponse(comment, blockedCommentIdSet, s3Util);
+                    return CommentConverter.toCommentPreviewResponse(comment, member, blockedCommentIdSet, s3Util);
                 })
                 .toList();
 
@@ -76,7 +78,7 @@ public class CommentQueryServiceImpl implements CommentQueryService {
         List<Comment> commentList = commentSlice.toList();
 
         List<CommentResponse.CommentMyPreviewResponse> responses = commentList.stream()
-                .map(CommentConverter::toCommentMyPreviewResponse)
+                .map(comment -> toCommentMyPreviewResponse(comment, member))
                 .toList();
 
         Long nextCursor = null;
