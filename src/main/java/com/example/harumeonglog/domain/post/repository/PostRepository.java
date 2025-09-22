@@ -23,7 +23,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "and p.content like %:content% " +
             "and p.id < :cursor " +
             "order by p.id desc")
-    Slice<Post> findByContentLikeAndIdLessThanOrderByIdDesc(String content, Long cursor, Pageable pageable);
+    Slice<Post> findByContentLikeAndIdLessThanOrderByIdDesc(String content, Long memberId, Long cursor, Pageable pageable);
 
     @Query("select p " +
             "from Post p join fetch p.member m " +
@@ -34,7 +34,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "and p.content like %:content% " +
             "and p.id < :cursor " +
             "order by p.id desc")
-    Slice<Post> findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(String content, Long cursor, PostCategory postCategory, PageRequest of);
+    Slice<Post> findByPostCategoryAndContentLikeAndIdLessThanOrderByIdDesc(String content, Long memberId, Long cursor, PostCategory postCategory, PageRequest of);
 
     @Query("select p " +
             "from Post p join fetch p.member m " +
@@ -44,7 +44,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "and pr.id is null " +
             "and p.id < :cursor " +
             "order by p.id desc")
-    Slice<Post> findByMemberAndDeletedAtIsNullAndIdLessThanOrderByIdDesc(Member member, Long cursor, Pageable pageable);
+    Slice<Post> findByMemberAndDeletedAtIsNullAndIdLessThanOrderByIdDesc(Member member, Long viewerId, Long cursor, Pageable pageable);
 
     @Query("select p " +
             "from Post p " +
@@ -56,7 +56,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "and pr.id is null " +
             "and p.id < :cursor " +
             "order by p.id desc")
-    Slice<Post> findMyLikePosts(Member member, Long cursor, Pageable pageable);
+    Slice<Post> findMyLikePosts(Member member, Long memberId, Long cursor, Pageable pageable);
 
     @Query(value = """
         SELECT * FROM (
