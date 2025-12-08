@@ -13,8 +13,8 @@ import org.springframework.web.client.RestTemplate;
 @RequiredArgsConstructor
 public class DiscordApiUtil {
 
-    private final RestTemplate restTemplate = new RestTemplate();
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final RestTemplate discordRestTemplate;
+    private final ObjectMapper objectMapper;
     private final DiscordConfigData discordConfigData;
 
     public void sendAlarm(DiscordMessage discordMessage) {
@@ -26,7 +26,12 @@ public class DiscordApiUtil {
 
             HttpEntity<String> request = new HttpEntity<>(jsonMessage, headers);
 
-            ResponseEntity<String> response = restTemplate.exchange(discordConfigData.getWebHookUrl(), HttpMethod.POST, request, String.class);
+            ResponseEntity<String> response = discordRestTemplate.exchange(
+                    discordConfigData.getWebHookUrl(),
+                    HttpMethod.POST,
+                    request,
+                    String.class
+            );
 
             if (response.getStatusCode() != HttpStatus.NO_CONTENT) {
                 throw new RuntimeException("Failed to send Discord message: " + response.getStatusCode());
