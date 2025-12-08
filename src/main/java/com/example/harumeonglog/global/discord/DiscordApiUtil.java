@@ -5,12 +5,14 @@ import com.example.harumeonglog.global.discord.dto.DiscordMessage;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.*;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class DiscordApiUtil {
 
     private final RestTemplate discordRestTemplate;
@@ -34,11 +36,10 @@ public class DiscordApiUtil {
             );
 
             if (response.getStatusCode() != HttpStatus.NO_CONTENT) {
-                throw new RuntimeException("Failed to send Discord message: " + response.getStatusCode());
+                log.warn("Discord send failed: {}", response.getStatusCode());
             }
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
-            throw new RuntimeException("Failed to send Discord message", e);
+            log.warn("Discord send error", e);
         }
     }
 }
