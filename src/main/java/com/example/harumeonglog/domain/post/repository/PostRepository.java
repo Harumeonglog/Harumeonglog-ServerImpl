@@ -1,7 +1,6 @@
 package com.example.harumeonglog.domain.post.repository;
 
 import com.example.harumeonglog.domain.member.entity.Member;
-import com.example.harumeonglog.domain.post.controller.enums.PostRequestCategory;
 import com.example.harumeonglog.domain.post.entity.Post;
 import com.example.harumeonglog.domain.post.entity.enums.PostCategory;
 import org.springframework.data.domain.PageRequest;
@@ -60,15 +59,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "and p.id < :cursor " +
             "order by p.id desc")
     Slice<Post> findMyLikePosts(Member member, Long memberId, Long cursor, Pageable pageable);
-
-    @Query(value = """
-        SELECT * FROM (
-            SELECT *, ROW_NUMBER() OVER (PARTITION BY category ORDER BY created_at DESC) as rn
-            FROM post
-        ) AS ranked
-        WHERE rn = 1
-    """, nativeQuery = true)
-    List<Post> findFirstPostsByAllCategory();
 
     @Query(value = """
         UPDATE Post p SET p.postLikeNum = p.postLikeNum + 1 WHERE p = :post
