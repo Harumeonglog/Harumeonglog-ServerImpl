@@ -1,12 +1,9 @@
 package com.example.harumeonglog.global.firebase.service;
 
-import com.example.harumeonglog.domain.member.entity.Member;
 import com.example.harumeonglog.domain.member.entity.enums.NoticeType;
 import com.example.harumeonglog.domain.member.service.MemberCommandService;
 import com.example.harumeonglog.global.discord.DiscordApiUtil;
 import com.example.harumeonglog.global.discord.dto.DiscordMessage;
-import com.example.harumeonglog.global.firebase.converter.FCMConverter;
-import com.example.harumeonglog.global.firebase.dto.request.FCMSendRequest;
 import com.example.harumeonglog.global.firebase.dto.request.FCMSendRequest.ReceiverRequest;
 import com.google.firebase.messaging.*;
 import lombok.RequiredArgsConstructor;
