@@ -10,7 +10,9 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
@@ -92,4 +94,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     """)
     @Modifying
     void updatePostUnReportNumByPost(Post post);
+
+    @Query("select p " +
+            "from Post p join fetch p.member " +
+            "where p.deletedAt is null " +
+            "and cast(p.createdAt as date) = :targetDate " +
+            "order by p.postLikeNum desc, p.id desc")
+    List<Post> findTop5PostsByDateAndLikes(@Param("targetDate") LocalDate targetDate, Pageable pageable);
 }
