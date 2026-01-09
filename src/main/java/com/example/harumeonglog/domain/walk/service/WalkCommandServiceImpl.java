@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.walk.service;
 
 import com.example.harumeonglog.domain.event.dto.request.EventRequest;
+import com.example.harumeonglog.domain.event.dto.response.EventResponse;
 import com.example.harumeonglog.domain.event.entity.enums.EventCategory;
 import com.example.harumeonglog.domain.event.service.command.EventCommandService;
 import com.example.harumeonglog.domain.member.entity.Member;
@@ -15,13 +16,14 @@ import com.example.harumeonglog.domain.walk.entity.*;
 import com.example.harumeonglog.domain.walk.entity.enums.WalkStatus;
 import com.example.harumeonglog.domain.walk.repository.WalkLikeRepository;
 import com.example.harumeonglog.domain.walk.repository.WalkRepository;
-import com.example.harumeonglog.domain.walk.util.WalkContentGenerator;
 import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.code.WalkErrorCode;
 import com.example.harumeonglog.global.error.exception.MemberException;
 import com.example.harumeonglog.global.error.exception.PetException;
 import com.example.harumeonglog.global.error.exception.WalkException;
+import com.example.harumeonglog.global.outbox.converter.OutBoxConverter;
+import com.example.harumeonglog.global.outbox.repository.OutBoxRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -44,6 +46,7 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     private final MemberRepository memberRepository;
     private final MemberPetRepository memberPetRepository;
     private final WalkLikeRepository walkLikeRepository;
+    private final OutBoxRepository outBoxRepository;
 
     private final WalkQueryService walkQueryService;
     private final TrackQueryService trackQueryService;
@@ -57,8 +60,6 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     private final MemberWalkCommandService memberWalkCommandService;
     private final WalkPetCommandService walkPetCommandService;
     private final WalkLikeCommandService walkLikeCommandService;
-
-    private final WalkContentGenerator walkContentGenerator;
 
     @Override
     public WalkResponse.WalkStartResponse startWalk(Member member, WalkRequest.WalkStartRequest request) {
@@ -215,7 +216,8 @@ public class WalkCommandServiceImpl implements WalkCommandService {
         for (Pet pet : pets) {
             for (Member member : members) {
                 if (checkOwnPet(member, pet)) {
-                    eventCommandService.createEventAfterWalk(dto, member, pet);
+                    EventResponse.EventCreateResponse response = eventCommandService.createEventAfterWalk(dto, member, pet);
+                    outBoxRepository.save(OutBoxConverter.toWalkApiOutBox(walk.getId() + "/" + response.getEventId()));
                     break;
                 }
             }
@@ -225,7 +227,6 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     private EventRequest.EventRequestDTO createEventRequest(WalkRequest.WalkEndRequest request, Walk walk) {
         LocalDate today = LocalDate.now();
         LocalTime time = LocalTime.now();
-        String content = walkContentGenerator.generateWalkSummary(walk);
         return EventRequest.EventRequestDTO.builder()
                 .title(String.format(DEFAULT_TITLE_FORMAT, walk.getCreatedAt().getHour()))
                 .date(today)
@@ -235,7 +236,7 @@ public class WalkCommandServiceImpl implements WalkCommandService {
                 .hasNotice(false)
                 .time(time)
                 .category(EventCategory.WALK)
-                .details(content != null ? content : String.format(DEFAULT_DETAILS, walk.getCreatedAt().getHour(), walk.getCreatedAt().getMinute(), time.getHour(), time.getMinute()))
+                .details(String.format(DEFAULT_DETAILS, walk.getCreatedAt().getHour(), walk.getCreatedAt().getMinute(), time.getHour(), time.getMinute()))
                 .distance(String.valueOf(request.getDistance()))
                 .duration(String.valueOf(request.getTime()))
                 .build();
