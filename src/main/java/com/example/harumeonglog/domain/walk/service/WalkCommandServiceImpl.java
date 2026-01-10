@@ -1,6 +1,7 @@
 package com.example.harumeonglog.domain.walk.service;
 
 import com.example.harumeonglog.domain.event.dto.request.EventRequest;
+import com.example.harumeonglog.domain.event.dto.response.EventResponse;
 import com.example.harumeonglog.domain.event.entity.enums.EventCategory;
 import com.example.harumeonglog.domain.event.service.command.EventCommandService;
 import com.example.harumeonglog.domain.member.entity.Member;
@@ -9,6 +10,7 @@ import com.example.harumeonglog.domain.pet.entity.Pet;
 import com.example.harumeonglog.domain.pet.repository.MemberPetRepository;
 import com.example.harumeonglog.domain.pet.repository.PetRepository;
 import com.example.harumeonglog.domain.walk.converter.WalkConverter;
+import com.example.harumeonglog.domain.walk.dto.event.WalkApplicationEvents;
 import com.example.harumeonglog.domain.walk.dto.request.WalkRequest;
 import com.example.harumeonglog.domain.walk.dto.response.WalkResponse;
 import com.example.harumeonglog.domain.walk.entity.*;
@@ -18,10 +20,9 @@ import com.example.harumeonglog.domain.walk.repository.WalkRepository;
 import com.example.harumeonglog.global.error.code.MemberErrorCode;
 import com.example.harumeonglog.global.error.code.PetErrorCode;
 import com.example.harumeonglog.global.error.code.WalkErrorCode;
-import com.example.harumeonglog.global.error.exception.MemberException;
-import com.example.harumeonglog.global.error.exception.PetException;
-import com.example.harumeonglog.global.error.exception.WalkException;
+import com.example.harumeonglog.global.error.exception.*;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,6 +57,8 @@ public class WalkCommandServiceImpl implements WalkCommandService {
     private final MemberWalkCommandService memberWalkCommandService;
     private final WalkPetCommandService walkPetCommandService;
     private final WalkLikeCommandService walkLikeCommandService;
+
+    private final ApplicationEventPublisher eventPublisher;
 
     @Override
     public WalkResponse.WalkStartResponse startWalk(Member member, WalkRequest.WalkStartRequest request) {
@@ -212,7 +215,8 @@ public class WalkCommandServiceImpl implements WalkCommandService {
         for (Pet pet : pets) {
             for (Member member : members) {
                 if (checkOwnPet(member, pet)) {
-                    eventCommandService.createEventAfterWalk(dto, member, pet);
+                    EventResponse.EventCreateResponse response = eventCommandService.createEventAfterWalk(dto, member, pet);
+                    eventPublisher.publishEvent(WalkApplicationEvents.WalkContentEvent.from(walk.getId(), response.getEventId()));
                     break;
                 }
             }

@@ -31,4 +31,8 @@ public class WalkEvent extends Event {
         this.duration = duration;
         this.details = details;
     }
+
+    public void updateWalkDetails(String details) {
+        this.details = details;
+    }
 }

@@ -13,6 +13,7 @@ public enum WalkErrorCode implements BaseErrorCode {
     CANNOT_ADD_POSITION(HttpStatus.BAD_REQUEST, "WALK400", "산책이 좌표를 추가할 수 없는 상태입니다."),
     CANNOT_FIND_START_POSITION(HttpStatus.NOT_FOUND, "WALK400", "산책의 시작 좌표가 없습니다."),
     UNSUPPORTED_SORT(HttpStatus.BAD_REQUEST, "WALK400", "지원하지 않는 정렬 방식입니다."),
+    FAIL_TO_CREATE_SUMMARY(HttpStatus.INTERNAL_SERVER_ERROR, "WALK500", "산책 요약 생성에 실패했습니다."),
     ;
 
     private final HttpStatus httpStatus;

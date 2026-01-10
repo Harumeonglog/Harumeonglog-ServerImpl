@@ -84,3 +84,7 @@ cors:
     - PUT
     - PATCH
     - DELETE
+
+openai:
+  api:
+    key: ${OPENAI_API_KEY}
