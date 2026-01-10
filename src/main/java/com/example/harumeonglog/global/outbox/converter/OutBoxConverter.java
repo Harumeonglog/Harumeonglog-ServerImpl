@@ -20,12 +20,4 @@ public class OutBoxConverter {
                 .processed(false)
                 .build();
     }
-
-    public static OutBox toWalkApiOutBox(String payload) {
-        return OutBox.builder()
-                .eventType(EventType.WALK_AI_API)
-                .payload(payload)
-                .processed(false)
-                .build();
-    }
 }
