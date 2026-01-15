@@ -40,7 +40,6 @@
 <img alt="Spring Data JPA" src="https://img.shields.io/badge/Spring_Data_JPA-6DB33F?style=flat-square&logo=springboot&logoColor=white">
 <img alt="Spring Security" src="https://img.shields.io/badge/Spring_Security-6DB33F?style=flat-square&logo=springsecurity&logoColor=white">
 <img alt="Spring Scheduler" src="https://img.shields.io/badge/Spring_Scheduler-6DB33F?style=flat-square&logo=spring&logoColor=white">
-<img alt="Spring REST Docs" src="https://img.shields.io/badge/Spring_REST_Docs-6DB33F?style=flat-square&logo=spring&logoColor=white">
 <br/>
 <img alt="MySQL" src="https://img.shields.io/badge/MySQL-4479A1?style=flat-square&logo=MySQL&logoColor=white"/>
 <img alt="QueryDSL" src="https://img.shields.io/badge/QueryDSL-0289cf?style=flat-square&logoColor=white">
@@ -52,8 +51,6 @@
 <img alt="Redis" src="https://img.shields.io/badge/Redis-DC382D?style=flat-square&logo=redis&logoColor=white">
 <img alt="Amazon S3" src="https://img.shields.io/badge/Amazon_S3-569A31?style=flat-square&logo=amazons3&logoColor=white">
 <img alt="Amazon RDS" src="https://img.shields.io/badge/Amazon_RDS-527FFF?style=flat-square&logo=amazonrds&logoColor=white">
-<img alt="OpenSearch" src="https://img.shields.io/badge/OpenSearch-005EB8?style=flat-square&logo=opensearch&logoColor=white">
-<img alt="Logstash" src="https://img.shields.io/badge/Logstash-F2DC5D?style=flat-square&logo=logstash&logoColor=black">
 <br/>
 <img alt="Swagger" src="https://img.shields.io/badge/Swagger-85EA2D?style=flat-square&logo=swagger&logoColor=black">
 </div>
@@ -69,10 +66,10 @@
 
 
 # 🏭 시스템 아키텍처
-<img width="592" alt="harumeonglog_architecture" src="https://github.com/user-attachments/assets/1389e4e2-629c-4db0-bd41-7d9e3c6ed516" />
+<img width="635" height="454" alt="스크린샷 2026-01-15 오후 5 43 42" src="https://github.com/user-attachments/assets/20af5675-0f45-4bbc-a337-c6424c223dba" />
 
 
-# 📋 Commit Message Convention (이모지 + 소문자 적용)
+# 📋 Commit Message Convention
 | Tag           | Description             |
 |---------------|-------------------------|
 | `✨ feat`      | 새로운 기능 추가        |
