@@ -68,10 +68,10 @@ class PostCacheSchedulerTest {
     }
 
     @Test
-    @DisplayName("스케줄러는 CacheKeyUtil과 동일한 키를 사용하여 캐시에 적재해야 한다")
+    @DisplayName("스케줄러는 CacheKeyUtil의 스케줄러용 키를 사용하여 캐시에 적재해야 한다")
     void shouldUseSameCacheKeyAsCacheKeyUtil() {
         // given
-        String expectedCacheKey = CacheKeyUtil.getYesterdayPostsCacheKey();
+        String expectedCacheKey = CacheKeyUtil.getSchedulerCacheKey();
         given(postRepository.findTop5PostsByDateAndLikes(any(LocalDate.class), any(Pageable.class))).willReturn(mockPosts);
         given(yesterdayPostsCacheManager.getCache("getYesterdayGoodPosts")).willReturn(cache);
 

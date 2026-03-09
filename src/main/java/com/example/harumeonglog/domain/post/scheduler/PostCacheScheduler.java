@@ -32,7 +32,7 @@ public class PostCacheScheduler {
 
     @Scheduled(cron = "0 0 3 * * ?") // 매일 새벽 3시 실행
     public void preloadYesterdayGoodPostsCache() {
-        String cacheKey = CacheKeyUtil.getYesterdayPostsCacheKey(); // 통일된 키 생성 메서드 사용
+        String cacheKey = CacheKeyUtil.getSchedulerCacheKey();
         log.info("어제 인기 게시물 캐시 Eager Preloading 시작: {} - 캐시키: {}", LocalDateTime.now(), cacheKey);
         
         try {
