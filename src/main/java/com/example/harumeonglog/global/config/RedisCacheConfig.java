@@ -29,7 +29,7 @@ public class RedisCacheConfig {
                                 new GenericJackson2JsonRedisSerializer()
                         )
                 )
-                .entryTtl(Duration.ofHours(24L)); // 24시간 TTL로 하루 동안 캐싱
+                .entryTtl(Duration.ofHours(27L)); // 스케줄러(3시) 적재 후 다음날 키 전환(4시)까지 유효하도록 27시간
 
         return RedisCacheManager
                 .RedisCacheManagerBuilder
